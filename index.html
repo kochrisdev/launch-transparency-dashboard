@@ -79,6 +79,14 @@
   header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; margin-bottom: 6px; }
   .brand h1 { margin: 0; font-size: 26px; font-weight: 750; letter-spacing: -.01em; }
   .brand h1 span { color: var(--accent); }
+  .brand h1 span.proto-badge {
+    display: inline-block; vertical-align: 4px; margin-left: 8px;
+    font-size: 11.5px; font-weight: 650; letter-spacing: .02em; line-height: 1.4;
+    padding: 3px 10px; border-radius: 999px;
+    background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn);
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) { .brand h1 span.proto-badge { white-space: normal; margin-left: 0; margin-top: 6px; display: block; width: fit-content; } }
   .brand p { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; max-width: 60ch; }
   .meta { margin-left: auto; text-align: right; font-size: 12.5px; color: var(--ink-3); line-height: 1.6; }
   .meta b { color: var(--ink-2); font-weight: 600; }
@@ -266,7 +274,7 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1><span>LAUNCH</span> Transparency Dashboard</h1>
+      <h1><span>LAUNCH</span> Transparency Dashboard <span class="proto-badge">Prototype — data presented here may not be accurate</span></h1>
       <p>Tracking new antimalarial medicines from approval to access — where each product stands, and where it is stuck.</p>
     </div>
     <div class="meta">
