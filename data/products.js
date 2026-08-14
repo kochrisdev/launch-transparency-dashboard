@@ -45,9 +45,10 @@ window.LAUNCH_DATA =
     "GMP": "Good Manufacturing Practice — quality standard verified by inspection of manufacturing sites."
   },
   "changelog": [
+    { "date": "2026-08-14", "product": "ASPY", "change": "Renamed from Pyramax to ASPY (pyronaridine–artesunate); trade name retained in the subtitle." },
     { "date": "2026-08-14", "product": "All", "change": "Added glossary tooltips, CSV download, print view and pathway timing (time between gates) for marketed products." },
     { "date": "2026-08-14", "product": "GanLum", "change": "Phase III (KALUMA) marked complete — primary endpoint met, announced 12 Nov 2025; regulatory submission preparation now in progress." },
-    { "date": "2026-08-14", "product": "Pyramax", "change": "EMA Article 58 date corrected to 2012; July 2025 pregnancy label update added to milestones." },
+    { "date": "2026-08-14", "product": "ASPY", "change": "EMA Article 58 date corrected to 2012; July 2025 pregnancy label update added to milestones." },
     { "date": "2026-08-14", "product": "DHA–PPQ", "change": "Eurartesim WHO PQ requalification (Jan 2025) recorded; unknown counts set to TBC pending verification." },
     { "date": "2026-08-14", "product": "All", "change": "Dashboard moved from illustrative placeholders to draft public-source data. Prices and volumes shown as TBC until confirmed." }
   ],
@@ -140,8 +141,8 @@ window.LAUNCH_DATA =
     },
     {
       "id": "pyramax",
-      "name": "Pyramax",
-      "inn": "Pyronaridine–artesunate",
+      "name": "ASPY",
+      "inn": "Pyronaridine–artesunate (Pyramax)",
       "manufacturer": "Shin Poong Pharmaceutical · MMV",
       "class": "market",
       "classLabel": "Recommended · underutilized",

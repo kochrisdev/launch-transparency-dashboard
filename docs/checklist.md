@@ -26,10 +26,10 @@ Nothing remaining. ✅
 - [ ] 🤝 **Obtain first written manufacturer confirmations** (prices, capacity
   figures) and replace the corresponding TBCs.
 - [ ] 📊 **Verify country-level counts** — registrations, national guideline
-  inclusion, MFT plans for Pyramax and DHA–PPQ (currently TBC). *Also unblocks
+  inclusion, MFT plans for ASPY and DHA–PPQ (currently TBC). *Also unblocks
   the country map (stage 3).*
 - [ ] 📊 **Procurement volumes data pull** — Global Fund PQR and PMI records for
-  Pyramax and DHA–PPQ; fill the `volume` blocks.
+  ASPY and DHA–PPQ; fill the `volume` blocks.
 - [ ] 📊🤝 **Flip `dataStatus` to `"live"`** after sign-off (checklist in
   [data-analyst-guide.md §6](data-analyst-guide.md#6-data-status-transitions))
   and decide whether the prototype badge comes off in the same commit.
@@ -78,7 +78,7 @@ Nothing remaining. ✅
   `confirmedInWriting` provenance; validator with governance rules; single-file
   preview builder; page renders entirely from data (stats derived, never typed).
 - **Stage 2** — draft public-source data for all four medicines (GanLum Phase III
-  result, Pyramax 2012/2022/2025 milestones, Eurartesim PQ + requalification,
+  result, ASPY (Pyramax) 2012/2022/2025 milestones, Eurartesim PQ + requalification,
   ALAQ DeTACT timeline); TBC convention; `dataStatus` banner; on-page changelog;
   UPDATING workflow docs; CI validation on every push/PR.
 - **Stage 3** — glossary (13 terms, inline tooltips + panel); pathway timing

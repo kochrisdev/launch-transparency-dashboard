@@ -102,7 +102,7 @@ confirmed in writing that they may be shared.
 
 **Why is a product I care about not on the board?**
 The initial phase tracks four antimalarials: two in the late pipeline (GanLum,
-ALAQ) and two recommended but underutilized (Pyramax, DHA–PPQ). A prevention
+ALAQ) and two recommended but underutilized (ASPY, DHA–PPQ). A prevention
 tool (spatial emanators) is planned, pending funder approval. The scope may
 expand if the transparency approach proves effective.
 

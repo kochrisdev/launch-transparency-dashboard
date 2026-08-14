@@ -106,7 +106,7 @@ version with `node scripts/make-preview.js` and share `preview.html` as one atta
 ## Products
 
 GanLum (ganaplacide–lumefantrine), ALAQ (artemether–lumefantrine–amodiaquine triple ACT),
-Pyramax (pyronaridine–artesunate), DHA–PPQ (dihydroartemisinin–piperaquine), plus a
+ASPY (pyronaridine–artesunate, Pyramax), DHA–PPQ (dihydroartemisinin–piperaquine), plus a
 placeholder row for spatial emanators (prevention tool, pending funder approval).
 
 Live preview artifact: https://claude.ai/code/artifact/94826363-58d4-466f-b731-759a6d1e8fc7
