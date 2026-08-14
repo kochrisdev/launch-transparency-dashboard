@@ -1,5 +1,7 @@
 # LAUNCH Transparency Dashboard
 
+**Live site: https://kochrisdev.github.io/launch-transparency-dashboard/**
+
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
 RBM Partnership to End Malaria.
@@ -51,6 +53,29 @@ channel splits must sum to 100.
 
 Summary stats (medicines tracked, active bottlenecks) are computed from the data at
 render time — they can never disagree with the board.
+
+## Hosting and deployment
+
+The site deploys automatically via GitHub Pages: every push to `main` goes live at
+https://kochrisdev.github.io/launch-transparency-dashboard/ within a minute or two
+(after CI validates the data). There is no build step — the repo root is served as-is.
+
+### Handover options for RBM
+
+1. **RBM hosts** (preferred for production): copy `index.html`, `data/`, and
+   `.nojekyll` to any static path on dashboards.endmalaria.org. No server-side
+   requirements — plain static files.
+2. **RBM embeds**: keep this Pages deployment (or a fork under an RBM GitHub org)
+   and embed it:
+
+   ```html
+   <iframe src="https://kochrisdev.github.io/launch-transparency-dashboard/"
+           title="LAUNCH Transparency Dashboard"
+           style="width:100%;min-height:1400px;border:0"></iframe>
+   ```
+
+To move the repo to an organisation later, GitHub's *Transfer ownership* keeps the
+history and CI; only the Pages URL changes.
 
 ## Viewing locally
 
