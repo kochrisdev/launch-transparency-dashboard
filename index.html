@@ -88,6 +88,7 @@
     border: 1px solid var(--line);
   }
   .demo-banner b { color: var(--ink); }
+  .demo-banner.error { background: var(--crit-soft); color: var(--crit); }
 
   /* ---------- summary + legend strip ---------- */
   .strip {
@@ -104,7 +105,6 @@
 
   /* status dots (shape + color, never color alone) */
   .dot { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 11px; font-weight: 800; }
-  .dot svg { display: block; }
   .dot.done { background: var(--good); color: #fff; }
   .dot.prog { background: var(--warn); color: #fff; }
   .dot.late { background: var(--crit); color: #fff; }
@@ -132,7 +132,6 @@
     padding: 2.5px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2);
   }
   .chip.pipeline { background: var(--accent-soft); color: var(--accent); }
-  .chip.flag { background: var(--crit-soft); color: var(--crit); text-transform: none; letter-spacing: 0; font-weight: 600; }
   .chip.soon { background: var(--idle-soft); color: var(--ink-3); }
 
   /* pipeline track */
@@ -173,6 +172,7 @@
   .card h3 { margin: 0 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
   .card .big { font-size: 24px; font-weight: 750; font-variant-numeric: tabular-nums; }
   .card .sub { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  .card .prov { font-size: 11px; color: var(--ink-3); margin-top: 6px; }
   .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); }
   .card ul li { margin: 3px 0; }
   .card p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
@@ -195,7 +195,6 @@
   .pill.late { background: var(--crit-soft); color: var(--crit); }
   .pill.idle { background: var(--idle-soft); color: var(--ink-3); }
   .src { font-size: 11.5px; color: var(--ink-3); margin-top: 10px; }
-  .caret { margin-left: auto; color: var(--ink-3); font-size: 12px; transition: transform .15s; grid-column: 2; justify-self: end; align-self: start; }
 
   /* channel split bar */
   .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin: 8px 0 6px; }
@@ -221,17 +220,17 @@
       <p>Tracking new antimalarial medicines from approval to access — where each product stands, and where it is stuck.</p>
     </div>
     <div class="meta">
-      <b>Hosted by the RBM Partnership to End Malaria</b><br>
-      Last updated 14 Aug 2026 · Data confirmed by manufacturers for public release
+      <b id="host-note">Hosted by the RBM Partnership to End Malaria</b><br>
+      <span id="updated"></span> · Data confirmed by manufacturers for public release
     </div>
   </header>
 
-  <div class="demo-banner"><b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.</div>
+  <div class="demo-banner" id="banner" hidden><b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.</div>
 
   <div class="strip" role="group" aria-label="Summary">
-    <div class="stat"><span class="n">4</span><span class="l">medicines tracked</span></div>
-    <div class="stat"><span class="n crit-n">3</span><span class="l">active bottlenecks</span></div>
-    <div class="stat"><span class="n">2</span><span class="l">expected to market ≤ 3 yrs</span></div>
+    <div class="stat"><span class="n" id="stat-tracked">–</span><span class="l">medicines tracked</span></div>
+    <div class="stat"><span class="n crit-n" id="stat-bottlenecks">–</span><span class="l">active bottlenecks</span></div>
+    <div class="stat"><span class="n" id="stat-pipeline">–</span><span class="l">expected to market ≤ 3 yrs</span></div>
     <div class="legend" aria-label="Status legend">
       <span class="key"><span class="dot done" aria-hidden="true">✓</span> Complete</span>
       <span class="key"><span class="dot prog" aria-hidden="true">›</span> In progress</span>
@@ -254,341 +253,217 @@
 
 <div id="tip" role="tooltip"></div>
 
+<script src="data/products.js"></script>
 <script>
-const STAGES = [
-  "R&D & clinical",
-  "Regulatory approval (SRA)",
-  "WHO guidelines",
-  "WHO prequalification",
-  "Country registration",
-  "National policy adoption",
-  "Procurement",
-  "In-country delivery"
-];
+(function () {
+  const board = document.getElementById("board");
+  const banner = document.getElementById("banner");
 
-// status: done | prog | late | idle
-const PRODUCTS = [
-  {
-    id: "ganlum",
-    name: "GanLum",
-    inn: "Ganaplacide–lumefantrine",
-    mfr: "Novartis · MMV",
-    cls: "pipeline", clsLabel: "Pipeline · new chemical class",
-    current: 0,
-    stages: [
-      { s: "prog", note: "Phase III ongoing (multi-country, incl. Mali, Burkina Faso)", date: "Readout expected Q3 2027", next: "Complete Phase III enrolment" },
-      { s: "idle", note: "Not started", next: "Dossier submission planned after Phase III", date: "Anticipated 2028" },
-      { s: "idle", note: "Not started", next: "Early WHO GDG engagement underway informally" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" }
-    ],
-    flag: null,
-    detail: {
-      price: { big: "TBC", sub: "Pricing discussions not yet public" },
-      usecase: "First non-artemisinin combination — candidate for MFT strategies and artemisinin partial-resistance settings.",
-      access: ["MMV co-development agreement in place", "Access provisions under negotiation", "Manufacturing scale-up plan in design"],
-      adoption: ["New chemical class — pharmacovigilance plan required", "Health-worker training on new regimen"],
-      or: { lead: "MMV / Novartis", where: "Mali, Burkina Faso, Gabon", when: "Ongoing → 2027", q: "Efficacy in partial-resistance settings" },
-      country: { reg: 0, guide: 0, mft: 0, demand: "—" },
-      volume: null,
-      milestones: [
-        ["Phase III trials", "prog", "In progress", "Ongoing", "Readout", "Q3 2027"],
-        ["SRA dossier submission", "idle", "Not started", "—", "Submission", "2028"],
-        ["WHO GDG engagement", "idle", "Not started", "—", "Pre-submission dialogue", "2027"],
-        ["WHO prequalification", "idle", "Not started", "—", "—", "TBD"]
-      ]
-    }
-  },
-  {
-    id: "alaq",
-    name: "ALAQ",
-    inn: "Artemether–lumefantrine–amodiaquine (triple ACT)",
-    mfr: "Marketing partner TBC · MORU / DNDi",
-    cls: "pipeline", clsLabel: "Pipeline · triple ACT",
-    current: 2,
-    stages: [
-      { s: "done", note: "Phase III complete (DeTACT trials)", date: "Completed Jan 2025" },
-      { s: "prog", note: "Dossier under SRA review", date: "Submitted 12 Feb 2026", next: "SRA assessment", nextDate: "Q1 2027" },
-      { s: "late", note: "GDG review slipped from Q3 2026 to Q1 2027 (+2 quarters) — committee scheduling", date: "Was Q3 2026", next: "GDG meeting", nextDate: "Q1 2027" },
-      { s: "idle", note: "Not started", next: "PQ dossier after SRA opinion" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" },
-      { s: "idle", note: "Not started" }
-    ],
-    flag: "WHO guideline review delayed — GDG meeting moved from Q3 2026 to Q1 2027 (+2 quarters)",
-    detail: {
-      price: { big: "US$ 1.25", sub: "Indicative per adult treatment at launch · GDF price commitment" },
-      usecase: "MFT component and first-line option where artemisinin partial resistance is confirmed.",
-      access: ["Price commitment with GDF", "Registration footprint planned in 30+ endemic countries", "Manufacturing capacity secured", "Out-licensing agreements in place"],
-      adoption: ["Updated treatment guidelines and job aids", "Health-worker training (new 3-drug regimen)"],
-      or: { lead: "Jhpiego (ASPY-linked OR network)", where: "DRC, Rwanda, Nigeria, Uganda", when: "Sep 2025 → Aug 2029", q: "Adherence and safety of triple ACT at scale" },
-      country: { reg: 0, guide: 0, mft: 7, demand: "12.8M forecast (2028)" },
-      volume: null,
-      milestones: [
-        ["Safety & efficacy (Phase III)", "done", "Complete", "24 Jan 2025", "—", "—"],
-        ["Dossier submission (SRA pathway)", "prog", "Submitted", "12 Feb 2026", "SRA assessment", "Q1 2027"],
-        ["WHO GDG engagement", "prog", "In progress", "Ongoing", "GDG meeting", "Q1 2027"],
-        ["WHO guidelines update", "late", "Delayed +2 qtrs", "—", "Draft guideline review", "Q1 2027"],
-        ["WHO prequalification", "idle", "Not started", "—", "Dossier submission", "Q3 2027"],
-        ["GMP inspection", "idle", "Not started", "—", "Scheduling", "TBD"],
-        ["Country regulatory review", "idle", "Not started", "—", "National submissions (incl. AMA)", "TBD"]
-      ]
-    }
-  },
-  {
-    id: "pyramax",
-    name: "Pyramax",
-    inn: "Pyronaridine–artesunate",
-    mfr: "Shin Poong Pharmaceutical · MMV",
-    cls: "market", clsLabel: "Recommended · underutilized",
-    current: 5,
-    stages: [
-      { s: "done", note: "Development complete", date: "—" },
-      { s: "done", note: "EMA positive opinion (Article 58)", date: "2015" },
-      { s: "done", note: "WHO recommended for uncomplicated malaria", date: "2022" },
-      { s: "done", note: "WHO prequalified (tablets & granules)", date: "2022" },
-      { s: "prog", note: "Registered in 24 endemic countries; 8 applications pending", date: "Rolling", next: "6 further registrations", nextDate: "2027" },
-      { s: "late", note: "In only 6 national treatment guidelines despite WHO recommendation — key adoption gap", next: "3 guideline committees reviewing", nextDate: "Q4 2026" },
-      { s: "prog", note: "Eligible for Global Fund procurement; volumes still low", date: "0.9M treatments (2024–25)" },
-      { s: "idle", note: "Limited routine delivery outside pilot districts" }
-    ],
-    flag: "Policy adoption is the bottleneck — WHO-recommended since 2022 but included in only 6 national guidelines",
-    detail: {
-      price: { big: "US$ 0.98", sub: "Indicative per adult treatment · Global Fund reference price" },
-      usecase: "First-line diversification / MFT component; paediatric granules available.",
-      access: ["WHO PQ held for two formulations", "Registration footprint: 24 countries and expanding", "Volume capacity confirmed by manufacturer"],
-      adoption: ["Guideline inclusion and case-management training", "No cold chain or special administration needs"],
-      or: { lead: "MMV country pilots", where: "Burkina Faso, Kenya, Cambodia", when: "2024 → 2027", q: "MFT deployment models with pyronaridine–artesunate" },
-      country: { reg: 24, guide: 6, mft: 4, demand: "4.1M forecast (2027)" },
-      volume: { total: "0.9M", period: "2024–2025", split: [ ["Global Fund", 62], ["PMI / USAID", 21], ["Domestic public", 12], ["Private sector", 5] ] },
-      milestones: [
-        ["SRA approval (EMA Art. 58)", "done", "Complete", "2015", "—", "—"],
-        ["WHO guideline recommendation", "done", "Complete", "2022", "—", "—"],
-        ["WHO prequalification", "done", "Complete", "2022", "—", "—"],
-        ["Country registrations", "prog", "24 of 30 targeted", "Rolling", "6 pending", "2027"],
-        ["National guideline inclusion", "late", "6 countries", "—", "3 committees in review", "Q4 2026"],
-        ["Procurement scale-up", "prog", "0.9M treatments", "2024–25", "Global Fund tender", "Q2 2027"]
-      ]
-    }
-  },
-  {
-    id: "dhappq",
-    name: "DHA–PPQ",
-    inn: "Dihydroartemisinin–piperaquine",
-    mfr: "Multiple prequalified manufacturers",
-    cls: "market", clsLabel: "Recommended · underutilized",
-    current: 6,
-    stages: [
-      { s: "done", note: "Development complete", date: "—" },
-      { s: "done", note: "EMA approval (Eurartesim)", date: "2011" },
-      { s: "done", note: "WHO recommended for uncomplicated malaria", date: "2015" },
-      { s: "done", note: "WHO prequalified (multiple products)", date: "2019" },
-      { s: "done", note: "Registered in 30+ endemic countries", date: "Rolling" },
-      { s: "prog", note: "In 11 national guidelines; MFT planning in 5 countries", next: "MFT strategy decisions", nextDate: "2027" },
-      { s: "late", note: "Under 5% of global ACT procurement volume — chronic underuse vs recommendation", date: "1.5M treatments (2024–25)" },
-      { s: "prog", note: "Routine delivery in 9 countries, mostly seasonal/IPT niches" }
-    ],
-    flag: "Procurement is the bottleneck — fully approved for a decade yet <5% of global ACT volumes",
-    detail: {
-      price: { big: "US$ 1.10", sub: "Indicative per adult treatment · pooled procurement reference" },
-      usecase: "MFT rotation partner and mass drug administration / chemoprevention niches.",
-      access: ["Multiple PQ'd suppliers — supply security via diversity", "No single-source dependency", "Established API supply chains"],
-      adoption: ["ECG guidance for specific risk groups in some guidelines", "Otherwise standard ACT case-management training"],
-      or: { lead: "Multiple academic consortia", where: "Mozambique, Tanzania, Senegal", when: "2023 → 2026", q: "MFT rotation sequencing and resistance impact" },
-      country: { reg: 32, guide: 11, mft: 5, demand: "9.4M forecast (2027)" },
-      volume: { total: "1.5M", period: "2024–2025", split: [ ["Global Fund", 48], ["Domestic public", 27], ["PMI / USAID", 15], ["Private sector", 10] ] },
-      milestones: [
-        ["SRA approval (EMA)", "done", "Complete", "2011", "—", "—"],
-        ["WHO guideline recommendation", "done", "Complete", "2015", "—", "—"],
-        ["WHO prequalification", "done", "Complete", "2019", "—", "—"],
-        ["Country registrations", "done", "32 countries", "Rolling", "—", "—"],
-        ["National guideline inclusion", "prog", "11 countries", "—", "MFT strategy decisions", "2027"],
-        ["Procurement scale-up", "late", "<5% of ACT volume", "2024–25", "Demand consolidation via GF", "2027"]
-      ]
-    }
+  if (!window.LAUNCH_DATA) {
+    banner.hidden = false;
+    banner.classList.add("error");
+    banner.innerHTML = "<b>Data failed to load.</b> data/products.js is missing or has a syntax error — run <code>node scripts/validate-data.js</code>.";
+    return;
   }
-];
 
-const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
-const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+  const DATA = window.LAUNCH_DATA;
+  const STAGES = DATA.stages;
+  const PRODUCTS = DATA.products;
+  const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
+  const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
 
-const board = document.getElementById("board");
+  // header + banner from meta
+  const dt = new Date(DATA.meta.lastUpdated + "T00:00:00");
+  document.getElementById("updated").textContent = "Last updated " +
+    dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  banner.hidden = !DATA.meta.illustrative;
 
-function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
-function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
+  // summary stats derived from the data, never hand-typed
+  const tracked = PRODUCTS.filter(p => !p.placeholder);
+  document.getElementById("stat-tracked").textContent = tracked.length;
+  document.getElementById("stat-bottlenecks").textContent =
+    tracked.filter(p => p.stages.some(s => s.status === "late")).length;
+  document.getElementById("stat-pipeline").textContent =
+    tracked.filter(p => p.class === "pipeline").length;
 
-PRODUCTS.forEach(p => {
-  const stagesHtml = p.stages.map((st, i) => {
-    const preDone = i > 0 && (p.stages[i-1].s === "done");
-    const postDone = st.s === "done";
-    return `
-      <div class="stage ${i === p.current ? "cur" : ""}">
-        <div class="row">
-          <div class="bar pre ${preDone ? "done-bar" : ""}"></div>
-          <span class="dot ${st.s}" tabindex="0" role="img"
-            aria-label="${esc(STAGES[i])}: ${LABEL[st.s]}. ${esc(st.note || "")}"
-            data-stage="${esc(STAGES[i])}" data-status="${st.s}"
-            data-note="${esc(st.note || "")}" data-date="${esc(st.date || "")}"
-            data-next="${esc(st.next || "")}" data-nextdate="${esc(st.nextDate || "")}">${ICON[st.s]}</span>
-          <div class="bar post ${postDone ? "done-bar" : ""}"></div>
+  function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+
+  tracked.forEach(p => {
+    const stagesHtml = p.stages.map((st, i) => {
+      const preDone = i > 0 && (p.stages[i - 1].status === "done");
+      const postDone = st.status === "done";
+      return `
+        <div class="stage ${i === p.currentStage ? "cur" : ""}">
+          <div class="row">
+            <div class="bar pre ${preDone ? "done-bar" : ""}"></div>
+            <span class="dot ${st.status}" tabindex="0" role="img"
+              aria-label="${esc(STAGES[i])}: ${LABEL[st.status]}. ${esc(st.note)}"
+              data-stage="${esc(STAGES[i])}" data-status="${st.status}"
+              data-note="${esc(st.note)}" data-date="${esc(st.date)}"
+              data-next="${esc(st.next)}" data-nextdate="${esc(st.nextDate)}"
+              data-asof="${esc(st.asOf)}">${ICON[st.status]}</span>
+            <div class="bar post ${postDone ? "done-bar" : ""}"></div>
+          </div>
+          <div class="lbl">${STAGES[i]}</div>
+        </div>`;
+    }).join("");
+
+    const d = p.detail;
+    const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
+    const volumeCard = d.volume ? `
+      <div class="card">
+        <h3>Treatments procured · ${esc(d.volume.period)}</h3>
+        <div class="big">${esc(d.volume.total)}</div>
+        <div class="split" aria-hidden="true">
+          ${d.volume.split.map((s, i) => `<div style="width:${s.pct}%;background:${shades[i % shades.length]}" title="${esc(s.channel)} ${s.pct}%"></div>`).join("")}
         </div>
-        <div class="lbl">${STAGES[i]}</div>
+        <div class="split-legend">
+          ${d.volume.split.map((s, i) => `<span class="key"><span class="sw" style="background:${shades[i % shades.length]}"></span>${esc(s.channel)} ${s.pct}%</span>`).join("")}
+        </div>
+        ${d.volume.source ? `<div class="prov">Source: ${esc(d.volume.source)}</div>` : ""}
+      </div>` : `
+      <div class="card">
+        <h3>Treatments procured</h3>
+        <div class="big">—</div>
+        <div class="sub">Not yet procured — pre-launch</div>
       </div>`;
-  }).join("");
 
-  const d = p.detail;
-  const volumeCard = d.volume ? `
-    <div class="card">
-      <h3>Treatments procured · ${d.volume.period}</h3>
-      <div class="big">${d.volume.total}</div>
-      <div class="split" aria-hidden="true">
-        ${d.volume.split.map((s, i) => {
-          const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
-          return `<div style="width:${s[1]}%;background:${shades[i]}" title="${s[0]} ${s[1]}%"></div>`;
-        }).join("")}
-      </div>
-      <div class="split-legend">
-        ${d.volume.split.map((s, i) => {
-          const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
-          return `<span class="key"><span class="sw" style="background:${shades[i]}"></span>${s[0]} ${s[1]}%</span>`;
-        }).join("")}
-      </div>
-    </div>` : `
-    <div class="card">
-      <h3>Treatments procured</h3>
-      <div class="big">—</div>
-      <div class="sub">Not yet procured — pre-launch</div>
-    </div>`;
+    const priceProv = [
+      d.price.source ? "Source: " + d.price.source : "",
+      d.price.confirmedInWriting ? "Manufacturer-confirmed in writing" : "",
+      d.price.asOf ? "as of " + d.price.asOf : ""
+    ].filter(Boolean).join(" · ");
 
-  const node = el(`
-    <section class="product ${p.cls}" id="${p.id}">
-      <button class="prow" aria-expanded="false" aria-controls="${p.id}-detail">
-        <div class="pid">
-          <div class="name">${p.name}</div>
-          <div class="inn">${p.inn}</div>
-          <div class="mfr">${p.mfr}</div>
-          <div class="chips">
-            <span class="chip ${p.cls === "pipeline" ? "pipeline" : ""}">${p.clsLabel}</span>
+    const node = el(`
+      <section class="product" id="${esc(p.id)}">
+        <button class="prow" aria-expanded="false" aria-controls="${esc(p.id)}-detail">
+          <div class="pid">
+            <div class="name">${esc(p.name)}</div>
+            <div class="inn">${esc(p.inn)}</div>
+            <div class="mfr">${esc(p.manufacturer)}</div>
+            <div class="chips">
+              <span class="chip ${p.class === "pipeline" ? "pipeline" : ""}">${esc(p.classLabel)}</span>
+            </div>
           </div>
+          <div class="trackbox"><div class="track">${stagesHtml}</div></div>
+        </button>
+        ${p.flag ? `<div class="flagnote">${esc(p.flag)}</div>` : ""}
+        <div style="height:14px"></div>
+        <div class="detail" id="${esc(p.id)}-detail">
+          <div class="cards">
+            <div class="card">
+              <h3>Indicative price per treatment</h3>
+              <div class="big">${esc(d.price.value)}</div>
+              <div class="sub">${esc(d.price.note)}</div>
+              ${priceProv ? `<div class="prov">${esc(priceProv)}</div>` : ""}
+            </div>
+            <div class="card">
+              <h3>Target use case</h3>
+              <p>${esc(d.useCase)}</p>
+            </div>
+            <div class="card">
+              <h3>Access &amp; supply commitments</h3>
+              <ul>${d.access.map(a => `<li>${esc(a)}</li>`).join("")}</ul>
+            </div>
+            <div class="card">
+              <h3>Adoption requirements</h3>
+              <ul>${d.adoption.map(a => `<li>${esc(a)}</li>`).join("")}</ul>
+            </div>
+            <div class="card">
+              <h3>Country access</h3>
+              <div class="kv"><span>Registered</span><span>${d.country.registered}</span></div>
+              <div class="kv"><span>In national guidelines</span><span>${d.country.inGuidelines}</span></div>
+              <div class="kv"><span>In MFT plans</span><span>${d.country.inMft}</span></div>
+              <div class="kv"><span>Forecast demand</span><span>${esc(d.country.forecastDemand)}</span></div>
+            </div>
+            <div class="card">
+              <h3>Operational research</h3>
+              <div class="kv"><span>Lead</span><span>${esc(d.research.lead)}</span></div>
+              <div class="kv"><span>Geographies</span><span>${esc(d.research.geographies)}</span></div>
+              <div class="kv"><span>Timeline</span><span>${esc(d.research.timeline)}</span></div>
+              <p style="margin-top:6px"><em>${esc(d.research.question)}</em></p>
+            </div>
+            ${volumeCard}
+          </div>
+          <div class="mtable-box">
+            <table class="mtable">
+              <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
+              <tbody>
+                ${d.milestones.map(m => `
+                  <tr>
+                    <td>${esc(m.milestone)}</td>
+                    <td><span class="pill ${m.status}">${ICON[m.status] ? ICON[m.status] + " " : ""}${esc(m.label)}</span></td>
+                    <td>${esc(m.date)}</td>
+                    <td>${esc(m.next)}</td>
+                    <td>${esc(m.anticipated)}</td>
+                  </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+          <div class="src">${DATA.meta.illustrative
+            ? "Illustrative data for design review. Live version: each figure links to its public source and the date the manufacturer confirmed release."
+            : "Each figure reflects its cited public source; manufacturer-specific details are shown only where release was confirmed in writing."}</div>
         </div>
-        <div class="trackbox"><div class="track">${stagesHtml}</div></div>
-      </button>
-      ${p.flag ? `<div class="flagnote">${p.flag}</div>` : ""}
-      <div style="height:14px"></div>
-      <div class="detail" id="${p.id}-detail">
-        <div class="cards">
-          <div class="card">
-            <h3>Indicative price per treatment</h3>
-            <div class="big">${d.price.big}</div>
-            <div class="sub">${d.price.sub}</div>
-          </div>
-          <div class="card">
-            <h3>Target use case</h3>
-            <p>${d.usecase}</p>
-          </div>
-          <div class="card">
-            <h3>Access &amp; supply commitments</h3>
-            <ul>${d.access.map(a => `<li>${a}</li>`).join("")}</ul>
-          </div>
-          <div class="card">
-            <h3>Adoption requirements</h3>
-            <ul>${d.adoption.map(a => `<li>${a}</li>`).join("")}</ul>
-          </div>
-          <div class="card">
-            <h3>Country access</h3>
-            <div class="kv"><span>Registered</span><span>${d.country.reg}</span></div>
-            <div class="kv"><span>In national guidelines</span><span>${d.country.guide}</span></div>
-            <div class="kv"><span>In MFT plans</span><span>${d.country.mft}</span></div>
-            <div class="kv"><span>Forecast demand</span><span>${d.country.demand}</span></div>
-          </div>
-          <div class="card">
-            <h3>Operational research</h3>
-            <div class="kv"><span>Lead</span><span>${d.or.lead}</span></div>
-            <div class="kv"><span>Geographies</span><span>${d.or.where}</span></div>
-            <div class="kv"><span>Timeline</span><span>${d.or.when}</span></div>
-            <p style="margin-top:6px"><em>${d.or.q}</em></p>
-          </div>
-          ${volumeCard}
-        </div>
-        <div class="mtable-box">
-          <table class="mtable">
-            <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
-            <tbody>
-              ${d.milestones.map(m => `
-                <tr>
-                  <td>${m[0]}</td>
-                  <td><span class="pill ${m[1]}">${ICON[m[1]] ? ICON[m[1]] + " " : ""}${m[2]}</span></td>
-                  <td>${m[3]}</td>
-                  <td>${m[4]}</td>
-                  <td>${m[5]}</td>
-                </tr>`).join("")}
-            </tbody>
-          </table>
-        </div>
-        <div class="src">Illustrative data for design review. Live version: each figure links to its public source and the date the manufacturer confirmed release.</div>
-      </div>
-    </section>
-  `);
-  board.appendChild(node);
-});
-
-// future / prevention placeholder
-board.appendChild(el(`
-  <section class="product future">
-    <div class="prow" style="cursor:default">
-      <div class="pid">
-        <div class="name">Spatial emanators</div>
-        <div class="inn">Vector-control prevention tool</div>
-        <div class="mfr">SC Johnson</div>
-        <div class="chips"><span class="chip soon">Prevention · pending funder approval</span></div>
-      </div>
-      <div style="color:var(--ink-3);font-size:13.5px">
-        Planned addition to LAUNCH tracking. The same pipeline view will apply, with WHO PQ/Vector Control
-        and guideline stages adapted for prevention products.
-      </div>
-    </div>
-    <div style="height:14px"></div>
-  </section>
-`));
-
-// expand/collapse
-document.querySelectorAll(".prow[aria-controls]").forEach(btn => {
-  btn.addEventListener("click", e => {
-    if (e.target.closest(".dot")) return; // dots are for tooltips
-    const prod = btn.closest(".product");
-    const open = prod.classList.toggle("open");
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
+      </section>
+    `);
+    board.appendChild(node);
   });
-});
 
-// tooltip
-const tip = document.getElementById("tip");
-function showTip(dot) {
-  const rows = [];
-  if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
-  if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
-  if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
-  if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
-  tip.innerHTML = `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`;
-  tip.style.display = "block";
-  const r = dot.getBoundingClientRect();
-  const tw = tip.offsetWidth, th = tip.offsetHeight;
-  let x = r.left + r.width / 2 - tw / 2;
-  x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
-  let y = r.top - th - 10;
-  if (y < 8) y = r.bottom + 10;
-  tip.style.left = x + "px";
-  tip.style.top = y + "px";
-}
-document.querySelectorAll(".stage .dot").forEach(dot => {
-  dot.addEventListener("mouseenter", () => showTip(dot));
-  dot.addEventListener("focus", () => showTip(dot));
-  dot.addEventListener("mouseleave", () => tip.style.display = "none");
-  dot.addEventListener("blur", () => tip.style.display = "none");
-  dot.addEventListener("click", e => e.stopPropagation());
-});
+  // placeholder rows (e.g. prevention tools not yet approved for tracking)
+  PRODUCTS.filter(p => p.placeholder).forEach(p => {
+    board.appendChild(el(`
+      <section class="product future">
+        <div class="prow" style="cursor:default">
+          <div class="pid">
+            <div class="name">${esc(p.name)}</div>
+            <div class="inn">${esc(p.inn)}</div>
+            <div class="mfr">${esc(p.manufacturer)}</div>
+            <div class="chips"><span class="chip soon">${esc(p.classLabel)}</span></div>
+          </div>
+          <div style="color:var(--ink-3);font-size:13.5px">${esc(p.note)}</div>
+        </div>
+        <div style="height:14px"></div>
+      </section>
+    `));
+  });
+
+  // expand/collapse
+  document.querySelectorAll(".prow[aria-controls]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      if (e.target.closest(".dot")) return; // dots are for tooltips
+      const prod = btn.closest(".product");
+      const open = prod.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+
+  // tooltip
+  const tip = document.getElementById("tip");
+  function showTip(dot) {
+    const rows = [];
+    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
+    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
+    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
+    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
+    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
+    tip.innerHTML = `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`;
+    tip.style.display = "block";
+    const r = dot.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = r.left + r.width / 2 - tw / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+    let y = r.top - th - 10;
+    if (y < 8) y = r.bottom + 10;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  document.querySelectorAll(".stage .dot").forEach(dot => {
+    dot.addEventListener("mouseenter", () => showTip(dot));
+    dot.addEventListener("focus", () => showTip(dot));
+    dot.addEventListener("mouseleave", () => tip.style.display = "none");
+    dot.addEventListener("blur", () => tip.style.display = "none");
+    dot.addEventListener("click", e => e.stopPropagation());
+  });
+})();
 </script>

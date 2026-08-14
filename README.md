@@ -4,15 +4,58 @@ Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
 RBM Partnership to End Malaria.
 
-- **`index.html`** — self-contained, no build step, no backend. Open directly in a browser.
-- One row per medicine, 8 pipeline stages with traffic-light status; red flags carry
-  a one-line reason where a product is stuck. Click a row for the full product profile
-  (price, use case, access commitments, adoption requirements, country access,
-  operational research, procured volumes, milestone table).
-- All statuses, dates, prices and volumes are **illustrative placeholders** for design
-  review — not real programme data.
-- Products: GanLum (ganaplacide–lumefantrine), ALAQ (triple ACT), Pyramax
-  (pyronaridine–artesunate), DHA–PPQ (dihydroartemisinin–piperaquine), plus a
-  placeholder row for spatial emanators (prevention, pending funder approval).
+One row per medicine, 8 pipeline stages with traffic-light status; red flags carry
+a one-line reason where a product is stuck. Click a row for the full product profile
+(price, use case, access commitments, adoption requirements, country access,
+operational research, procured volumes, milestone table).
+
+**All statuses, dates, prices and volumes are illustrative placeholders** for design
+review — not real programme data (`meta.illustrative` in the data file controls the
+on-page banner).
+
+## Structure
+
+| File | Role |
+| --- | --- |
+| `index.html` | The dashboard. Static — no build step, no backend. |
+| `data/products.js` | **The only file that changes in routine updates.** Strict JSON wrapped in `window.LAUNCH_DATA =`. |
+| `scripts/validate-data.js` | Data validator — run after every data edit. |
+| `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
+
+## Updating the data
+
+1. Edit `data/products.js` (strict JSON: double quotes, no trailing commas).
+2. Validate:
+
+   ```bash
+   node scripts/validate-data.js
+   ```
+
+3. Commit and push. Nothing else to do — the page reads the data file directly.
+
+Every data point carries provenance fields:
+
+- `source` — public, citable origin of the figure
+- `asOf` — date the value was last verified (`YYYY-MM-DD`)
+- `confirmedInWriting` — manufacturer confirmed release of this figure in writing
+
+The validator enforces the governance rules, e.g.: a delayed (red) stage must carry a
+substantive reason; a product with a red stage must have a top-level bottleneck `flag`;
+a displayed price requires `confirmedInWriting: true` or a public `source`; volume
+channel splits must sum to 100.
+
+Summary stats (medicines tracked, active bottlenecks) are computed from the data at
+render time — they can never disagree with the board.
+
+## Viewing locally
+
+Open `index.html` directly in a browser (no server needed), or build the single-file
+version with `node scripts/make-preview.js` and share `preview.html` as one attachment.
+
+## Products
+
+GanLum (ganaplacide–lumefantrine), ALAQ (artemether–lumefantrine–amodiaquine triple ACT),
+Pyramax (pyronaridine–artesunate), DHA–PPQ (dihydroartemisinin–piperaquine), plus a
+placeholder row for spatial emanators (prevention tool, pending funder approval).
 
 Live preview artifact: https://claude.ai/code/artifact/94826363-58d4-466f-b731-759a6d1e8fc7
