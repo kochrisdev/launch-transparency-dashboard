@@ -1,0 +1,19 @@
+name: Validate dashboard data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate data file
+        run: node scripts/validate-data.js
+      - name: Build single-file preview (smoke test)
+        run: node scripts/make-preview.js

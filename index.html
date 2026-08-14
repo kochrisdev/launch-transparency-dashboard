@@ -203,6 +203,18 @@
   .split-legend .key { display: inline-flex; align-items: center; gap: 5px; }
   .sw { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
 
+  /* recent updates */
+  .updates {
+    margin-top: 22px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; box-shadow: var(--shadow); padding: 12px 18px;
+  }
+  .updates summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+  .updates ul { margin: 10px 0 4px; padding-left: 0; list-style: none; }
+  .updates li { display: flex; gap: 12px; font-size: 13px; color: var(--ink-2); padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .updates li:last-child { border-bottom: 0; }
+  .updates .ud { flex: none; width: 84px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .updates .up { flex: none; width: 84px; font-weight: 650; color: var(--ink); }
+
   footer { margin-top: 30px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
   footer b { color: var(--ink-2); }
 
@@ -221,11 +233,11 @@
     </div>
     <div class="meta">
       <b id="host-note">Hosted by the RBM Partnership to End Malaria</b><br>
-      <span id="updated"></span> · Data confirmed by manufacturers for public release
+      <span id="updated"></span><span id="meta-note"></span>
     </div>
   </header>
 
-  <div class="demo-banner" id="banner" hidden><b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.</div>
+  <div class="demo-banner" id="banner" hidden></div>
 
   <div class="strip" role="group" aria-label="Summary">
     <div class="stat"><span class="n" id="stat-tracked">–</span><span class="l">medicines tracked</span></div>
@@ -240,6 +252,11 @@
   </div>
 
   <div class="board" id="board"></div>
+
+  <details class="updates" id="updates" hidden>
+    <summary>Recent updates</summary>
+    <ul id="updates-list"></ul>
+  </details>
 
   <footer>
     <b>About the data.</b> The LAUNCH dashboard displays publicly available information only. Product-specific details
@@ -276,7 +293,24 @@
   const dt = new Date(DATA.meta.lastUpdated + "T00:00:00");
   document.getElementById("updated").textContent = "Last updated " +
     dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-  banner.hidden = !DATA.meta.illustrative;
+
+  const status = DATA.meta.dataStatus;
+  const BANNERS = {
+    illustrative: "<b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.",
+    draft: "<b>Draft data.</b> Compiled from public sources and pending LAUNCH team verification and manufacturer written confirmation. Unverified values are shown as TBC, never estimated."
+  };
+  if (BANNERS[status]) { banner.hidden = false; banner.innerHTML = BANNERS[status]; }
+  document.getElementById("meta-note").textContent =
+    status === "live" ? " · Data confirmed by manufacturers for public release" : " · " + status + " data";
+
+  // changelog
+  const updates = DATA.changelog || [];
+  if (updates.length) {
+    document.getElementById("updates").hidden = false;
+    document.getElementById("updates-list").innerHTML = updates.slice(0, 8).map(u =>
+      `<li><span class="ud">${u.date}</span><span class="up">${u.product}</span><span>${u.change}</span></li>`
+    ).join("");
+  }
 
   // summary stats derived from the data, never hand-typed
   const tracked = PRODUCTS.filter(p => !p.placeholder);
@@ -326,7 +360,7 @@
       <div class="card">
         <h3>Treatments procured</h3>
         <div class="big">—</div>
-        <div class="sub">Not yet procured — pre-launch</div>
+        <div class="sub">${esc(d.volumeNote || "Data not yet available")}</div>
       </div>`;
 
     const priceProv = [
@@ -401,8 +435,10 @@
               </tbody>
             </table>
           </div>
-          <div class="src">${DATA.meta.illustrative
+          <div class="src">${status === "illustrative"
             ? "Illustrative data for design review. Live version: each figure links to its public source and the date the manufacturer confirmed release."
+            : status === "draft"
+            ? "Draft data compiled from public sources — pending verification. Manufacturer-specific details will appear only once release is confirmed in writing."
             : "Each figure reflects its cited public source; manufacturer-specific details are shown only where release was confirmed in writing."}</div>
         </div>
       </section>

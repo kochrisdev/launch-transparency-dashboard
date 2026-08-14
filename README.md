@@ -9,9 +9,12 @@ a one-line reason where a product is stuck. Click a row for the full product pro
 (price, use case, access commitments, adoption requirements, country access,
 operational research, procured volumes, milestone table).
 
-**All statuses, dates, prices and volumes are illustrative placeholders** for design
-review — not real programme data (`meta.illustrative` in the data file controls the
-on-page banner).
+**Data status: draft** — compiled from public sources (WHO PQ list, WHO guidelines,
+EMA, Novartis/MMV/MORU announcements) and pending LAUNCH team verification and
+manufacturer written confirmation. Unverified values are shown as `TBC`, never
+estimated. `meta.dataStatus` in the data file (`illustrative` / `draft` / `live`)
+controls the on-page banner. See [UPDATING.md](UPDATING.md) for the update workflow,
+governance rules, and the manufacturer confirmation register.
 
 ## Structure
 
@@ -21,6 +24,8 @@ on-page banner).
 | `data/products.js` | **The only file that changes in routine updates.** Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
+| `UPDATING.md` | Operating manual: update loop, governance rules, confirmation register, cadence. |
+| `.github/workflows/validate.yml` | CI — every push and PR must pass the data validator. |
 
 ## Updating the data
 

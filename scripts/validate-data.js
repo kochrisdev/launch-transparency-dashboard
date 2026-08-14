@@ -35,12 +35,23 @@ try {
 }
 
 // ---- meta ------------------------------------------------------------------
+const DATA_STATUSES = ["illustrative", "draft", "live"];
 if (!data.meta) err("meta: missing");
 else {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.meta.lastUpdated || ""))
     err(`meta.lastUpdated: must be YYYY-MM-DD, got "${data.meta.lastUpdated}"`);
-  if (typeof data.meta.illustrative !== "boolean")
-    err("meta.illustrative: must be true or false (controls the mockup banner)");
+  if (!DATA_STATUSES.includes(data.meta.dataStatus))
+    err(`meta.dataStatus: must be one of ${DATA_STATUSES.join("/")} (controls the on-page banner), got "${data.meta.dataStatus}"`);
+}
+
+// ---- changelog ---------------------------------------------------------------
+if (data.changelog !== undefined) {
+  if (!Array.isArray(data.changelog)) err("changelog: must be an array");
+  else data.changelog.forEach((c, ci) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(c.date || "")) err(`changelog[${ci}]: date must be YYYY-MM-DD`);
+    if (!c.product) err(`changelog[${ci}]: "product" is required (product name or "All")`);
+    if (!c.change || c.change.trim().length < 10) err(`changelog[${ci}]: "change" must describe what changed`);
+  });
 }
 
 // ---- stages ----------------------------------------------------------------
@@ -113,10 +124,16 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
       if (shown && !d.price.asOf) warn(`${tag}: detail.price has no "asOf" date`);
     }
     if (d.country) {
-      for (const k of ["registered", "inGuidelines", "inMft"])
-        if (!Number.isInteger(d.country[k]) || d.country[k] < 0)
-          err(`${tag}: detail.country.${k} must be a non-negative integer`);
+      for (const k of ["registered", "inGuidelines", "inMft"]) {
+        const v = d.country[k];
+        // "TBC" is the honest value for a count we haven't verified yet —
+        // an invented number is worse than an admitted gap.
+        if (v !== "TBC" && (!Number.isInteger(v) || v < 0))
+          err(`${tag}: detail.country.${k} must be a non-negative integer or "TBC"`);
+      }
     }
+    if (d.volume === null && !d.volumeNote)
+      warn(`${tag}: no volume data and no "volumeNote" explaining why`);
     if (d.volume) {
       if (!d.volume.total || !d.volume.period || !Array.isArray(d.volume.split))
         err(`${tag}: detail.volume needs total, period and split[]`);
