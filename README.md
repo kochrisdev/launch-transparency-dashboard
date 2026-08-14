@@ -1,4 +1,4 @@
-# LAUNCH Transparency Dashboard
+# LAUNCH Transparency Dashboard (Prototype)
 
 **Live site: https://kochrisdev.github.io/launch-transparency-dashboard/**
 
