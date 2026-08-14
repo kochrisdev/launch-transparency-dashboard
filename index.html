@@ -1,0 +1,594 @@
+<title>LAUNCH Transparency Dashboard</title>
+<style>
+  :root {
+    --ground: #F5F7F8;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F3;
+    --ink: #16303F;
+    --ink-2: #4E6371;
+    --ink-3: #7C8E99;
+    --line: #D8E0E4;
+    --accent: #14657E;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E3EEF2;
+    --good: #1E8A5A;
+    --good-soft: #E2F2EA;
+    --warn: #B87500;
+    --warn-soft: #FBF0DA;
+    --crit: #C0392B;
+    --crit-soft: #FAE7E4;
+    --idle: #9AA8B1;
+    --idle-soft: #EEF1F3;
+    --shadow: 0 1px 2px rgba(22,48,63,.06), 0 4px 16px rgba(22,48,63,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101B22;
+      --surface: #17252E;
+      --surface-2: #1E3039;
+      --ink: #E7EEF2;
+      --ink-2: #A9BBC5;
+      --ink-3: #7C919D;
+      --line: #2B404C;
+      --accent: #4FA8C3;
+      --accent-ink: #0D1D25;
+      --accent-soft: #1C3947;
+      --good: #47B983;
+      --good-soft: #16352A;
+      --warn: #E0A63C;
+      --warn-soft: #3A2E14;
+      --crit: #E06A5C;
+      --crit-soft: #40201C;
+      --idle: #647883;
+      --idle-soft: #22333C;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101B22;
+    --surface: #17252E;
+    --surface-2: #1E3039;
+    --ink: #E7EEF2;
+    --ink-2: #A9BBC5;
+    --ink-3: #7C919D;
+    --line: #2B404C;
+    --accent: #4FA8C3;
+    --accent-ink: #0D1D25;
+    --accent-soft: #1C3947;
+    --good: #47B983;
+    --good-soft: #16352A;
+    --warn: #E0A63C;
+    --warn-soft: #3A2E14;
+    --crit: #E06A5C;
+    --crit-soft: #40201C;
+    --idle: #647883;
+    --idle-soft: #22333C;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 15px/1.5 -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 56px; }
+
+  /* ---------- header ---------- */
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; margin-bottom: 6px; }
+  .brand h1 { margin: 0; font-size: 26px; font-weight: 750; letter-spacing: -.01em; }
+  .brand h1 span { color: var(--accent); }
+  .brand p { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; max-width: 60ch; }
+  .meta { margin-left: auto; text-align: right; font-size: 12.5px; color: var(--ink-3); line-height: 1.6; }
+  .meta b { color: var(--ink-2); font-weight: 600; }
+  .demo-banner {
+    margin: 18px 0 20px; padding: 9px 14px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--ink-2); font-size: 13px;
+    border: 1px solid var(--line);
+  }
+  .demo-banner b { color: var(--ink); }
+
+  /* ---------- summary + legend strip ---------- */
+  .strip {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px;
+    padding: 12px 18px; margin-bottom: 22px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+  }
+  .stat { display: flex; align-items: baseline; gap: 7px; }
+  .stat .n { font-size: 22px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .stat .n.crit-n { color: var(--crit); }
+  .stat .l { font-size: 12.5px; color: var(--ink-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-left: auto; font-size: 12.5px; color: var(--ink-2); }
+  .legend .key { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* status dots (shape + color, never color alone) */
+  .dot { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 11px; font-weight: 800; }
+  .dot svg { display: block; }
+  .dot.done { background: var(--good); color: #fff; }
+  .dot.prog { background: var(--warn); color: #fff; }
+  .dot.late { background: var(--crit); color: #fff; }
+  .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
+
+  /* ---------- product rows ---------- */
+  .board { display: flex; flex-direction: column; gap: 14px; }
+  .product {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .product.future { opacity: .78; }
+  .prow {
+    display: grid; grid-template-columns: 250px 1fr; gap: 20px; align-items: center;
+    padding: 18px 20px; cursor: pointer; width: 100%;
+    background: none; border: 0; text-align: left; color: inherit; font: inherit;
+  }
+  .prow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 14px; }
+  .pid .name { font-size: 16.5px; font-weight: 700; letter-spacing: -.005em; }
+  .pid .inn { color: var(--ink-2); font-size: 13px; margin-top: 1px; }
+  .pid .mfr { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    font-size: 11px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+    padding: 2.5px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2);
+  }
+  .chip.pipeline { background: var(--accent-soft); color: var(--accent); }
+  .chip.flag { background: var(--crit-soft); color: var(--crit); text-transform: none; letter-spacing: 0; font-weight: 600; }
+  .chip.soon { background: var(--idle-soft); color: var(--ink-3); }
+
+  /* pipeline track */
+  .trackbox { overflow-x: auto; }
+  .track { display: flex; align-items: flex-start; min-width: 640px; }
+  .stage { flex: 1; min-width: 76px; position: relative; text-align: center; }
+  .stage .row { display: flex; align-items: center; }
+  .stage .bar { flex: 1; height: 3px; background: var(--line); }
+  .stage .bar.done-bar { background: var(--good); }
+  .stage:first-child .bar.pre, .stage:last-child .bar.post { visibility: hidden; }
+  .stage .lbl { font-size: 11px; line-height: 1.25; color: var(--ink-3); margin-top: 7px; padding: 0 3px; }
+  .stage.cur .lbl { color: var(--ink); font-weight: 650; }
+  .stage .dot { margin: 0 2px; cursor: help; }
+  .stage.cur .dot { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .flagnote {
+    margin: 10px 20px 0 290px; font-size: 12.5px; color: var(--crit);
+    display: flex; gap: 7px; align-items: baseline;
+  }
+  .flagnote::before { content: "▲"; font-size: 9px; }
+
+  /* ---------- tooltip ---------- */
+  #tip {
+    position: fixed; z-index: 50; max-width: 280px; pointer-events: none;
+    background: var(--ink); color: var(--ground); padding: 10px 12px; border-radius: 8px;
+    font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow); display: none;
+  }
+  #tip b { display: block; margin-bottom: 2px; }
+  #tip .trow { display: flex; gap: 8px; justify-content: space-between; }
+  #tip .trow span:first-child { opacity: .7; }
+
+  /* ---------- detail panel ---------- */
+  .detail { display: none; border-top: 1px solid var(--line); background: var(--surface-2); padding: 20px; }
+  .product.open .detail { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .card .big { font-size: 24px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .card .sub { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); }
+  .card ul li { margin: 3px 0; }
+  .card p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+  .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+  .kv:last-child { border-bottom: 0; }
+  .kv span:first-child { color: var(--ink-2); }
+  .kv span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+  .mtable-box { overflow-x: auto; margin-top: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  table.mtable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+  .mtable th {
+    text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 700; padding: 10px 14px; border-bottom: 1px solid var(--line);
+  }
+  .mtable td { padding: 9px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+  .mtable tr:last-child td { border-bottom: 0; }
+  .mtable td:first-child { color: var(--ink); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--good-soft); color: var(--good); }
+  .pill.prog { background: var(--warn-soft); color: var(--warn); }
+  .pill.late { background: var(--crit-soft); color: var(--crit); }
+  .pill.idle { background: var(--idle-soft); color: var(--ink-3); }
+  .src { font-size: 11.5px; color: var(--ink-3); margin-top: 10px; }
+  .caret { margin-left: auto; color: var(--ink-3); font-size: 12px; transition: transform .15s; grid-column: 2; justify-self: end; align-self: start; }
+
+  /* channel split bar */
+  .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin: 8px 0 6px; }
+  .split div + div { margin-left: 2px; }
+  .split-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+  .split-legend .key { display: inline-flex; align-items: center; gap: 5px; }
+  .sw { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+  footer { margin-top: 30px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer b { color: var(--ink-2); }
+
+  @media (max-width: 760px) {
+    .prow { grid-template-columns: 1fr; }
+    .flagnote { margin-left: 20px; }
+    .meta { text-align: left; margin-left: 0; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1><span>LAUNCH</span> Transparency Dashboard</h1>
+      <p>Tracking new antimalarial medicines from approval to access — where each product stands, and where it is stuck.</p>
+    </div>
+    <div class="meta">
+      <b>Hosted by the RBM Partnership to End Malaria</b><br>
+      Last updated 14 Aug 2026 · Data confirmed by manufacturers for public release
+    </div>
+  </header>
+
+  <div class="demo-banner"><b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.</div>
+
+  <div class="strip" role="group" aria-label="Summary">
+    <div class="stat"><span class="n">4</span><span class="l">medicines tracked</span></div>
+    <div class="stat"><span class="n crit-n">3</span><span class="l">active bottlenecks</span></div>
+    <div class="stat"><span class="n">2</span><span class="l">expected to market ≤ 3 yrs</span></div>
+    <div class="legend" aria-label="Status legend">
+      <span class="key"><span class="dot done" aria-hidden="true">✓</span> Complete</span>
+      <span class="key"><span class="dot prog" aria-hidden="true">›</span> In progress</span>
+      <span class="key"><span class="dot late" aria-hidden="true">!</span> Delayed / bottleneck</span>
+      <span class="key"><span class="dot idle" aria-hidden="true"></span> Not started</span>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <footer>
+    <b>About the data.</b> The LAUNCH dashboard displays publicly available information only. Product-specific details
+    (including pricing) appear solely where the manufacturer has confirmed in writing that they may be shared.
+    Hover any stage for status detail; select a medicine to open its full profile.<br>
+    <b>Sources.</b> WHO Guidelines &amp; Prequalification updates · stringent regulatory authority registers ·
+    national regulatory authorities · Global Fund / PMI procurement data · manufacturer communications.
+    A LAUNCH initiative of Unitaid partners, hosted on RBM dashboards.
+  </footer>
+</div>
+
+<div id="tip" role="tooltip"></div>
+
+<script>
+const STAGES = [
+  "R&D & clinical",
+  "Regulatory approval (SRA)",
+  "WHO guidelines",
+  "WHO prequalification",
+  "Country registration",
+  "National policy adoption",
+  "Procurement",
+  "In-country delivery"
+];
+
+// status: done | prog | late | idle
+const PRODUCTS = [
+  {
+    id: "ganlum",
+    name: "GanLum",
+    inn: "Ganaplacide–lumefantrine",
+    mfr: "Novartis · MMV",
+    cls: "pipeline", clsLabel: "Pipeline · new chemical class",
+    current: 0,
+    stages: [
+      { s: "prog", note: "Phase III ongoing (multi-country, incl. Mali, Burkina Faso)", date: "Readout expected Q3 2027", next: "Complete Phase III enrolment" },
+      { s: "idle", note: "Not started", next: "Dossier submission planned after Phase III", date: "Anticipated 2028" },
+      { s: "idle", note: "Not started", next: "Early WHO GDG engagement underway informally" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" }
+    ],
+    flag: null,
+    detail: {
+      price: { big: "TBC", sub: "Pricing discussions not yet public" },
+      usecase: "First non-artemisinin combination — candidate for MFT strategies and artemisinin partial-resistance settings.",
+      access: ["MMV co-development agreement in place", "Access provisions under negotiation", "Manufacturing scale-up plan in design"],
+      adoption: ["New chemical class — pharmacovigilance plan required", "Health-worker training on new regimen"],
+      or: { lead: "MMV / Novartis", where: "Mali, Burkina Faso, Gabon", when: "Ongoing → 2027", q: "Efficacy in partial-resistance settings" },
+      country: { reg: 0, guide: 0, mft: 0, demand: "—" },
+      volume: null,
+      milestones: [
+        ["Phase III trials", "prog", "In progress", "Ongoing", "Readout", "Q3 2027"],
+        ["SRA dossier submission", "idle", "Not started", "—", "Submission", "2028"],
+        ["WHO GDG engagement", "idle", "Not started", "—", "Pre-submission dialogue", "2027"],
+        ["WHO prequalification", "idle", "Not started", "—", "—", "TBD"]
+      ]
+    }
+  },
+  {
+    id: "alaq",
+    name: "ALAQ",
+    inn: "Artemether–lumefantrine–amodiaquine (triple ACT)",
+    mfr: "Marketing partner TBC · MORU / DNDi",
+    cls: "pipeline", clsLabel: "Pipeline · triple ACT",
+    current: 2,
+    stages: [
+      { s: "done", note: "Phase III complete (DeTACT trials)", date: "Completed Jan 2025" },
+      { s: "prog", note: "Dossier under SRA review", date: "Submitted 12 Feb 2026", next: "SRA assessment", nextDate: "Q1 2027" },
+      { s: "late", note: "GDG review slipped from Q3 2026 to Q1 2027 (+2 quarters) — committee scheduling", date: "Was Q3 2026", next: "GDG meeting", nextDate: "Q1 2027" },
+      { s: "idle", note: "Not started", next: "PQ dossier after SRA opinion" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" },
+      { s: "idle", note: "Not started" }
+    ],
+    flag: "WHO guideline review delayed — GDG meeting moved from Q3 2026 to Q1 2027 (+2 quarters)",
+    detail: {
+      price: { big: "US$ 1.25", sub: "Indicative per adult treatment at launch · GDF price commitment" },
+      usecase: "MFT component and first-line option where artemisinin partial resistance is confirmed.",
+      access: ["Price commitment with GDF", "Registration footprint planned in 30+ endemic countries", "Manufacturing capacity secured", "Out-licensing agreements in place"],
+      adoption: ["Updated treatment guidelines and job aids", "Health-worker training (new 3-drug regimen)"],
+      or: { lead: "Jhpiego (ASPY-linked OR network)", where: "DRC, Rwanda, Nigeria, Uganda", when: "Sep 2025 → Aug 2029", q: "Adherence and safety of triple ACT at scale" },
+      country: { reg: 0, guide: 0, mft: 7, demand: "12.8M forecast (2028)" },
+      volume: null,
+      milestones: [
+        ["Safety & efficacy (Phase III)", "done", "Complete", "24 Jan 2025", "—", "—"],
+        ["Dossier submission (SRA pathway)", "prog", "Submitted", "12 Feb 2026", "SRA assessment", "Q1 2027"],
+        ["WHO GDG engagement", "prog", "In progress", "Ongoing", "GDG meeting", "Q1 2027"],
+        ["WHO guidelines update", "late", "Delayed +2 qtrs", "—", "Draft guideline review", "Q1 2027"],
+        ["WHO prequalification", "idle", "Not started", "—", "Dossier submission", "Q3 2027"],
+        ["GMP inspection", "idle", "Not started", "—", "Scheduling", "TBD"],
+        ["Country regulatory review", "idle", "Not started", "—", "National submissions (incl. AMA)", "TBD"]
+      ]
+    }
+  },
+  {
+    id: "pyramax",
+    name: "Pyramax",
+    inn: "Pyronaridine–artesunate",
+    mfr: "Shin Poong Pharmaceutical · MMV",
+    cls: "market", clsLabel: "Recommended · underutilized",
+    current: 5,
+    stages: [
+      { s: "done", note: "Development complete", date: "—" },
+      { s: "done", note: "EMA positive opinion (Article 58)", date: "2015" },
+      { s: "done", note: "WHO recommended for uncomplicated malaria", date: "2022" },
+      { s: "done", note: "WHO prequalified (tablets & granules)", date: "2022" },
+      { s: "prog", note: "Registered in 24 endemic countries; 8 applications pending", date: "Rolling", next: "6 further registrations", nextDate: "2027" },
+      { s: "late", note: "In only 6 national treatment guidelines despite WHO recommendation — key adoption gap", next: "3 guideline committees reviewing", nextDate: "Q4 2026" },
+      { s: "prog", note: "Eligible for Global Fund procurement; volumes still low", date: "0.9M treatments (2024–25)" },
+      { s: "idle", note: "Limited routine delivery outside pilot districts" }
+    ],
+    flag: "Policy adoption is the bottleneck — WHO-recommended since 2022 but included in only 6 national guidelines",
+    detail: {
+      price: { big: "US$ 0.98", sub: "Indicative per adult treatment · Global Fund reference price" },
+      usecase: "First-line diversification / MFT component; paediatric granules available.",
+      access: ["WHO PQ held for two formulations", "Registration footprint: 24 countries and expanding", "Volume capacity confirmed by manufacturer"],
+      adoption: ["Guideline inclusion and case-management training", "No cold chain or special administration needs"],
+      or: { lead: "MMV country pilots", where: "Burkina Faso, Kenya, Cambodia", when: "2024 → 2027", q: "MFT deployment models with pyronaridine–artesunate" },
+      country: { reg: 24, guide: 6, mft: 4, demand: "4.1M forecast (2027)" },
+      volume: { total: "0.9M", period: "2024–2025", split: [ ["Global Fund", 62], ["PMI / USAID", 21], ["Domestic public", 12], ["Private sector", 5] ] },
+      milestones: [
+        ["SRA approval (EMA Art. 58)", "done", "Complete", "2015", "—", "—"],
+        ["WHO guideline recommendation", "done", "Complete", "2022", "—", "—"],
+        ["WHO prequalification", "done", "Complete", "2022", "—", "—"],
+        ["Country registrations", "prog", "24 of 30 targeted", "Rolling", "6 pending", "2027"],
+        ["National guideline inclusion", "late", "6 countries", "—", "3 committees in review", "Q4 2026"],
+        ["Procurement scale-up", "prog", "0.9M treatments", "2024–25", "Global Fund tender", "Q2 2027"]
+      ]
+    }
+  },
+  {
+    id: "dhappq",
+    name: "DHA–PPQ",
+    inn: "Dihydroartemisinin–piperaquine",
+    mfr: "Multiple prequalified manufacturers",
+    cls: "market", clsLabel: "Recommended · underutilized",
+    current: 6,
+    stages: [
+      { s: "done", note: "Development complete", date: "—" },
+      { s: "done", note: "EMA approval (Eurartesim)", date: "2011" },
+      { s: "done", note: "WHO recommended for uncomplicated malaria", date: "2015" },
+      { s: "done", note: "WHO prequalified (multiple products)", date: "2019" },
+      { s: "done", note: "Registered in 30+ endemic countries", date: "Rolling" },
+      { s: "prog", note: "In 11 national guidelines; MFT planning in 5 countries", next: "MFT strategy decisions", nextDate: "2027" },
+      { s: "late", note: "Under 5% of global ACT procurement volume — chronic underuse vs recommendation", date: "1.5M treatments (2024–25)" },
+      { s: "prog", note: "Routine delivery in 9 countries, mostly seasonal/IPT niches" }
+    ],
+    flag: "Procurement is the bottleneck — fully approved for a decade yet <5% of global ACT volumes",
+    detail: {
+      price: { big: "US$ 1.10", sub: "Indicative per adult treatment · pooled procurement reference" },
+      usecase: "MFT rotation partner and mass drug administration / chemoprevention niches.",
+      access: ["Multiple PQ'd suppliers — supply security via diversity", "No single-source dependency", "Established API supply chains"],
+      adoption: ["ECG guidance for specific risk groups in some guidelines", "Otherwise standard ACT case-management training"],
+      or: { lead: "Multiple academic consortia", where: "Mozambique, Tanzania, Senegal", when: "2023 → 2026", q: "MFT rotation sequencing and resistance impact" },
+      country: { reg: 32, guide: 11, mft: 5, demand: "9.4M forecast (2027)" },
+      volume: { total: "1.5M", period: "2024–2025", split: [ ["Global Fund", 48], ["Domestic public", 27], ["PMI / USAID", 15], ["Private sector", 10] ] },
+      milestones: [
+        ["SRA approval (EMA)", "done", "Complete", "2011", "—", "—"],
+        ["WHO guideline recommendation", "done", "Complete", "2015", "—", "—"],
+        ["WHO prequalification", "done", "Complete", "2019", "—", "—"],
+        ["Country registrations", "done", "32 countries", "Rolling", "—", "—"],
+        ["National guideline inclusion", "prog", "11 countries", "—", "MFT strategy decisions", "2027"],
+        ["Procurement scale-up", "late", "<5% of ACT volume", "2024–25", "Demand consolidation via GF", "2027"]
+      ]
+    }
+  }
+];
+
+const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
+const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+
+const board = document.getElementById("board");
+
+function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
+
+PRODUCTS.forEach(p => {
+  const stagesHtml = p.stages.map((st, i) => {
+    const preDone = i > 0 && (p.stages[i-1].s === "done");
+    const postDone = st.s === "done";
+    return `
+      <div class="stage ${i === p.current ? "cur" : ""}">
+        <div class="row">
+          <div class="bar pre ${preDone ? "done-bar" : ""}"></div>
+          <span class="dot ${st.s}" tabindex="0" role="img"
+            aria-label="${esc(STAGES[i])}: ${LABEL[st.s]}. ${esc(st.note || "")}"
+            data-stage="${esc(STAGES[i])}" data-status="${st.s}"
+            data-note="${esc(st.note || "")}" data-date="${esc(st.date || "")}"
+            data-next="${esc(st.next || "")}" data-nextdate="${esc(st.nextDate || "")}">${ICON[st.s]}</span>
+          <div class="bar post ${postDone ? "done-bar" : ""}"></div>
+        </div>
+        <div class="lbl">${STAGES[i]}</div>
+      </div>`;
+  }).join("");
+
+  const d = p.detail;
+  const volumeCard = d.volume ? `
+    <div class="card">
+      <h3>Treatments procured · ${d.volume.period}</h3>
+      <div class="big">${d.volume.total}</div>
+      <div class="split" aria-hidden="true">
+        ${d.volume.split.map((s, i) => {
+          const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
+          return `<div style="width:${s[1]}%;background:${shades[i]}" title="${s[0]} ${s[1]}%"></div>`;
+        }).join("")}
+      </div>
+      <div class="split-legend">
+        ${d.volume.split.map((s, i) => {
+          const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
+          return `<span class="key"><span class="sw" style="background:${shades[i]}"></span>${s[0]} ${s[1]}%</span>`;
+        }).join("")}
+      </div>
+    </div>` : `
+    <div class="card">
+      <h3>Treatments procured</h3>
+      <div class="big">—</div>
+      <div class="sub">Not yet procured — pre-launch</div>
+    </div>`;
+
+  const node = el(`
+    <section class="product ${p.cls}" id="${p.id}">
+      <button class="prow" aria-expanded="false" aria-controls="${p.id}-detail">
+        <div class="pid">
+          <div class="name">${p.name}</div>
+          <div class="inn">${p.inn}</div>
+          <div class="mfr">${p.mfr}</div>
+          <div class="chips">
+            <span class="chip ${p.cls === "pipeline" ? "pipeline" : ""}">${p.clsLabel}</span>
+          </div>
+        </div>
+        <div class="trackbox"><div class="track">${stagesHtml}</div></div>
+      </button>
+      ${p.flag ? `<div class="flagnote">${p.flag}</div>` : ""}
+      <div style="height:14px"></div>
+      <div class="detail" id="${p.id}-detail">
+        <div class="cards">
+          <div class="card">
+            <h3>Indicative price per treatment</h3>
+            <div class="big">${d.price.big}</div>
+            <div class="sub">${d.price.sub}</div>
+          </div>
+          <div class="card">
+            <h3>Target use case</h3>
+            <p>${d.usecase}</p>
+          </div>
+          <div class="card">
+            <h3>Access &amp; supply commitments</h3>
+            <ul>${d.access.map(a => `<li>${a}</li>`).join("")}</ul>
+          </div>
+          <div class="card">
+            <h3>Adoption requirements</h3>
+            <ul>${d.adoption.map(a => `<li>${a}</li>`).join("")}</ul>
+          </div>
+          <div class="card">
+            <h3>Country access</h3>
+            <div class="kv"><span>Registered</span><span>${d.country.reg}</span></div>
+            <div class="kv"><span>In national guidelines</span><span>${d.country.guide}</span></div>
+            <div class="kv"><span>In MFT plans</span><span>${d.country.mft}</span></div>
+            <div class="kv"><span>Forecast demand</span><span>${d.country.demand}</span></div>
+          </div>
+          <div class="card">
+            <h3>Operational research</h3>
+            <div class="kv"><span>Lead</span><span>${d.or.lead}</span></div>
+            <div class="kv"><span>Geographies</span><span>${d.or.where}</span></div>
+            <div class="kv"><span>Timeline</span><span>${d.or.when}</span></div>
+            <p style="margin-top:6px"><em>${d.or.q}</em></p>
+          </div>
+          ${volumeCard}
+        </div>
+        <div class="mtable-box">
+          <table class="mtable">
+            <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
+            <tbody>
+              ${d.milestones.map(m => `
+                <tr>
+                  <td>${m[0]}</td>
+                  <td><span class="pill ${m[1]}">${ICON[m[1]] ? ICON[m[1]] + " " : ""}${m[2]}</span></td>
+                  <td>${m[3]}</td>
+                  <td>${m[4]}</td>
+                  <td>${m[5]}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="src">Illustrative data for design review. Live version: each figure links to its public source and the date the manufacturer confirmed release.</div>
+      </div>
+    </section>
+  `);
+  board.appendChild(node);
+});
+
+// future / prevention placeholder
+board.appendChild(el(`
+  <section class="product future">
+    <div class="prow" style="cursor:default">
+      <div class="pid">
+        <div class="name">Spatial emanators</div>
+        <div class="inn">Vector-control prevention tool</div>
+        <div class="mfr">SC Johnson</div>
+        <div class="chips"><span class="chip soon">Prevention · pending funder approval</span></div>
+      </div>
+      <div style="color:var(--ink-3);font-size:13.5px">
+        Planned addition to LAUNCH tracking. The same pipeline view will apply, with WHO PQ/Vector Control
+        and guideline stages adapted for prevention products.
+      </div>
+    </div>
+    <div style="height:14px"></div>
+  </section>
+`));
+
+// expand/collapse
+document.querySelectorAll(".prow[aria-controls]").forEach(btn => {
+  btn.addEventListener("click", e => {
+    if (e.target.closest(".dot")) return; // dots are for tooltips
+    const prod = btn.closest(".product");
+    const open = prod.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+});
+
+// tooltip
+const tip = document.getElementById("tip");
+function showTip(dot) {
+  const rows = [];
+  if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
+  if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
+  if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
+  if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
+  tip.innerHTML = `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`;
+  tip.style.display = "block";
+  const r = dot.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = r.left + r.width / 2 - tw / 2;
+  x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+  let y = r.top - th - 10;
+  if (y < 8) y = r.bottom + 10;
+  tip.style.left = x + "px";
+  tip.style.top = y + "px";
+}
+document.querySelectorAll(".stage .dot").forEach(dot => {
+  dot.addEventListener("mouseenter", () => showTip(dot));
+  dot.addEventListener("focus", () => showTip(dot));
+  dot.addEventListener("mouseleave", () => tip.style.display = "none");
+  dot.addEventListener("blur", () => tip.style.display = "none");
+  dot.addEventListener("click", e => e.stopPropagation());
+});
+</script>
