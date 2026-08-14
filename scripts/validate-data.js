@@ -44,6 +44,15 @@ else {
     err(`meta.dataStatus: must be one of ${DATA_STATUSES.join("/")} (controls the on-page banner), got "${data.meta.dataStatus}"`);
 }
 
+// ---- glossary ----------------------------------------------------------------
+if (data.glossary !== undefined) {
+  if (typeof data.glossary !== "object" || Array.isArray(data.glossary)) err("glossary: must be an object of term → definition");
+  else for (const [term, def] of Object.entries(data.glossary)) {
+    if (!term.trim()) err("glossary: empty term key");
+    if (typeof def !== "string" || def.trim().length < 20) err(`glossary["${term}"]: definition must be a real sentence`);
+  }
+}
+
 // ---- changelog ---------------------------------------------------------------
 if (data.changelog !== undefined) {
   if (!Array.isArray(data.changelog)) err("changelog: must be an array");
@@ -130,6 +139,21 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
         // an invented number is worse than an admitted gap.
         if (v !== "TBC" && (!Number.isInteger(v) || v < 0))
           err(`${tag}: detail.country.${k} must be a non-negative integer or "TBC"`);
+      }
+    }
+    if (d.journey !== undefined) {
+      if (!Array.isArray(d.journey) || d.journey.length < 2) err(`${tag}: detail.journey must be an array of at least 2 gates`);
+      else {
+        let prev = null;
+        d.journey.forEach((g, gi) => {
+          if (!g.label || !g.label.trim()) err(`${tag}: journey[${gi}] needs a "label"`);
+          const y = g.year;
+          if (y !== "TBC" && (!Number.isInteger(y) || y < 1990 || y > 2100))
+            err(`${tag}: journey[${gi}].year must be a year (1990–2100) or "TBC"`);
+          if (Number.isInteger(y) && Number.isInteger(prev) && y < prev)
+            warn(`${tag}: journey[${gi}] year ${y} is earlier than the previous gate (${prev}) — check the order`);
+          if (Number.isInteger(y)) prev = y;
+        });
       }
     }
     if (d.volume === null && !d.volumeNote)

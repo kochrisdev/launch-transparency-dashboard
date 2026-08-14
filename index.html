@@ -218,6 +218,44 @@
   footer { margin-top: 30px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
   footer b { color: var(--ink-2); }
 
+  /* glossary terms */
+  .gloss { text-decoration: underline dotted; text-decoration-color: var(--ink-3); text-underline-offset: 2px; cursor: help; }
+  .gloss:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+  .glossary-panel .gt { flex: none; width: 84px; font-weight: 650; color: var(--ink); }
+
+  /* pathway timing (journey) */
+  .journey-wrap { margin-top: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .journey-wrap h3 { margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .journey-wrap .jnote { font-size: 12px; color: var(--ink-3); margin: 0 0 10px; }
+  .journey { display: flex; align-items: flex-start; overflow-x: auto; padding-bottom: 4px; }
+  .jnode { text-align: center; min-width: 108px; flex: none; }
+  .jnode .jyear { font-weight: 750; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .jnode .jyear.tbc { color: var(--ink-3); }
+  .jnode .jlbl { font-size: 11.5px; line-height: 1.3; color: var(--ink-2); margin-top: 3px; padding: 0 4px; }
+  .jgap { align-self: flex-start; margin: 1px 4px 0; flex: none; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 650; white-space: nowrap; }
+  .jgap.g-good { background: var(--good-soft); color: var(--good); }
+  .jgap.g-warn { background: var(--warn-soft); color: var(--warn); }
+  .jgap.g-crit { background: var(--crit-soft); color: var(--crit); }
+  .jgap.g-tbc { background: var(--idle-soft); color: var(--ink-3); }
+
+  /* download button */
+  .dl-btn {
+    margin-left: auto; background: var(--accent); color: var(--accent-ink); border: 0;
+    border-radius: 8px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+  }
+  .dl-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .strip .legend { margin-left: 0; }
+
+  /* print view */
+  @media print {
+    body { background: #fff; }
+    .product .detail { display: block !important; }
+    .product { break-inside: avoid; box-shadow: none; }
+    .dl-btn, #tip { display: none !important; }
+    .updates, .glossary-panel { display: block; }
+    .updates[open] summary, .glossary-panel[open] summary { list-style: none; }
+  }
+
   @media (max-width: 760px) {
     .prow { grid-template-columns: 1fr; }
     .flagnote { margin-left: 20px; }
@@ -249,6 +287,7 @@
       <span class="key"><span class="dot late" aria-hidden="true">!</span> Delayed / bottleneck</span>
       <span class="key"><span class="dot idle" aria-hidden="true"></span> Not started</span>
     </div>
+    <button class="dl-btn" id="dl-csv" type="button">Download CSV</button>
   </div>
 
   <div class="board" id="board"></div>
@@ -256,6 +295,11 @@
   <details class="updates" id="updates" hidden>
     <summary>Recent updates</summary>
     <ul id="updates-list"></ul>
+  </details>
+
+  <details class="updates glossary-panel" id="glossary" hidden>
+    <summary>Definitions</summary>
+    <ul id="glossary-list"></ul>
   </details>
 
   <footer>
@@ -363,6 +407,28 @@
         <div class="sub">${esc(d.volumeNote || "Data not yet available")}</div>
       </div>`;
 
+    const journeyHtml = d.journey ? (() => {
+      const parts = [];
+      d.journey.forEach((g, i) => {
+        if (i > 0) {
+          const a = d.journey[i - 1].year, b = g.year;
+          let cls = "g-tbc", txt = "pending";
+          if (Number.isInteger(a) && Number.isInteger(b)) {
+            const gap = b - a;
+            txt = gap === 0 ? "same year" : "+" + gap + " yr" + (gap === 1 ? "" : "s");
+            cls = gap <= 2 ? "g-good" : gap <= 5 ? "g-warn" : "g-crit";
+          }
+          parts.push(`<span class="jgap ${cls}">${txt}</span>`);
+        }
+        parts.push(`<div class="jnode"><div class="jyear ${g.year === "TBC" ? "tbc" : ""}">${esc(g.year)}</div><div class="jlbl">${esc(g.label)}</div></div>`);
+      });
+      return `<div class="journey-wrap">
+        <h3>Time between gates</h3>
+        <p class="jnote">Elapsed time between access milestones. Benchmark (LAUNCH deep-dive, draft): ≤ 2 yrs between gates; 3–5 yrs slow; over 5 yrs a systemic delay.</p>
+        <div class="journey">${parts.join("")}</div>
+      </div>`;
+    })() : "";
+
     const priceProv = [
       d.price.source ? "Source: " + d.price.source : "",
       d.price.confirmedInWriting ? "Manufacturer-confirmed in writing" : "",
@@ -420,6 +486,7 @@
             </div>
             ${volumeCard}
           </div>
+          ${journeyHtml}
           <div class="mtable-box">
             <table class="mtable">
               <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
@@ -476,16 +543,10 @@
 
   // tooltip
   const tip = document.getElementById("tip");
-  function showTip(dot) {
-    const rows = [];
-    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
-    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
-    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
-    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
-    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
-    tip.innerHTML = `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`;
+  function showTipAt(el, html) {
+    tip.innerHTML = html;
     tip.style.display = "block";
-    const r = dot.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     let x = r.left + r.width / 2 - tw / 2;
     x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
@@ -494,12 +555,100 @@
     tip.style.left = x + "px";
     tip.style.top = y + "px";
   }
+  function hideTip() { tip.style.display = "none"; }
+  function showStageTip(dot) {
+    const rows = [];
+    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
+    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
+    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
+    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
+    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
+    showTipAt(dot, `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`);
+  }
   document.querySelectorAll(".stage .dot").forEach(dot => {
-    dot.addEventListener("mouseenter", () => showTip(dot));
-    dot.addEventListener("focus", () => showTip(dot));
-    dot.addEventListener("mouseleave", () => tip.style.display = "none");
-    dot.addEventListener("blur", () => tip.style.display = "none");
+    dot.addEventListener("mouseenter", () => showStageTip(dot));
+    dot.addEventListener("focus", () => showStageTip(dot));
+    dot.addEventListener("mouseleave", hideTip);
+    dot.addEventListener("blur", hideTip);
     dot.addEventListener("click", e => e.stopPropagation());
+  });
+
+  // glossary: definitions panel + inline dotted-underline terms
+  const GLOSS = DATA.glossary || {};
+  const terms = Object.keys(GLOSS).sort((a, b) => b.length - a.length);
+  if (terms.length) {
+    document.getElementById("glossary").hidden = false;
+    document.getElementById("glossary-list").innerHTML = Object.keys(GLOSS).sort().map(t =>
+      `<li><span class="gt">${esc(t)}</span><span>${esc(GLOSS[t])}</span></li>`).join("");
+
+    const re = new RegExp("\\b(" + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")\\b", "g");
+    document.querySelectorAll("#board .product").forEach(section => {
+      const seen = new Set(); // first occurrence per product only — repetition is noise
+      const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, {
+        acceptNode(n) {
+          const parent = n.parentElement;
+          if (!parent || parent.closest(".gloss")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        const text = node.nodeValue;
+        let m, frag = null, last = 0;
+        re.lastIndex = 0;
+        while ((m = re.exec(text))) {
+          if (seen.has(m[1])) continue;
+          seen.add(m[1]);
+          if (!frag) frag = document.createDocumentFragment();
+          frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+          const s = document.createElement("span");
+          s.className = "gloss";
+          s.tabIndex = 0;
+          s.textContent = m[1];
+          s.dataset.term = m[1];
+          frag.appendChild(s);
+          last = m.index + m[1].length;
+        }
+        if (frag) {
+          frag.appendChild(document.createTextNode(text.slice(last)));
+          node.parentNode.replaceChild(frag, node);
+        }
+      });
+    });
+    document.querySelectorAll(".gloss").forEach(g => {
+      const show = () => showTipAt(g, `<b>${esc(g.dataset.term)}</b>${esc(GLOSS[g.dataset.term])}`);
+      g.addEventListener("mouseenter", show);
+      g.addEventListener("focus", show);
+      g.addEventListener("mouseleave", hideTip);
+      g.addEventListener("blur", hideTip);
+    });
+  }
+
+  // CSV download — stages and milestones for every tracked product
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  document.getElementById("dl-csv").addEventListener("click", () => {
+    const rows = [["Product", "Record", "Item", "Status", "Detail", "Date", "Next step", "Anticipated", "Source", "As of"]];
+    tracked.forEach(p => {
+      p.stages.forEach((s, i) =>
+        rows.push([p.name, "Stage", STAGES[i], LABEL[s.status], s.note, s.date, s.next, s.nextDate, s.source || "", s.asOf || ""]));
+      p.detail.milestones.forEach(m =>
+        rows.push([p.name, "Milestone", m.milestone, LABEL[m.status], m.label, m.date, m.next, m.anticipated, m.source || "", ""]));
+    });
+    const csv = rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "launch-dashboard-data-" + DATA.meta.lastUpdated + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // print: open every panel so the printout is complete
+  window.addEventListener("beforeprint", () => {
+    document.getElementById("updates").open = true;
+    document.getElementById("glossary").open = true;
   });
 })();
 </script>

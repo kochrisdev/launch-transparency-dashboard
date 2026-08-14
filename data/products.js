@@ -29,7 +29,23 @@ window.LAUNCH_DATA =
     "Procurement",
     "In-country delivery"
   ],
+  "glossary": {
+    "ACT": "Artemisinin-based combination therapy — the standard class of malaria treatments pairing an artemisinin derivative with a longer-acting partner drug.",
+    "SRA": "Stringent Regulatory Authority — an advanced regulator (e.g. EMA, US FDA) whose review anchors WHO prequalification and country registrations.",
+    "WLA": "WHO-Listed Authority — a regulator assessed by WHO as operating at an advanced level.",
+    "Article 58": "EMA procedure giving a scientific opinion on high-priority medicines intended for markets outside the EU.",
+    "GDG": "Guidelines Development Group — the WHO expert group that reviews evidence and formulates treatment recommendations.",
+    "PQ": "WHO prequalification — quality, safety and efficacy assessment that makes a product eligible for procurement by UN agencies and major donors.",
+    "MFT": "Multiple first-line therapies — deploying several first-line treatments in parallel to reduce drug pressure and slow resistance.",
+    "EOI": "Expression of Interest — the WHO prequalification invitation list; a product must be on it before a PQ dossier can be assessed.",
+    "AMA": "African Medicines Agency — continental body coordinating regulatory review across African Union member states.",
+    "PMI": "U.S. President's Malaria Initiative — a major bilateral funder and procurer of malaria commodities.",
+    "MMV": "Medicines for Malaria Venture — product development partnership behind several antimalarials.",
+    "PQR": "Price & Quality Reporting — the Global Fund database of procurement transactions (volumes and prices).",
+    "GMP": "Good Manufacturing Practice — quality standard verified by inspection of manufacturing sites."
+  },
   "changelog": [
+    { "date": "2026-08-14", "product": "All", "change": "Added glossary tooltips, CSV download, print view and pathway timing (time between gates) for marketed products." },
     { "date": "2026-08-14", "product": "GanLum", "change": "Phase III (KALUMA) marked complete — primary endpoint met, announced 12 Nov 2025; regulatory submission preparation now in progress." },
     { "date": "2026-08-14", "product": "Pyramax", "change": "EMA Article 58 date corrected to 2012; July 2025 pregnancy label update added to milestones." },
     { "date": "2026-08-14", "product": "DHA–PPQ", "change": "Eurartesim WHO PQ requalification (Jan 2025) recorded; unknown counts set to TBC pending verification." },
@@ -155,6 +171,13 @@ window.LAUNCH_DATA =
         ],
         "research": { "lead": "MMV and partners", "geographies": "Ghana, Vietnam, Burkina Faso and others (efficacy studies)", "timeline": "Ongoing", "question": "MFT deployment models with pyronaridine–artesunate" },
         "country": { "registered": 25, "inGuidelines": "TBC", "inMft": "TBC", "forecastDemand": "TBC" },
+        "journey": [
+          { "label": "EMA Article 58 positive opinion", "year": 2012 },
+          { "label": "WHO prequalification (tablets)", "year": 2012 },
+          { "label": "Paediatric granules prequalified", "year": 2016 },
+          { "label": "WHO strong recommendation", "year": 2022 },
+          { "label": "Broad national guideline inclusion", "year": "TBC" }
+        ],
         "volume": null,
         "volumeNote": "Procurement volumes being compiled from Global Fund PQR and PMI records",
         "milestones": [
@@ -201,6 +224,12 @@ window.LAUNCH_DATA =
         ],
         "research": { "lead": "Multiple academic consortia", "geographies": "Ghana, Mozambique, SE Asia (efficacy and MFT studies)", "timeline": "Ongoing", "question": "MFT rotation sequencing and resistance impact" },
         "country": { "registered": "TBC", "inGuidelines": "TBC", "inMft": "TBC", "forecastDemand": "TBC" },
+        "journey": [
+          { "label": "EMA approval (Eurartesim)", "year": 2011 },
+          { "label": "WHO guideline recommendation", "year": 2015 },
+          { "label": "WHO prequalification", "year": 2015 },
+          { "label": "Broad procurement uptake", "year": "TBC" }
+        ],
         "volume": null,
         "volumeNote": "Procurement volumes being compiled from Global Fund PQR and national records",
         "milestones": [
