@@ -24,6 +24,7 @@ controls the on-page banner.
 | [User guide](docs/user-guide.md) | Donors, ministries of health, implementing partners, pharma — how to read and use the dashboard. |
 | [Data analyst guide](docs/data-analyst-guide.md) | Whoever maintains the data — update loop, data dictionary, governance rules, confirmation register, cadence. |
 | [Developer guide](docs/developer-guide.md) | Whoever maintains or extends the code — architecture, rendering pipeline, validator, deployment, handover. |
+| [Remaining-tasks checklist](docs/checklist.md) | Living checklist of open items from build stages 1–4, with who's needed for each. |
 
 ## Structure
 
