@@ -2,6 +2,19 @@
 
 **Live site: https://kochrisdev.github.io/launch-transparency-dashboard/**
 
+Two design options are live for client review, running off the same data:
+
+- **Option A — journey board** (default, `index.html`): one row per medicine, its
+  full pathway left to right. Emphasises each product's story.
+- **Option B — comparison matrix** ([`option-b.html`](https://kochrisdev.github.io/launch-transparency-dashboard/option-b.html)):
+  stages as rows, medicines as columns. Emphasises cross-product comparison at
+  each gate. Distinct visual identity (deep green, serif display, dark header band).
+
+The pages cross-link in their headers. Once the client picks a direction, the
+other option is deleted and remaining features (glossary, CSV, print, timing)
+are consolidated into the winner — Option B is currently a layout study without
+those extras.
+
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
 RBM Partnership to End Malaria.

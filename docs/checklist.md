@@ -54,6 +54,10 @@ Nothing remaining. ✅
 
 ## Stage 4 — Hosting and handover
 
+- [ ] 🤝 **Client picks a design direction** — Option A (journey board,
+  `index.html`) vs Option B (comparison matrix, `option-b.html`), both live and
+  cross-linked. Then: delete the losing option and port Option A's extra
+  features (glossary, CSV, print, pathway timing) into the winner if B is chosen.
 - [ ] 🤝 **Engage RBM's web team** — share the live link; decide between
   (a) RBM hosts the static files, (b) RBM embeds the Pages URL via iframe,
   (c) repo transfer to an RBM GitHub org. Options in the README.
