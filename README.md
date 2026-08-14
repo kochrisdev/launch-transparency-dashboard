@@ -15,8 +15,15 @@ operational research, procured volumes, milestone table).
 EMA, Novartis/MMV/MORU announcements) and pending LAUNCH team verification and
 manufacturer written confirmation. Unverified values are shown as `TBC`, never
 estimated. `meta.dataStatus` in the data file (`illustrative` / `draft` / `live`)
-controls the on-page banner. See [UPDATING.md](UPDATING.md) for the update workflow,
-governance rules, and the manufacturer confirmation register.
+controls the on-page banner.
+
+## Documentation
+
+| Guide | Audience |
+| --- | --- |
+| [User guide](docs/user-guide.md) | Donors, ministries of health, implementing partners, pharma — how to read and use the dashboard. |
+| [Data analyst guide](docs/data-analyst-guide.md) | Whoever maintains the data — update loop, data dictionary, governance rules, confirmation register, cadence. |
+| [Developer guide](docs/developer-guide.md) | Whoever maintains or extends the code — architecture, rendering pipeline, validator, deployment, handover. |
 
 ## Structure
 
@@ -26,7 +33,7 @@ governance rules, and the manufacturer confirmation register.
 | `data/products.js` | **The only file that changes in routine updates.** Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
-| `UPDATING.md` | Operating manual: update loop, governance rules, confirmation register, cadence. |
+| `docs/` | Documentation for users, data analysts and developers (see table above). |
 | `.github/workflows/validate.yml` | CI — every push and PR must pass the data validator. |
 
 ## Updating the data
