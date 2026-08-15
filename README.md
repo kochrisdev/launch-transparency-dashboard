@@ -11,9 +11,9 @@ Two design options are live for client review, running off the same data:
   each gate. Distinct visual identity (deep green, serif display, dark header band).
 
 The pages cross-link in their headers. Once the client picks a direction, the
-other option is deleted and remaining features (glossary, CSV, print, timing)
-are consolidated into the winner — Option B is currently a layout study without
-those extras.
+other option is deleted and remaining features (glossary, CSV export, print
+view, pathway timing chart, country access map) are consolidated into the
+winner — Option B is currently a layout study without those extras.
 
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
@@ -74,7 +74,9 @@ controls the on-page banner.
    node scripts/validate-data.js
    ```
 
-3. Commit and push. Nothing else to do — the page reads the data file directly.
+3. Commit and push. Nothing else to do — the page reads the data file directly,
+   and CI automatically snapshots the change into `history/` and rebuilds
+   `feed.xml`.
 
 Every data point carries provenance fields:
 
@@ -98,9 +100,10 @@ https://kochrisdev.github.io/launch-transparency-dashboard/ within a minute or t
 
 ### Handover options for RBM
 
-1. **RBM hosts** (preferred for production): copy `index.html`, `data/`, and
-   `.nojekyll` to any static path on dashboards.endmalaria.org. No server-side
-   requirements — plain static files.
+1. **RBM hosts** (preferred for production): copy the static set —
+   `index.html`, `widget.html`, `data/`, `feed.xml`, `.nojekyll` (plus
+   `option-b.html` during the design review) — to any static path on
+   dashboards.endmalaria.org. No server-side requirements — plain static files.
 2. **RBM embeds**: keep this Pages deployment (or a fork under an RBM GitHub org)
    and embed it:
 

@@ -151,7 +151,7 @@ Prefer, in order:
 | From → to | Checklist |
 | --- | --- |
 | `illustrative` → `draft` | Every value replaced with a sourced public figure or `TBC`. |
-| `draft` → `live` | Every non-TBC figure verified against its source within the last quarter; every price/volume either public-sourced or covered by a written manufacturer confirmation; sign-off recorded (see §7); prototype badge removal agreed. |
+| `draft` → `live` | Every non-TBC figure verified against its source within the last quarter; every price/volume either public-sourced or covered by a written manufacturer confirmation; every product's `countries.status` either `"verified"` or the block removed; sign-off recorded (see §7); prototype badge removal agreed. |
 
 ## 7. Manufacturer confirmation register (kept OUTSIDE this repo)
 
@@ -175,7 +175,15 @@ changelog it.
 `confirmedInWriting: true` (register entry first), `asOf`, changelog.
 
 **Add a journey gate** — append `{ "label": "...", "year": 2026 }` in
-chronological position; only verifiable dates.
+chronological position; only verifiable dates. Feeds both the per-product
+timing card and the cross-product timing chart.
+
+**Update the country map** — edit `detail.countries.list` (`iso3` + `level`,
+one entry per country, highest level wins: `mft` > `guidelines` >
+`registered`). While entries are unverified, keep `status: "illustrative"` or
+`"draft"` — the map shows a warning overlay automatically. When the country
+survey is verified, replace the whole list and set `status: "verified"` in the
+same commit; the overlay disappears.
 
 **Move the current-stage marker** — update `currentStage` (0-based index into
 the stages array).
@@ -194,6 +202,9 @@ exactly 8 stage entries, validate.
 | *a displayed price needs confirmedInWriting=true or a public "source"* | Either add the source, set the confirmation flag (register entry first), or set the value to `"TBC"`. |
 | *split percentages sum to N* | Make the channel percentages sum to 100. |
 | *country.X must be a non-negative integer or "TBC"* | No estimates — a number you can source, or `"TBC"`. |
+| *countries.status must be illustrative/draft/verified* | Use one of the three values; `"verified"` only when the survey is signed off. |
+| *unverified detail.countries needs a substantive "note"* | Write the map-overlay warning text (what the data is and isn't). |
+| *countries.list[N].iso3 / .level* | 3-letter uppercase ISO codes; level is `registered`, `guidelines` or `mft`; no duplicate countries. |
 
 Warnings (missing `asOf`, missing source on a done milestone) don't block a
 push, but treat them as your to-do list.

@@ -16,12 +16,20 @@ upgrade, or break.
 
 | Path | Role |
 | --- | --- |
-| `index.html` | Design option A (journey board): CSS (design tokens + components), HTML skeleton, and the render script. The full-featured page. |
+| `index.html` | Design option A (journey board): CSS (design tokens + components), HTML skeleton, and the render script. The full-featured page (glossary, CSV, print, timing chart, country map). |
 | `option-b.html` | Design option B (comparison matrix): a standalone layout study for client review. Same data contract, feature subset. See §10. |
-| `data/products.js` | The data contract: `window.LAUNCH_DATA = { …strict JSON… }`. The only file analysts touch; **feeds both option pages**. |
+| `widget.html` | Embeddable one-row product tracker for partner sites (`?product=<id or name>`). Dependency-free; reads the same data file. |
+| `data/products.js` | The data contract: `window.LAUNCH_DATA = { …strict JSON… }`. The only file analysts touch; **feeds all three pages**. |
+| `data/world-map.js` | Generated geometry: `window.LAUNCH_MAP = { w, h, countries: { ISO3: { n, d } } }`. Natural Earth 110m, public domain. Committed output — regenerate with `scripts/build-map.js`, never hand-edit. |
+| `history/` | Dated snapshots of the data file, bot-committed by `publish.yml` on every data change. Append-only; the raw material for future trend charts and playback. |
+| `feed.xml` | RSS 2.0 feed of changelog entries, bot-rebuilt by `publish.yml`. |
 | `scripts/validate-data.js` | Node validator: strict-JSON extraction + governance rules. Exit 1 on error. |
-| `scripts/make-preview.js` | Inlines the data file into `preview.html` (single-file build of **option A** for email/artifact sharing). Optional; never required to deploy. |
+| `scripts/make-preview.js` | Inlines the data **and map** files into `preview.html` (single-file build of option A for email/artifact sharing). Optional; never required to deploy. |
+| `scripts/make-feed.js` | Regenerates `feed.xml` from the changelog. Run by CI; safe by hand. |
+| `scripts/build-map.js` | One-off map-geometry generator (dev-only deps documented in its header). |
 | `.github/workflows/validate.yml` | CI: validator + preview build on every push/PR. |
+| `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
+| `.github/workflows/reminder.yml` | Monthly cron: opens the milestone-scan checklist issue. Also runnable manually (workflow_dispatch). |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
 | `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
@@ -63,10 +71,22 @@ Order matters:
    occurrence of each term per product in `<span class="gloss" tabindex="0">`
    (word-boundary regex, longest term first, skips inside existing `.gloss`).
    First-occurrence-only is a readability decision.
-9. **CSV export** — builds rows from the same data (stages + milestones),
-   quotes per RFC 4180, prepends a UTF-8 BOM (`﻿`) so Excel detects the
-   encoding, downloads via a Blob URL.
-10. **Print** — `beforeprint` opens the reference panels; CSS `@media print`
+9. **Country access map** — guarded on `window.LAUNCH_MAP`: builds the SVG once
+   from the geometry file, then `selectMap(id)` re-classes paths per product
+   from `detail.countries.list` (`lvl-registered/guidelines/mft` + focusable).
+   The warning overlay shows unless `countries.status === "verified"`; products
+   without a `countries` block get the empty-state message instead. Only
+   colored countries get tooltips and tab stops.
+10. **Pathway timing chart** — products whose `journey` has ≥ 2 dated gates,
+    plotted on a shared year axis (percent-positioned divs, no chart library):
+    gate markers with tooltips, gap segments colored by the same ≤2/3–5/>5-year
+    classes as the per-product cards, a dashed run-to-today when a `"TBC"` gate
+    is pending, and an elapsed-total label. Products not yet plottable are
+    named under the chart rather than silently omitted.
+11. **CSV export** — builds rows from the same data (stages + milestones),
+    quotes per RFC 4180, prepends a UTF-8 BOM (`﻿`) so Excel detects the
+    encoding, downloads via a Blob URL.
+12. **Print** — `beforeprint` opens the reference panels; CSS `@media print`
     forces detail panels open and hides interactive chrome.
 
 **Escaping**: all data values pass through `esc()` before being interpolated
@@ -124,10 +144,16 @@ No test framework by design; two layers instead:
 - **Now**: GitHub Pages from `main` root; every push is live in ~1–2 min.
   CI gates data quality but does not gate the Pages deploy (branch-based Pages
   deploys regardless) — treat a red CI run as a revert-now signal.
-- **RBM options**: (a) copy `index.html`, `data/`, `.nojekyll` to any static
-  path on their site; (b) iframe the Pages URL (snippet in the README);
-  (c) transfer the repo to an RBM GitHub org (history and CI move; Pages URL
-  changes).
+- **Bot commits**: `publish.yml` pushes snapshot/feed commits to `main` after
+  data changes — always `git pull` before pushing local work, or a
+  fast-forward rejection will greet you.
+- **RBM options**: (a) copy the static set — `index.html`, `widget.html`,
+  `data/`, `feed.xml`, `.nojekyll` (plus `option-b.html` while the design
+  review runs) — to any path on their site; (b) iframe the Pages URL (snippet
+  in the README); (c) transfer the repo to an RBM GitHub org (history and CI
+  move; Pages URL changes). The `feed.xml` URL and widget embed URLs change
+  with the host — update the constants in `scripts/make-feed.js` and partner
+  snippets when they do.
 - No secrets exist anywhere in the repo or its history; the confirmation
   register lives outside the repo by policy.
 
