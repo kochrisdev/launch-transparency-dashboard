@@ -6,6 +6,10 @@ You maintain exactly **one file**: [`data/products.js`](../data/products.js).
 Everything on the dashboard — statuses, flags, counts, the summary numbers, the
 Recent updates panel — is rendered from it. You never edit HTML.
 
+While two design options are live for client review (`index.html` and
+`option-b.html`), **both read this same data file** — one edit updates both
+pages at once.
+
 ---
 
 ## 1. The update loop
@@ -81,7 +85,7 @@ sentence. Add any acronym you introduce in a note.
 
 | Field | Type | Notes |
 | --- | --- | --- |
-| `id` | lowercase slug | Unique, stable — used as the HTML anchor. |
+| `id` | lowercase slug | Unique, stable — used as the HTML anchor. Never rename it, even if the display name changes (e.g. ASPY's id remains `pyramax`). |
 | `name`, `inn`, `manufacturer` | string | Display identity. |
 | `class` | `"pipeline"` \| `"market"` | Pipeline = pre-launch; market = launched but underutilized. Feeds the "expected to market" stat. |
 | `classLabel` | string | The chip text under the name. |

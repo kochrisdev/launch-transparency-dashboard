@@ -87,3 +87,7 @@ Nothing remaining. ✅
   https://kochrisdev.github.io/launch-transparency-dashboard/ with auto-deploy
   on push; handover options documented; prototype badge; docs set for users,
   analysts and developers.
+- **Client review additions** — design option B (comparison matrix,
+  `option-b.html`) live alongside option A, cross-linked, same data file;
+  product renamed Pyramax → ASPY (trade name kept in subtitle); documentation
+  updated to cover both options.

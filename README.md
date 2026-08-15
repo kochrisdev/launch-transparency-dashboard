@@ -43,8 +43,9 @@ controls the on-page banner.
 
 | File | Role |
 | --- | --- |
-| `index.html` | The dashboard. Static — no build step, no backend. |
-| `data/products.js` | **The only file that changes in routine updates.** Strict JSON wrapped in `window.LAUNCH_DATA =`. |
+| `index.html` | The dashboard, design option A (journey board). Static — no build step, no backend. |
+| `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
+| `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
@@ -109,4 +110,6 @@ GanLum (ganaplacide–lumefantrine), ALAQ (artemether–lumefantrine–amodiaqui
 ASPY (pyronaridine–artesunate, Pyramax), DHA–PPQ (dihydroartemisinin–piperaquine), plus a
 placeholder row for spatial emanators (prevention tool, pending funder approval).
 
-Live preview artifact: https://claude.ai/code/artifact/94826363-58d4-466f-b731-759a6d1e8fc7
+Live preview artifacts (private until shared): option A
+https://claude.ai/code/artifact/94826363-58d4-466f-b731-759a6d1e8fc7 · option B
+https://claude.ai/code/artifact/a8e7edc7-05bb-434f-8c0b-5b3ea5854542

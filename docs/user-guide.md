@@ -9,6 +9,14 @@ The LAUNCH Transparency Dashboard tracks new and underutilized antimalarial
 medicines along the full journey from research to patients — and shows, at a
 glance, **where each product stands and where it is stuck**.
 
+> **Design review note.** Two layouts are currently live, showing the same data:
+> **[Option A](https://kochrisdev.github.io/launch-transparency-dashboard/)** (one
+> row per medicine — this guide describes it) and
+> **[Option B](https://kochrisdev.github.io/launch-transparency-dashboard/option-b.html)**
+> (a comparison matrix: stages as rows, medicines as columns, with the same
+> traffic lights and a profile drawer). The pages link to each other in their
+> headers. One layout will be retained after review.
+
 ---
 
 ## Reading the board in 30 seconds
@@ -102,9 +110,10 @@ confirmed in writing that they may be shared.
 
 **Why is a product I care about not on the board?**
 The initial phase tracks four antimalarials: two in the late pipeline (GanLum,
-ALAQ) and two recommended but underutilized (ASPY, DHA–PPQ). A prevention
-tool (spatial emanators) is planned, pending funder approval. The scope may
-expand if the transparency approach proves effective.
+ALAQ) and two recommended but underutilized (ASPY — pyronaridine–artesunate,
+marketed as Pyramax — and DHA–PPQ). A prevention tool (spatial emanators) is
+planned, pending funder approval. The scope may expand if the transparency
+approach proves effective.
 
 **How often is it updated?**
 Milestones are reviewed monthly and updated within days of major public events;

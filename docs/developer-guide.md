@@ -16,13 +16,14 @@ upgrade, or break.
 
 | Path | Role |
 | --- | --- |
-| `index.html` | The entire application: CSS (design tokens + components), HTML skeleton, and the render script. |
-| `data/products.js` | The data contract: `window.LAUNCH_DATA = { …strict JSON… }`. The only file analysts touch. |
+| `index.html` | Design option A (journey board): CSS (design tokens + components), HTML skeleton, and the render script. The full-featured page. |
+| `option-b.html` | Design option B (comparison matrix): a standalone layout study for client review. Same data contract, feature subset. See §10. |
+| `data/products.js` | The data contract: `window.LAUNCH_DATA = { …strict JSON… }`. The only file analysts touch; **feeds both option pages**. |
 | `scripts/validate-data.js` | Node validator: strict-JSON extraction + governance rules. Exit 1 on error. |
-| `scripts/make-preview.js` | Inlines the data file into `preview.html` (single-file build for email/artifact sharing). Optional; never required to deploy. |
+| `scripts/make-preview.js` | Inlines the data file into `preview.html` (single-file build of **option A** for email/artifact sharing). Optional; never required to deploy. |
 | `.github/workflows/validate.yml` | CI: validator + preview build on every push/PR. |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
-| `docs/` | This documentation set. |
+| `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
 
 ## 3. The data contract
@@ -153,7 +154,32 @@ No test framework by design; two layers instead:
 - **New detail cards**: add the field to the schema (analyst guide §4), the
   validator, and the card template in the product render — in that order.
 
-## 10. Conventions
+## 10. Design options (temporary, during client review)
+
+`option-b.html` is a deliberate **fork of the presentation, not of the data or
+governance**: it loads the same `data/products.js`, derives the same stats, and
+uses the same status semantics, but renders a stages-as-rows × products-as-columns
+matrix with its own visual identity (deep green, serif display, dark header
+band, single light theme). It carries a feature subset — no glossary, CSV,
+print handling, or pathway timing — because it exists to test the *layout*
+question, not feature parity.
+
+Maintenance rules while both are live:
+
+- Data/schema changes must keep **both** renderers working — option B reads
+  `stages`, `products[*].stages`, `flag`, `currentStage`, `detail.*` and
+  `meta.dataStatus`.
+- Copy changes that state facts (hosting note, prototype badge, banner texts)
+  should be applied to both pages.
+- `scripts/make-preview.js` covers option A only; a self-contained option B is
+  built the same way (replace its `<script src>` with the inlined data file).
+
+**Consolidation** (when the client decides — tracked in `docs/checklist.md`):
+delete the losing file, remove the cross-links, and if B wins, port A's
+glossary/CSV/print/timing blocks into it (they are self-contained sections of
+A's script and CSS).
+
+## 11. Conventions
 
 - Match the existing style: vanilla ES2017+, template literals for markup,
   `esc()` on every interpolated value, no dependencies.
