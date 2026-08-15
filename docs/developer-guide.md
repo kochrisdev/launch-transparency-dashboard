@@ -194,9 +194,10 @@ No test framework by design; two layers instead:
 governance**: it loads the same `data/products.js`, derives the same stats, and
 uses the same status semantics, but renders a stages-as-rows × products-as-columns
 matrix with its own visual identity (deep green, serif display, dark header
-band, single light theme). It carries a feature subset — no glossary, CSV,
-print handling, or pathway timing — because it exists to test the *layout*
-question, not feature parity.
+band, single light theme). Both options now include the country access map,
+the cross-product pathway timing chart, and the Recent updates panel (the
+renderers are duplicated per page by design — no shared module until a winner
+is chosen). A-only extras: glossary tooltips, CSV export, and print handling.
 
 Maintenance rules while both are live:
 

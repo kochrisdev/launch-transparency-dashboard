@@ -10,10 +10,11 @@ Two design options are live for client review, running off the same data:
   stages as rows, medicines as columns. Emphasises cross-product comparison at
   each gate. Distinct visual identity (deep green, serif display, dark header band).
 
-The pages cross-link in their headers. Once the client picks a direction, the
-other option is deleted and remaining features (glossary, CSV export, print
-view, pathway timing chart, country access map) are consolidated into the
-winner — Option B is currently a layout study without those extras.
+The pages cross-link in their headers. Both include the country access map,
+the pathway timing chart and the Recent updates panel; glossary tooltips, CSV
+export and the print view are Option-A-only for now. Once the client picks a
+direction, the other option is deleted and the remaining extras are
+consolidated into the winner.
 
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
