@@ -2,6 +2,11 @@
 
 *For anyone maintaining or extending the code, including RBM's web team at handover.*
 
+> New to malaria product access? Read the **[domain primer](domain-primer.md)**
+> first — it explains what the dataset means (the 8-stage pathway, the actors,
+> why these four products, the terminology) and why the governance rules are
+> shaped the way they are. Most schema decisions trace back to facts in it.
+
 ## 1. Architecture in one paragraph
 
 A deliberately **static, zero-build, zero-backend** site: one HTML file renders
