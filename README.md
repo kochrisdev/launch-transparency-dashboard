@@ -11,8 +11,8 @@ Two design options are live for client review, running off the same data:
   each gate. Distinct visual identity (deep green, serif display, dark header band).
 
 The pages cross-link in their headers. Both include the country access map,
-the pathway timing chart and the Recent updates panel; glossary tooltips, CSV
-export and the print view are Option-A-only for now. Once the client picks a
+the pathway timing chart, CSV download and the Recent updates panel; glossary
+tooltips and the print view are Option-A-only for now. Once the client picks a
 direction, the other option is deleted and the remaining extras are
 consolidated into the winner.
 

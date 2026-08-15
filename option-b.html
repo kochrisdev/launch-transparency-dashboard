@@ -68,6 +68,11 @@
   .stat .n { font-size: 21px; font-weight: 750; color: var(--ink); font-variant-numeric: tabular-nums; }
   .stat .n.crit-n { color: var(--crit); }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-left: auto; }
+  .dl-btn {
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+  }
+  .dl-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .key { display: inline-flex; align-items: center; gap: 6px; }
   .dot { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 11px; font-weight: 800; }
   .dot.done { background: var(--good); color: #fff; }
@@ -229,6 +234,7 @@
       <span class="key"><span class="dot late">!</span> Delayed</span>
       <span class="key"><span class="dot idle"></span> Not started</span>
     </div>
+    <button class="dl-btn" id="dl-csv" type="button">Download CSV</button>
   </div>
 
   <div class="matrix-box"><div class="matrix" id="matrix"></div></div>
@@ -474,6 +480,26 @@
     dot.addEventListener("focus", show);
     dot.addEventListener("mouseleave", hideTip);
     dot.addEventListener("blur", hideTip);
+  });
+
+  // ---- CSV download: stages and milestones for every tracked product ----
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  document.getElementById("dl-csv").addEventListener("click", () => {
+    const rows = [["Product", "Record", "Item", "Status", "Detail", "Date", "Next step", "Anticipated", "Source", "As of"]];
+    tracked.forEach(p => {
+      p.stages.forEach((s, i) =>
+        rows.push([p.name, "Stage", STAGES[i], LABEL[s.status], s.note, s.date, s.next, s.nextDate, s.source || "", s.asOf || ""]));
+      p.detail.milestones.forEach(m =>
+        rows.push([p.name, "Milestone", m.milestone, LABEL[m.status], m.label, m.date, m.next, m.anticipated, m.source || "", ""]));
+    });
+    const csv = rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob([String.fromCharCode(0xFEFF) + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "launch-dashboard-data-" + DATA.meta.lastUpdated + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   });
 
   // ---- recent updates ----
