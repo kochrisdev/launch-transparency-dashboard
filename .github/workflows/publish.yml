@@ -1,0 +1,42 @@
+name: Snapshot history and rebuild feed
+
+# Runs only when the data file changes on main. The bot commit it produces
+# touches history/ and feed.xml, which do NOT match this path filter, so it
+# cannot retrigger itself.
+on:
+  push:
+    branches: [main]
+    paths: ["data/products.js"]
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate data
+        run: node scripts/validate-data.js
+      - name: Snapshot data file into history/
+        run: |
+          DATE=$(node -e "const m=require('fs').readFileSync('data/products.js','utf8').match(/\"lastUpdated\": \"([0-9-]+)\"/); console.log(m[1])")
+          mkdir -p history
+          cp data/products.js "history/products-$DATE.js"
+          echo "Snapshot: history/products-$DATE.js"
+      - name: Rebuild RSS feed
+        run: node scripts/make-feed.js
+      - name: Commit snapshot and feed
+        run: |
+          git config user.name "launch-dashboard-bot"
+          git config user.email "actions@github.com"
+          git add history feed.xml
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "chore: history snapshot + feed rebuild [bot]"
+            git push
+          fi

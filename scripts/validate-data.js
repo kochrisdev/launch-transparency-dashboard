@@ -141,6 +141,24 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
           err(`${tag}: detail.country.${k} must be a non-negative integer or "TBC"`);
       }
     }
+    if (d.countries !== undefined) {
+      const c = d.countries;
+      if (!["illustrative", "draft", "verified"].includes(c.status))
+        err(`${tag}: detail.countries.status must be illustrative/draft/verified`);
+      if (c.status !== "verified" && (!c.note || c.note.trim().length < 20))
+        err(`${tag}: unverified detail.countries needs a substantive "note" (shown as the map warning)`);
+      if (!Array.isArray(c.list) || !c.list.length) err(`${tag}: detail.countries.list must be a non-empty array`);
+      else {
+        const seenIso = new Set();
+        c.list.forEach((e, ei) => {
+          if (!/^[A-Z]{3}$/.test(e.iso3 || "")) err(`${tag}: countries.list[${ei}].iso3 must be a 3-letter uppercase ISO code`);
+          if (seenIso.has(e.iso3)) err(`${tag}: countries.list has duplicate iso3 "${e.iso3}"`);
+          seenIso.add(e.iso3);
+          if (!["registered", "guidelines", "mft"].includes(e.level))
+            err(`${tag}: countries.list[${ei}].level must be registered/guidelines/mft`);
+        });
+      }
+    }
     if (d.journey !== undefined) {
       if (!Array.isArray(d.journey) || d.journey.length < 2) err(`${tag}: detail.journey must be an array of at least 2 gates`);
       else {

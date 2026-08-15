@@ -27,6 +27,12 @@ pages at once.
 4. Bump `meta.lastUpdated`.
 5. Commit and push. The live site updates automatically within ~2 minutes.
 
+Two things happen automatically after your push — no action needed: a dated
+snapshot of the data file is committed to `history/` (fuel for future trend
+charts), and `feed.xml` (the public RSS feed of updates) is rebuilt from your
+changelog entries. A GitHub issue also opens on the 1st of each month with the
+milestone-scan checklist; close it when the scan is done.
+
 ## 2. Status vocabulary
 
 Every stage and milestone uses one of four statuses:
@@ -110,7 +116,8 @@ expected step. Empty strings are fine for fields that don't apply.
 | `adoption` | string[] | Bullet list of adoption prerequisites. |
 | `research` | `{ lead, geographies, timeline, question }` | Operational research summary. |
 | `country` | `{ registered, inGuidelines, inMft, forecastDemand }` | Counts are integers or `"TBC"`; `forecastDemand` is free text. |
-| `journey` | array of `{ label, year }` (optional) | The "time between gates" timeline. `year` is an integer or `"TBC"`. Keep chronological. Only add gates with verifiable dates. |
+| `journey` | array of `{ label, year }` (optional) | The "time between gates" timeline and the cross-product timing chart. `year` is an integer or `"TBC"`. Keep chronological. Only add gates with verifiable dates. |
+| `countries` | `{ status, note, list[] }` (optional) | Feeds the country access map. `status`: `illustrative` / `draft` / `verified` — anything but `verified` renders a warning overlay on the map (and needs a `note`). `list` entries are `{ "iso3": "GHA", "level": "registered" \| "guidelines" \| "mft" }` — one entry per country, highest level wins. Replace the illustrative lists with the verified country survey and flip `status`. |
 | `volume` | `{ total, period, split[], source }` or `null` | `split` entries are `{ channel, pct }` and must sum to 100. |
 | `volumeNote` | string | Required when `volume` is `null` — say why (pre-launch, data being compiled). |
 | `milestones` | array | `{ milestone, status, label, date, next, anticipated, source }`. `label` is the pill text (e.g. "25+ countries", "Delayed +2 qtrs"). |

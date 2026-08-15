@@ -46,10 +46,24 @@ controls the on-page banner.
 | `index.html` | The dashboard, design option A (journey board). Static — no build step, no backend. |
 | `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
 | `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
+| `widget.html` | Embeddable single-product tracker for partner sites (`?product=aspy` etc.). |
+| `data/world-map.js` | Generated map geometry (Natural Earth, public domain) — rerun `scripts/build-map.js` to regenerate. |
+| `history/` | Automatic dated snapshots of the data file (bot-committed on every data change) — the raw material for future trend charts and playback. |
+| `feed.xml` | RSS feed of dashboard updates, rebuilt automatically from the changelog. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
-| `.github/workflows/validate.yml` | CI — every push and PR must pass the data validator. |
+| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue. |
+
+### Embedding a single product on a partner site
+
+```html
+<iframe src="https://kochrisdev.github.io/launch-transparency-dashboard/widget.html?product=aspy"
+        title="LAUNCH tracker — ASPY"
+        style="width:100%;max-width:720px;height:200px;border:1px solid #ddd;border-radius:10px"></iframe>
+```
+
+`product` accepts the id or the display name: `ganlum`, `alaq`, `aspy` (or `pyramax`), `dhappq` (or `dha-ppq`).
 
 ## Updating the data
 

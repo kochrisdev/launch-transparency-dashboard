@@ -136,12 +136,20 @@ No test framework by design; two layers instead:
 - **Add a pipeline stage**: append/insert in `stages` *and* add the matching
   entry to every product's `stages` array (the validator enforces the count).
   Track min-width may need adjusting (`.track { min-width }`).
-- **Country access map**: blocked on verified per-country data, not on code.
-  When data arrives, add `countries: [{ iso3, registered, inGuidelines, inMft }]`
-  per product, validate it, and render an inline SVG map colored from tokens —
-  keep it self-contained (no external tile/CDN dependencies; the artifact
-  preview's CSP blocks external requests, and self-containment is what makes
-  every hosting option work).
+- **Country access map** (implemented): geometry lives in the generated
+  `data/world-map.js` (Natural Earth 110m via `scripts/build-map.js` — dev-only
+  deps documented in that script; rerun only to change projection or country
+  set). The renderer colors countries from `detail.countries.list` and shows a
+  warning overlay unless `countries.status === "verified"` — the map can never
+  silently present unverified coverage. Self-contained by design: no tiles, no
+  CDN.
+- **History snapshots + RSS feed** (implemented): `.github/workflows/publish.yml`
+  runs only on `data/products.js` changes, commits `history/products-<date>.js`
+  and a rebuilt `feed.xml` as a bot. It cannot retrigger itself (path filter).
+  The `history/` folder is the raw material for future trend charts and
+  "as of" playback.
+- **Embeddable widget** (implemented): `widget.html?product=<id or name>` —
+  one-row tracker for partner sites; keep it dependency-free and tiny.
 - **Analytics**: add the chosen provider's script tag in `index.html` only for
   the production host (consider a hostname guard so localhost/preview isn't
   counted). Prefer a cookieless option (e.g. Plausible) to avoid consent

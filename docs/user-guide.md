@@ -78,6 +78,20 @@ Click any row to open the full profile:
 - **Milestone table** — every milestone with status, dates, the next expected
   step and its anticipated date.
 
+## The map and the timing chart
+
+Below the board:
+
+- **Country access map** — pick a medicine to see where it is registered (light),
+  in national guidelines (medium), and in MFT plans (dark). While the country
+  survey is being verified, the map carries an ILLUSTRATIVE warning and must not
+  be cited.
+- **Pathway timing across products** — each marketed medicine's real history on
+  one time axis: dots are gates, colored bars are the years between them
+  (green ≤ 2, amber 3–5, red over 5), and a dashed line runs to today where the
+  next gate is still pending. The totals ("14 yrs, ongoing") are the delay story
+  in one number.
+
 ## Features worth knowing
 
 - **Hover any stage dot** for the status detail, next expected step, and the
@@ -89,6 +103,10 @@ Click any row to open the full profile:
 - **Download CSV** (top right of the summary strip) exports every status and
   milestone, with sources, for use in your own reports.
 - **Print / save as PDF** — all profiles open automatically for a complete printout.
+- **Subscribe to updates** — an RSS feed of every change:
+  https://kochrisdev.github.io/launch-transparency-dashboard/feed.xml
+- **Embed a product tracker** on your own site — a one-row live widget per
+  medicine; ask the LAUNCH team for the snippet (or see the repository README).
 
 ## How much can I trust a number?
 

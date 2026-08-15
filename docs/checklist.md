@@ -36,9 +36,10 @@ Nothing remaining. ✅
 
 ## Stage 3 — Features
 
-- [ ] 🧑‍💻 **Country access map** — blocked on verified country data (stage 2
-  item above). Implementation notes in
-  [developer-guide.md §9](developer-guide.md#9-extension-notes).
+- [ ] 📊 **Country access map: swap in verified data** — the map is built and
+  live, but shows an ILLUSTRATIVE overlay; replace the placeholder
+  `countries.list` with the verified survey and flip `countries.status` to
+  `"verified"` (see [data-analyst-guide.md §4](data-analyst-guide.md#4-data-dictionary)).
 - [ ] 🤝🧑‍💻 **Usage analytics** — choose a provider (Plausible suggested:
   cookieless, no consent banner), create the account, add the script tag with a
   hostname guard so previews aren't counted. Needed to evidence usage for
@@ -91,3 +92,10 @@ Nothing remaining. ✅
   `option-b.html`) live alongside option A, cross-linked, same data file;
   product renamed Pyramax → ASPY (trade name kept in subtitle); documentation
   updated to cover both options.
+- **Visualization tier 1–2 (Aug 2026)** — country access map (illustrative
+  overlay until verified); cross-product pathway timing chart (real dates);
+  embeddable product widget (`widget.html`); RSS update feed (`feed.xml`);
+  automatic history snapshots on every data change (`history/`); monthly
+  milestone-scan reminder issue. Deferred until history accrues: procurement
+  trend charts and "as of" playback; deferred until country data verified:
+  audience lenses.

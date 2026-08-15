@@ -1,0 +1,39 @@
+name: Monthly data review reminder
+
+# Opens a checklist issue on the first of each month so the milestone scan
+# from docs/data-analyst-guide.md happens on cadence. Deliberately a reminder,
+# not an automated scraper: the public sources are CMS pages that change
+# cosmetically all the time, so hash-watching them would cry wolf. Revisit
+# automated ingestion when stable data APIs are identified.
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open review issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Monthly milestone scan — $(date -u +%B\ %Y)"
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$(cat <<'EOF'
+          Monthly data review (see docs/data-analyst-guide.md §5 for the source hierarchy):
+
+          - [ ] WHO PQ list of prequalified medicines — new listings / requalifications
+          - [ ] WHO PQ Expression of Interest list — ALAQ / GanLum additions
+          - [ ] WHO Guidelines for malaria — updates, GDG meeting outcomes
+          - [ ] EMA — Article 58 opinions, label changes
+          - [ ] Novartis / MMV / MORU-DeTACT / Shin Poong announcements
+          - [ ] Global Fund PQR + PMI (quarterly — check if due)
+          - [ ] Country survey refresh (quarterly — check if due)
+          - [ ] Update data/products.js, run the validator, add changelog entries, bump lastUpdated
+
+          Close this issue when the scan is done (even if nothing changed — note "no changes" in a comment).
+          EOF
+          )"

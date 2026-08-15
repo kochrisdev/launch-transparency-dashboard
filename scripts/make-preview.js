@@ -9,15 +9,15 @@ const path = require("path");
 
 const root = path.join(__dirname, "..");
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
-const data = fs.readFileSync(path.join(root, "data", "products.js"), "utf8");
 
-const out = html.replace(
-  '<script src="data/products.js"></script>',
-  "<script>\n" + data + "\n</script>"
-);
-if (out === html) {
-  console.error("ERROR: could not find the data <script> tag in index.html");
-  process.exit(1);
+let out = html;
+for (const rel of ["data/products.js", "data/world-map.js"]) {
+  const tag = `<script src="${rel}"></script>`;
+  if (!out.includes(tag)) {
+    console.error(`ERROR: could not find ${tag} in index.html`);
+    process.exit(1);
+  }
+  out = out.replace(tag, "<script>\n" + fs.readFileSync(path.join(root, ...rel.split("/")), "utf8") + "\n</script>");
 }
 fs.writeFileSync(path.join(root, "preview.html"), out);
 console.log("Wrote preview.html (" + Math.round(out.length / 1024) + " KB)");
