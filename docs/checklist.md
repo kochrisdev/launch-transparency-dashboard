@@ -19,7 +19,7 @@ Nothing remaining. ✅
   source; correct or downgrade to TBC. (Whole board is `dataStatus: "draft"`
   until this is done.)
 - [ ] 📊 **Fill the cadence/ownership table** with real names —
-  [data-analyst-guide.md §10](data-analyst-guide.md#10-suggested-cadence-and-ownership-fill-in).
+  [data-analyst-guide.md §11](data-analyst-guide.md#11-suggested-cadence-and-ownership-fill-in).
 - [ ] 📊 **Set up the manufacturer confirmation register** in the team document
   store (outside this repo) — spec in
   [data-analyst-guide.md §7](data-analyst-guide.md#7-manufacturer-confirmation-register-kept-outside-this-repo).

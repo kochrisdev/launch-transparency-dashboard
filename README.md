@@ -71,6 +71,7 @@ controls the on-page banner.
 | `feed.xml` | RSS feed of dashboard updates, rebuilt automatically from the changelog. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
+| `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
 | `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue. |
 

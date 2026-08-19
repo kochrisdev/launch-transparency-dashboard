@@ -196,7 +196,22 @@ same commit as the stage/milestone change it reflects, and changelog it.
 **Add a product** — copy an existing product block, change every field, keep
 exactly 8 stage entries, validate.
 
-## 9. Troubleshooting validator errors
+## 9. The quarterly "what changed" brief
+
+```bash
+node scripts/make-brief.js              # default window: last 90 days
+node scripts/make-brief.js --since 2026-06-01   # explicit window start
+```
+
+Writes `briefs/launch-brief-<date>.md` (and `briefs/latest.md`). It compiles:
+where every product stands, stage-status movements against the closest
+`history/` snapshot before the window, the changelog entries in the window,
+active bottlenecks, and every remaining TBC gap (your verification to-do list).
+While `dataStatus` is not `live`, the brief says so — verify before circulating
+externally. Run it quarterly (the monthly reminder issue includes it) and after
+any major milestone event.
+
+## 10. Troubleshooting validator errors
 
 | Error says | Fix |
 | --- | --- |
@@ -214,7 +229,7 @@ exactly 8 stage entries, validate.
 Warnings (missing `asOf`, missing source on a done milestone) don't block a
 push, but treat them as your to-do list.
 
-## 10. Suggested cadence and ownership (fill in)
+## 11. Suggested cadence and ownership (fill in)
 
 | What | Cadence | Owner |
 | --- | --- | --- |
