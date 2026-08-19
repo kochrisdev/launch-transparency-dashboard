@@ -1,4 +1,5 @@
 <title>LAUNCH Dashboard — Design Option B</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   /* Option B commits to a single light look with a deep-green identity —
      a deliberate contrast to Option A's teal row-board. */
@@ -53,7 +54,20 @@
     background: rgba(224,166,60,.16); color: #E8B75B; border: 1px solid #A97F2E;
     white-space: nowrap;
   }
-  @media (max-width: 760px) { .proto-badge { display: block; width: fit-content; margin: 8px 0 0; white-space: normal; } .band .meta { text-align: left; margin-left: 0; } }
+  @media (max-width: 760px) {
+    .proto-badge { display: block; width: fit-content; margin: 8px 0 0; white-space: normal; }
+    .band .meta { text-align: left; margin-left: 0; }
+    .wrap { padding: 0 14px 48px; }
+    .band-inner { padding: 22px 14px 20px; }
+    .updates li { flex-wrap: wrap; gap: 4px 12px; }
+    .stuck li { flex-wrap: wrap; }
+    .drawer { padding: 14px; }
+    .timing-axis { margin-left: 110px; }
+    .trow2 .tname { width: 110px; font-size: 12px; }
+    .ttotal { width: 78px; font-size: 11px; }
+    .timing-pending { margin-left: 0; }
+    .dl-btn { margin-left: 0; }
+  }
 
   .banner {
     margin: 20px 0; padding: 9px 14px; border-radius: 8px;

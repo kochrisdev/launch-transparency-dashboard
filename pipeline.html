@@ -1,4 +1,5 @@
 <title>LAUNCH Pipeline Poster</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   /* Pipeline poster view — MMV-poster-style phase columns, LAUNCH teal identity.
      Single committed light look (a poster, printed and projected), explicit colors. */
@@ -39,7 +40,12 @@
     padding: 3px 10px; border-radius: 999px;
     background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); white-space: nowrap;
   }
-  @media (max-width: 760px) { .proto-badge { white-space: normal; margin-left: 0; margin-top: 6px; display: block; width: fit-content; } }
+  @media (max-width: 760px) {
+    .proto-badge { white-space: normal; margin-left: 0; margin-top: 6px; display: block; width: fit-content; }
+    .meta { text-align: left; margin-left: 0; }
+    .wrap { padding: 20px 14px 48px; }
+    .poster-box { padding: 12px; }
+  }
   .brand p { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; max-width: 62ch; }
   .meta { margin-left: auto; text-align: right; font-size: 12.5px; color: var(--ink-3); line-height: 1.6; }
   .meta b { color: var(--ink-2); font-weight: 600; }

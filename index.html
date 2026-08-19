@@ -1,4 +1,5 @@
 <title>LAUNCH Transparency Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
     --ground: #F5F7F8;
@@ -326,9 +327,18 @@
   }
 
   @media (max-width: 760px) {
-    .prow { grid-template-columns: 1fr; }
-    .flagnote { margin-left: 20px; }
+    .wrap { padding: 20px 14px 48px; }
+    .prow { grid-template-columns: 1fr; padding: 14px 14px; }
+    .flagnote { margin-left: 14px; margin-right: 14px; }
     .meta { text-align: left; margin-left: 0; }
+    .updates li { flex-wrap: wrap; gap: 4px 12px; }
+    .strip { padding: 10px 14px; }
+    .dl-btn { margin-left: 0; }
+    .detail { padding: 14px; }
+    .timing-axis { margin-left: 110px; }
+    .trow2 .tname { width: 110px; font-size: 12px; }
+    .ttotal { width: 78px; font-size: 11px; }
+    .timing-pending { margin-left: 0; }
   }
 </style>
 

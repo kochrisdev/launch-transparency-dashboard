@@ -1,4 +1,5 @@
 <title>The Waiting Years</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
     --ground: #F5F7F8; --surface: #FFFFFF; --surface-2: #EDF1F3;
@@ -151,11 +152,19 @@
   footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; }
 
   @media (max-width: 860px) {
-    .scrolly { grid-template-columns: 1fr; }
-    .stage { position: sticky; top: 0; height: 52vh; background: var(--ground); z-index: 2; order: -1;
-      border-bottom: 1px solid var(--line); }
-    .step { min-height: 70vh; }
-    .bignum { font-size: 44px; }
+    .scrolly { grid-template-columns: 1fr; padding: 0 14px; }
+    .stage { position: sticky; top: 0; height: 54vh; background: var(--ground); z-index: 2; order: -1;
+      border-bottom: 1px solid var(--line); padding: 8px 0; align-items: flex-start; }
+    .stage-inner { max-height: 100%; }
+    .layer.on { max-height: calc(54vh - 16px); overflow-y: auto; }
+    .step { min-height: 68vh; }
+    .step .card { padding: 16px 16px; }
+    .bignum { font-size: 40px; }
+    .biglbl { font-size: 13px; }
+    .panel { padding: 12px; margin-top: 10px; }
+    .mini-cards { grid-template-columns: 1fr; }
+    .hero { padding-top: 34px; }
+    .stl .glbl { max-width: 84px; }
   }
 </style>
 
