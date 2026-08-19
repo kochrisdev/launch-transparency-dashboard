@@ -45,6 +45,7 @@ window.LAUNCH_DATA =
     "GMP": "Good Manufacturing Practice — quality standard verified by inspection of manufacturing sites."
   },
   "changelog": [
+    { "date": "2026-08-15", "product": "All", "change": "Added MMV-style pipeline poster view (pipeline.html) placing each product in its development phase." },
     { "date": "2026-08-15", "product": "All", "change": "Added country access map (illustrative until verified), cross-product pathway timing chart, embeddable product widget, RSS update feed and automatic data-history snapshots." },
     { "date": "2026-08-14", "product": "ASPY", "change": "Renamed from Pyramax to ASPY (pyronaridine–artesunate); trade name retained in the subtitle." },
     { "date": "2026-08-14", "product": "All", "change": "Added glossary tooltips, CSV download, print view and pathway timing (time between gates) for marketed products." },
@@ -61,6 +62,7 @@ window.LAUNCH_DATA =
       "manufacturer": "Novartis · MMV",
       "class": "pipeline",
       "classLabel": "Pipeline · new chemical class",
+      "phase": "regulatory",
       "currentStage": 1,
       "flag": null,
       "stages": [
@@ -104,6 +106,7 @@ window.LAUNCH_DATA =
       "manufacturer": "Fosun Pharma · MORU / DeTACT partnership",
       "class": "pipeline",
       "classLabel": "Pipeline · triple ACT",
+      "phase": "phase3",
       "currentStage": 0,
       "flag": null,
       "stages": [
@@ -147,6 +150,7 @@ window.LAUNCH_DATA =
       "manufacturer": "Shin Poong Pharmaceutical · MMV",
       "class": "market",
       "classLabel": "Recommended · underutilized",
+      "phase": "access",
       "currentStage": 5,
       "flag": "Adoption is the bottleneck — strongly recommended by WHO since 2022 and registered in 25+ countries, but national guideline inclusion remains limited",
       "stages": [
@@ -222,6 +226,7 @@ window.LAUNCH_DATA =
       "manufacturer": "Alfasigma (Eurartesim) · Guilin and other PQ'd suppliers",
       "class": "market",
       "classLabel": "Recommended · underutilized",
+      "phase": "access",
       "currentStage": 6,
       "flag": "Procurement is the bottleneck — recommended and prequalified for a decade, yet a small share of global ACT volumes",
       "stages": [

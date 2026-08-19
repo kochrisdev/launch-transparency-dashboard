@@ -91,6 +91,11 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
 
     if (!["pipeline", "market"].includes(p.class))
       err(`${tag}: class must be "pipeline" or "market", got "${p.class}"`);
+    const PHASES = ["preclinical", "phase1", "phase2", "phase3", "regulatory", "access"];
+    if (p.phase !== undefined && !PHASES.includes(p.phase))
+      err(`${tag}: phase must be one of ${PHASES.join("/")}, got "${p.phase}"`);
+    if (p.phase === undefined)
+      warn(`${tag}: no "phase" — the product will not appear on the pipeline poster view`);
 
     // stage track
     if (!Array.isArray(p.stages) || p.stages.length !== nStages) {

@@ -94,6 +94,7 @@ sentence. Add any acronym you introduce in a note.
 | `id` | lowercase slug | Unique, stable — used as the HTML anchor. Never rename it, even if the display name changes (e.g. ASPY's id remains `pyramax`). |
 | `name`, `inn`, `manufacturer` | string | Display identity. |
 | `class` | `"pipeline"` \| `"market"` | Pipeline = pre-launch; market = launched but underutilized. Feeds the "expected to market" stat. |
+| `phase` | `"preclinical"` \| `"phase1"` \| `"phase2"` \| `"phase3"` \| `"regulatory"` \| `"access"` | Where the product sits on the pipeline-poster view. Move it forward when a phase gate is passed (e.g. Phase III readout → `"regulatory"`; first launches → `"access"`). A product without a phase is omitted from the poster (validator warns). |
 | `classLabel` | string | The chip text under the name. |
 | `currentStage` | integer 0–7 | Index of the highlighted stage. |
 | `flag` | string or `null` | The red sentence under the row. Required if any stage is `late`; keep it to one factual sentence with dates. |

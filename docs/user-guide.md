@@ -15,7 +15,9 @@ glance, **where each product stands and where it is stuck**.
 > **[Option B](https://kochrisdev.github.io/launch-transparency-dashboard/option-b.html)**
 > (a comparison matrix: stages as rows, medicines as columns, with the same
 > traffic lights and a profile drawer). The pages link to each other in their
-> headers. One layout will be retained after review.
+> headers. One layout will be retained after review. A third, complementary
+> **[pipeline poster](https://kochrisdev.github.io/launch-transparency-dashboard/pipeline.html)**
+> shows the whole portfolio by development phase, MMV-poster style.
 
 ---
 

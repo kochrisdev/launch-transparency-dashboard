@@ -16,6 +16,14 @@ tooltips and the print view are Option-A-only for now. Once the client picks a
 direction, the other option is deleted and the remaining extras are
 consolidated into the winner.
 
+There is also a third, complementary view (not part of the A/B decision):
+
+- **Pipeline poster** ([`pipeline.html`](https://kochrisdev.github.io/launch-transparency-dashboard/pipeline.html)):
+  the portfolio laid out MMV-poster style — development-phase columns
+  (Preclinical → Approved · scaling up), category-colored product cards with
+  bottleneck dots, a prevention lane for planned tools. Placement is driven by
+  each product's `phase` field; cards click through to the journey board.
+
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
 RBM Partnership to End Malaria.
@@ -47,6 +55,7 @@ controls the on-page banner.
 | --- | --- |
 | `index.html` | The dashboard, design option A (journey board). Static — no build step, no backend. |
 | `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
+| `pipeline.html` | Pipeline poster view (MMV-style phase columns). Reads the same data file. |
 | `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `widget.html` | Embeddable single-product tracker for partner sites (`?product=aspy` etc.). |
 | `data/world-map.js` | Generated map geometry (Natural Earth, public domain) — rerun `scripts/build-map.js` to regenerate. |
