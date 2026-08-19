@@ -102,6 +102,11 @@ Nothing remaining. ✅
 - **Pipeline poster (Aug 2026)** — `pipeline.html`, MMV-poster-style
   phase-column view of the portfolio, driven by the new per-product `phase`
   field; complementary to the A/B decision, cross-linked from both options.
+- **Data story (Aug 2026)** — `story.html`, scroll-driven narrative ("The
+  Waiting Years"): sticky visual walks portfolio → ASPY's timeline → the
+  computed 10-year approval-to-recommendation gap → the three-approvals
+  pathway → today's bottlenecks → the access map → the incoming pipeline.
+  All figures derived from the data file at render time.
 - **Streamlit platform (Aug 2026)** — `streamlit-app/`: parallel Python
   implementation (journey board, matrix heatmap, choropleth map, timing
   timeline, pipeline poster, exports) with flexible data input (bundled

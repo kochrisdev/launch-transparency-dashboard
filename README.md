@@ -23,6 +23,12 @@ There is also a third, complementary view (not part of the A/B decision):
   (Preclinical → Approved · scaling up), category-colored product cards with
   bottleneck dots, a prevention lane for planned tools. Placement is driven by
   each product's `phase` field; cards click through to the journey board.
+- **Data story** ([`story.html`](https://kochrisdev.github.io/launch-transparency-dashboard/story.html)):
+  "The Waiting Years" — a scroll-driven narrative for donors and advocacy: one
+  medicine's decade from approval to (still-pending) adoption, told through a
+  sticky visual that shifts from portfolio → timeline → pathway → bottlenecks →
+  map → the incoming pipeline. Every number is computed from the data file, so
+  the story updates itself as the data changes.
 
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
@@ -56,6 +62,7 @@ controls the on-page banner.
 | `index.html` | The dashboard, design option A (journey board). Static — no build step, no backend. |
 | `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
 | `pipeline.html` | Pipeline poster view (MMV-style phase columns). Reads the same data file. |
+| `story.html` | Scroll-driven data story ("The Waiting Years") for advocacy audiences. Reads the same data file. |
 | `streamlit-app/` | Parallel Python/Streamlit platform: same views, flexible data input (bundled file / URL / upload) and runtime configuration. See [its README](streamlit-app/README.md). |
 | `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `widget.html` | Embeddable single-product tracker for partner sites (`?product=aspy` etc.). |
