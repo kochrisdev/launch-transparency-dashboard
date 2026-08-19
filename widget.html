@@ -32,8 +32,9 @@
   .lbl { font-size: 8.5px; line-height: 1.2; color: var(--ink-3); margin-top: 4px; padding: 0 1px; }
   .flag { margin-top: 8px; font-size: 11.5px; color: var(--crit); }
   .flag::before { content: "▲ "; font-size: 8px; }
-  .foot { margin-top: 10px; display: flex; align-items: baseline; gap: 8px; font-size: 11px; color: var(--ink-3); }
-  .foot a { margin-left: auto; color: var(--accent); font-weight: 650; text-decoration: none; }
+  .foot { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 11px; color: var(--ink-3); }
+  .foot .navlinks { margin-left: auto; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+  .foot a { color: var(--accent); font-weight: 650; text-decoration: none; }
   .foot a:hover { text-decoration: underline; }
   .err { color: var(--crit); background: var(--crit-soft); border-radius: 8px; padding: 8px 12px; font-size: 12.5px; }
 </style>
@@ -83,7 +84,12 @@
     ${p.flag ? `<div class="flag">${esc(p.flag)}</div>` : ""}
     <div class="foot">
       <span>Updated ${esc(DATA.meta.lastUpdated)}</span>
-      <a href="index.html#${esc(p.id)}" target="_blank" rel="noopener">Full LAUNCH dashboard →</a>
+      <span class="navlinks">
+        <a href="index.html#${esc(p.id)}" target="_blank" rel="noopener">Dashboard →</a>
+        <a href="option-b.html" target="_blank" rel="noopener">Matrix</a>
+        <a href="pipeline.html" target="_blank" rel="noopener">Pipeline</a>
+        <a href="story.html" target="_blank" rel="noopener">Story</a>
+      </span>
     </div>`;
 })();
 </script>
