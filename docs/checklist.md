@@ -99,3 +99,6 @@ Nothing remaining. ✅
   milestone-scan reminder issue. Deferred until history accrues: procurement
   trend charts and "as of" playback; deferred until country data verified:
   audience lenses.
+- **Pipeline poster (Aug 2026)** — `pipeline.html`, MMV-poster-style
+  phase-column view of the portfolio, driven by the new per-product `phase`
+  field; complementary to the A/B decision, cross-linked from both options.

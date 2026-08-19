@@ -189,6 +189,10 @@ same commit; the overlay disappears.
 **Move the current-stage marker** — update `currentStage` (0-based index into
 the stages array).
 
+**Move a product on the pipeline poster** — update `phase` when a development
+gate is passed (`preclinical` → `phase1/2/3` → `regulatory` → `access`), in the
+same commit as the stage/milestone change it reflects, and changelog it.
+
 **Add a product** — copy an existing product block, change every field, keep
 exactly 8 stage entries, validate.
 

@@ -140,4 +140,5 @@ placeholder row for spatial emanators (prevention tool, pending funder approval)
 
 Live preview artifacts (private until shared): option A
 https://claude.ai/code/artifact/94826363-58d4-466f-b731-759a6d1e8fc7 · option B
-https://claude.ai/code/artifact/a8e7edc7-05bb-434f-8c0b-5b3ea5854542
+https://claude.ai/code/artifact/a8e7edc7-05bb-434f-8c0b-5b3ea5854542 · pipeline poster
+https://claude.ai/code/artifact/bd27d2a0-e0f2-47b5-8003-a6ac08989b6a

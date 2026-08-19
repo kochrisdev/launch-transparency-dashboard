@@ -188,7 +188,8 @@ per-product stage names as a future need.
 - WHO *Strategy to respond to antimalarial drug resistance in Africa* (2022) —
   why MFT and drug diversification matter.
 - Global Fund PQR / data explorer — prices and volumes (stage 6).
-- MMV's annual pipeline poster — the standard industry map of what's coming.
+- MMV's annual pipeline poster — the standard industry map of what's coming
+  (this repo's `pipeline.html` view borrows its phase-column format).
 - The LAUNCH presentation deck (internal) — slides 2–3 for the delay evidence,
   slides 7–9 for the dashboard's mandate; this repo implements slides 7–8.
 
