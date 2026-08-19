@@ -37,6 +37,7 @@ upgrade, or break.
 | `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
 | `.github/workflows/reminder.yml` | Monthly cron: opens the milestone-scan checklist issue. Also runnable manually (workflow_dispatch). |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
+| `streamlit-app/` | Parallel Python platform (analyst workbench): same data contract, flexible sources (file/URL/upload), runtime config, Plotly charts. Self-documented in its own README; `launch_data.py` is the pure-Python data layer, `app.py` the UI. Not part of the static deploy. |
 | `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
 

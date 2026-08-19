@@ -56,6 +56,7 @@ controls the on-page banner.
 | `index.html` | The dashboard, design option A (journey board). Static — no build step, no backend. |
 | `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
 | `pipeline.html` | Pipeline poster view (MMV-style phase columns). Reads the same data file. |
+| `streamlit-app/` | Parallel Python/Streamlit platform: same views, flexible data input (bundled file / URL / upload) and runtime configuration. See [its README](streamlit-app/README.md). |
 | `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `widget.html` | Embeddable single-product tracker for partner sites (`?product=aspy` etc.). |
 | `data/world-map.js` | Generated map geometry (Natural Earth, public domain) — rerun `scripts/build-map.js` to regenerate. |

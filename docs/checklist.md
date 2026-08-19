@@ -102,3 +102,10 @@ Nothing remaining. ✅
 - **Pipeline poster (Aug 2026)** — `pipeline.html`, MMV-poster-style
   phase-column view of the portfolio, driven by the new per-product `phase`
   field; complementary to the A/B decision, cross-linked from both options.
+- **Streamlit platform (Aug 2026)** — `streamlit-app/`: parallel Python
+  implementation (journey board, matrix heatmap, choropleth map, timing
+  timeline, pipeline poster, exports) with flexible data input (bundled
+  file / any URL / upload for pre-commit preview), sidebar configuration
+  (product filter, timing thresholds, governance toggles) and built-in data
+  checks. Deployable free on Streamlit Community Cloud; instructions in its
+  README.
