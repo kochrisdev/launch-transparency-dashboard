@@ -38,7 +38,10 @@ upgrade, or break.
 | `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
 | `.github/workflows/reminder.yml` | Monthly cron: opens the milestone-scan checklist issue. Also runnable manually (workflow_dispatch). |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
-| `streamlit-app/` | Parallel Python platform (analyst workbench): same data contract, flexible sources (file/URL/upload), runtime config, Plotly charts. Self-documented in its own README; `launch_data.py` is the pure-Python data layer, `app.py` the UI. Not part of the static deploy. |
+| `streamlit-app/` | Parallel Python platform (analyst workbench): same data contract, flexible sources (file/URL/upload), runtime config, Plotly charts. Self-documented in its own README; `launch_data.py` is the pure-Python data layer, `app.py` the UI. Not part of the static deploy. See §11. |
+| `powerbi/` | Power BI kit: live Power Query (M) scripts against the Pages data URL, CSV exports + generator, LAUNCH report theme, DAX measures, page-by-page build guide. Self-documented in its own README. See §11. |
+| `scripts/make-brief.js` | Generates the quarterly "what changed" brief into `briefs/` (diffs stage statuses against the closest `history/` snapshot before the window). |
+| `briefs/` | Generated what-changed briefs; `latest.md` is the stable pointer. |
 | `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
 
@@ -196,6 +199,26 @@ No test framework by design; two layers instead:
 - **New detail cards**: add the field to the schema (analyst guide §4), the
   validator, and the card template in the product render — in that order.
 
+## 9b. Testing the Streamlit app
+
+Streamlit's own harness runs the whole script headlessly and surfaces
+exceptions — use it after any `app.py` change:
+
+```python
+from streamlit.testing.v1 import AppTest
+at = AppTest.from_file("app.py", default_timeout=60)
+at.run()
+assert not at.exception, [e.value for e in at.exception]
+at.sidebar.multiselect[0].set_value(["ASPY"]).run()      # product filter
+at.sidebar.radio[0].set_value("Live site (URL)").run()   # live data source
+assert not at.exception
+```
+
+Widget indices are position-based — keep the sidebar's control order stable
+(source radio first, then the Configuration expander's multiselect → sliders →
+toggle) or update the tests. `launch_data.py` has no Streamlit imports, so its
+loaders/builders are testable with plain `python -c`.
+
 ## 10. Design options (temporary, during client review)
 
 `option-b.html` is a deliberate **fork of the presentation, not of the data or
@@ -222,7 +245,57 @@ delete the losing file, remove the cross-links, and if B wins, port A's
 glossary/CSV/print/timing blocks into it (they are self-contained sections of
 A's script and CSS).
 
-## 11. Conventions
+## 11. Parallel platforms (Streamlit, Power BI)
+
+The static site is the public flagship; two parallel platforms consume the
+same contract. Their per-folder READMEs are the operating manuals — this
+section is what a developer must know to keep all three coherent.
+
+**Streamlit** (`streamlit-app/`): `launch_data.py` (pure Python — parser
+accepts the `window.LAUNCH_DATA` wrapper or bare JSON, loaders for local
+file/URL/uploaded bytes, a lightweight mirror of the validator, row builders)
++ `app.py` (six tabbed views, injected brand CSS, sidebar data-source and
+configuration controls). Gotchas learned the hard way: Streamlit floats a
+~3.7rem header bar *over* the page — keep the transparent-strip + top-padding
+CSS or the branded header clips (and never `display:none` the header: the
+mobile sidebar toggle lives in it); alert `icon=` accepts only real emoji
+(`ℹ️` yes, `🛈` no); `st.columns` stack automatically on phones — design with
+that, custom HTML needs its own media queries. Deploys free on Streamlit
+Community Cloud (main file `streamlit-app/app.py`), auto-redeploys on push.
+
+**Power BI** (`powerbi/`): a kit, not a `.pbix` — `queries.m` (the
+`fnLaunchData` parser + 8 shaped tables, loading live from the Pages URL, so
+published reports refresh with the site), CSV exports for offline work,
+`LAUNCH-theme.json`, `measures.dax` (including the governance measures:
+`Data Status Banner`, `Map Verification Warning`). M can only execute inside
+Power BI/Excel — it cannot be CI-tested here, so treat `queries.m` as
+schema-coupled code reviewed by hand. If the hosting URL changes, `DataUrl`
+in `queries.m` is the one constant to edit.
+
+### Schema-change checklist
+
+When you add, rename, or restructure a field in `data/products.js`, touch —
+in this order:
+
+1. `data/products.js` — the field itself, with provenance where applicable.
+2. `scripts/validate-data.js` — a rule (error for governance, warning for
+   provenance debt) + the analyst guide's troubleshooting table.
+3. **Static renderers that surface it**: `index.html`, and as applicable
+   `option-b.html`, `pipeline.html`, `story.html`, `widget.html` (B reads
+   stages/flag/detail; poster reads `phase`; story derives from `journey`,
+   `countries`, `flag`; widget reads stages/flag only).
+4. `streamlit-app/launch_data.py` (row builders / validator mirror) and
+   `app.py` (the view that shows it).
+5. `powerbi/export-powerbi-data.js` **and** `powerbi/queries.m` (keep the two
+   table shapes identical), plus `measures.dax`/README if visualized.
+6. `scripts/make-brief.js` if the brief should report it.
+7. `docs/data-analyst-guide.md` §4 (dictionary) — and a changelog entry in the
+   data file.
+
+Skipping a consumer fails silently (the platforms ignore unknown fields), so
+grep the field name across the repo before calling a schema change done.
+
+## 12. Conventions
 
 - Match the existing style: vanilla ES2017+, template literals for markup,
   `esc()` on every interpolated value, no dependencies.

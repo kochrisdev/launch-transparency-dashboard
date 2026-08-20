@@ -33,6 +33,23 @@ charts), and `feed.xml` (the public RSS feed of updates) is rebuilt from your
 changelog entries. A GitHub issue also opens on the 1st of each month with the
 milestone-scan checklist; close it when the scan is done.
 
+## 1b. The platforms your edit feeds
+
+One data file drives three platforms. Know what each does with your push:
+
+| Platform | What it is | Effect of your push |
+| --- | --- | --- |
+| **Static site** (GitHub Pages) | The public flagship: journey board, comparison matrix, pipeline poster, data story, embeddable widget | Live within ~2 minutes, automatically. All five pages, the summary stats, the story's computed numbers and the RSS feed update themselves. |
+| **Streamlit app** (`streamlit-app/`) | The analyst workbench — and your **pre-commit preview tool** | If deployed on Streamlit Cloud: redeploys automatically. Locally: rerun. |
+| **Power BI kit** (`powerbi/`) | Report for Microsoft-stack partners, built once from the kit | Refreshes from the live site on its own schedule (set in the Power BI Service). No action for data-value changes; **schema** changes need the developer (see the developer guide's schema-change checklist). |
+
+**Previewing a draft before you commit** (recommended for big updates): run the
+Streamlit app (`cd streamlit-app && streamlit run app.py`), choose **Upload
+file** in the sidebar, and drop in your edited `products.js`. You get every
+view rendered from the draft plus live governance-check results — errors caught
+here never reach the public site. The sidebar's 🛡️ *Data checks* panel mirrors
+the repo validator.
+
 ## 2. Status vocabulary
 
 Every stage and milestone uses one of four statuses:
@@ -61,6 +78,10 @@ counts, dates, prices and volumes. The validator rejects invented-looking data
 where it can; where it can't, this rule is on you.
 
 ## 4. Data dictionary
+
+*(What readers see built from these fields is described in the
+[user guide](user-guide.md); which platforms consume which field is the
+[developer guide](developer-guide.md)'s schema-change checklist.)*
 
 ### `meta`
 
