@@ -57,11 +57,21 @@ bottleneck flags, unconfirmed prices.
 
 ## Views
 
-Journey board (per-product traffic lights + full profiles) · Comparison matrix
-(heatmap, hover notes) · Country map (Plotly choropleth from `countries.list`)
-· Pathway timing (gate-to-gate timeline from `journey`) · Pipeline poster
-(MMV-style phase columns from `phase`) · Data & export (tables, CSV/JSON
-downloads, changelog).
+Journey board (branded product cards with traffic-light stage tracks + full
+profiles) · Comparison matrix (heatmap, hover notes) · Country map (Plotly
+choropleth from `countries.list`) · Pathway timing (gate-to-gate timeline from
+`journey`) · Pipeline poster (MMV-style phase columns from `phase`) · Data &
+export (tables, CSV/JSON downloads, changelog).
+
+## UI & mobile
+
+The app injects the LAUNCH visual identity (teal accent, status colors,
+card-styled metrics, prototype badge) via a scoped CSS block in `app.py`, and
+is mobile-responsive: stage tracks scroll horizontally inside their cards,
+metric/pipeline columns stack vertically on phones (native Streamlit
+behaviour), chart legends move to horizontal placement, and paddings/type
+scale tighten below 640 px. Streamlit's default menu/footer chrome is hidden
+for a cleaner embed-like look.
 
 ## Files
 

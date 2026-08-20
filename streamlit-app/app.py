@@ -7,6 +7,7 @@ upload), runtime view configuration, and interactive Plotly charts.
 Run:  streamlit run app.py
 """
 
+import html as html_mod
 import json
 
 import pandas as pd
@@ -19,11 +20,89 @@ st.set_page_config(page_title="LAUNCH Transparency Dashboard", page_icon="💊",
 
 ACCENT = "#14657E"
 STATUS_COLOR = {"done": "#1E8A5A", "prog": "#B87500", "late": "#C0392B", "idle": "#9AA8B1"}
-PACE_COLOR = {}  # filled after thresholds are known
+STATUS_ICON = {"done": "✓", "prog": "›", "late": "!", "idle": ""}
+PLOTLY_CONFIG = {"displayModeBar": False}
+E = html_mod.escape
+
+# ---------------------------------------------------------------- brand CSS (incl. mobile)
+st.markdown("""
+<style>
+:root {
+  --lch-accent:#14657E; --lch-accent-soft:#E3EEF2; --lch-ink:#16303F; --lch-ink2:#4E6371;
+  --lch-ink3:#7C8E99; --lch-line:#D8E0E4; --lch-surface:#FFFFFF; --lch-surface2:#EDF1F3;
+  --lch-good:#1E8A5A; --lch-warn:#B87500; --lch-crit:#C0392B; --lch-crit-soft:#FAE7E4;
+  --lch-idle:#9AA8B1; --lch-idle-soft:#EEF1F3; --lch-warn-soft:#FBF0DA;
+}
+#MainMenu, footer, [data-testid="stToolbar"] { visibility: hidden; height: 0; }
+.block-container { padding-top: 1.1rem; padding-bottom: 3rem; max-width: 1200px; }
+
+/* header */
+.lch-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 2px; }
+.lch-title { font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; color: var(--lch-ink); }
+.lch-title span { color: var(--lch-accent); }
+.lch-badge { font-size: .68rem; font-weight: 650; letter-spacing: .02em; padding: 3px 10px;
+  border-radius: 999px; background: var(--lch-warn-soft); color: var(--lch-warn);
+  border: 1px solid var(--lch-warn); white-space: nowrap; }
+.lch-sub { color: var(--lch-ink2); font-size: .92rem; margin: 2px 0 0; }
+.lch-meta { color: var(--lch-ink3); font-size: .78rem; margin-top: 4px; }
+
+/* metric cards */
+[data-testid="stMetric"] { background: var(--lch-surface); border: 1px solid var(--lch-line);
+  border-radius: 12px; padding: 12px 16px; box-shadow: 0 1px 2px rgba(22,48,63,.06); }
+[data-testid="stMetricLabel"] { color: var(--lch-ink3); }
+
+/* tabs */
+[data-testid="stTabs"] button { font-weight: 650; }
+[data-testid="stTabs"] button[aria-selected="true"] { color: var(--lch-accent); }
+
+/* product card + stage track */
+.lch-card { background: var(--lch-surface); border: 1px solid var(--lch-line); border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(22,48,63,.06), 0 4px 16px rgba(22,48,63,.07);
+  padding: 14px 18px 10px; margin: 4px 0 2px; }
+.lch-prow { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: flex-start; }
+.lch-pid { min-width: 200px; flex: 1 1 200px; }
+.lch-pname { font-size: 1.08rem; font-weight: 750; color: var(--lch-ink); }
+.lch-pinn { font-size: .8rem; color: var(--lch-ink2); }
+.lch-pmfr { font-size: .75rem; color: var(--lch-ink3); }
+.lch-chip { display: inline-block; margin-top: 6px; font-size: .62rem; font-weight: 650;
+  letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px;
+  background: var(--lch-surface2); color: var(--lch-ink2); }
+.lch-chip.pipe { background: var(--lch-accent-soft); color: var(--lch-accent); }
+.lch-trackbox { flex: 3 1 380px; overflow-x: auto; }
+.lch-track { display: flex; align-items: flex-start; min-width: 560px; }
+.lch-st { flex: 1; min-width: 68px; text-align: center; }
+.lch-strow { display: flex; align-items: center; }
+.lch-bar { flex: 1; height: 3px; background: var(--lch-line); }
+.lch-bar.g { background: var(--lch-good); }
+.lch-st:first-child .pre, .lch-st:last-child .post { visibility: hidden; }
+.lch-dot { width: 19px; height: 19px; border-radius: 50%; display: inline-flex; align-items: center;
+  justify-content: center; flex: none; margin: 0 2px; font-size: 11px; font-weight: 800; color: #fff; cursor: help; }
+.lch-dot.done { background: var(--lch-good); } .lch-dot.prog { background: var(--lch-warn); }
+.lch-dot.late { background: var(--lch-crit); }
+.lch-dot.idle { background: var(--lch-idle-soft); border: 1.5px dashed var(--lch-idle); color: var(--lch-idle); }
+.lch-st.cur .lch-dot { box-shadow: 0 0 0 3px var(--lch-accent-soft); }
+.lch-stlbl { font-size: .62rem; line-height: 1.25; color: var(--lch-ink3); margin-top: 5px; padding: 0 2px; }
+.lch-st.cur .lch-stlbl { color: var(--lch-ink); font-weight: 650; }
+.lch-flag { margin-top: 8px; font-size: .8rem; color: var(--lch-crit); }
+.lch-flag::before { content: "▲ "; font-size: .6rem; }
+.lch-coming { font-size: .8rem; color: var(--lch-ink3); background: var(--lch-surface);
+  border: 1px dashed var(--lch-line); border-radius: 12px; padding: 10px 16px; margin-top: 10px; }
+
+/* mobile */
+@media (max-width: 640px) {
+  .block-container { padding-left: .8rem; padding-right: .8rem; }
+  .lch-title { font-size: 1.35rem; }
+  .lch-badge { white-space: normal; }
+  .lch-card { padding: 12px 12px 8px; }
+  .lch-track { min-width: 500px; }
+  [data-testid="stMetric"] { padding: 8px 12px; }
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------- sidebar: data input
-st.sidebar.title("💊 LAUNCH")
-st.sidebar.caption("Streamlit platform · prototype")
+st.sidebar.markdown("### 💊 LAUNCH")
+st.sidebar.caption("Streamlit platform · analyst workbench")
 
 source = st.sidebar.radio(
     "Data source",
@@ -47,11 +126,12 @@ uploaded_bytes = None
 if source == "Live site (URL)":
     url = st.sidebar.text_input("URL of products.js / .json", value=ld.DEFAULT_URL)
 elif source == "Upload file":
-    up = st.sidebar.file_uploader("products.js or .json", type=["js", "json", "txt"])
+    up = st.sidebar.file_uploader("products.js or .json", type=["js", "json", "txt"],
+                                  help="Preview a draft data file before committing it.")
     if up is not None:
         uploaded_bytes = up.getvalue()
     else:
-        st.sidebar.info("No file yet — showing the bundled repo file.")
+        st.sidebar.info("No file yet — showing the bundled repo file.", icon="📄")
 
 try:
     data = _load(source, url, uploaded_bytes)
@@ -60,7 +140,7 @@ except Exception as e:  # noqa: BLE001 — any load/parse failure is a user-faci
     st.stop()
 
 issues = ld.validate(data)
-with st.sidebar.expander(f"Data checks ({len(issues)} issue{'s' if len(issues) != 1 else ''})",
+with st.sidebar.expander(f"🛡️ Data checks ({len(issues)} issue{'s' if len(issues) != 1 else ''})",
                          expanded=bool(issues)):
     if issues:
         for i in issues:
@@ -69,13 +149,16 @@ with st.sidebar.expander(f"Data checks ({len(issues)} issue{'s' if len(issues) !
         st.success("All governance checks pass.")
 
 # ---------------------------------------------------------------- sidebar: configuration
-with st.sidebar.expander("Configuration", expanded=False):
+with st.sidebar.expander("⚙️ Configuration", expanded=False):
     products_all = [p["name"] for p in ld.tracked(data)]
     picked = st.multiselect("Products", products_all, default=products_all)
     good_max = st.slider("Timing: 'on track' up to (years)", 1, 4, 2)
     warn_max = st.slider("Timing: 'slow' up to (years)", good_max + 1, 10, max(5, good_max + 1))
     hide_unverified_map = st.toggle("Hide map until country data is verified", value=False,
                                     help="Governance option: suppress the choropleth entirely while countries.status is not 'verified'.")
+
+st.sidebar.caption("Static site: [journey board](https://kochrisdev.github.io/launch-transparency-dashboard/) · "
+                   "[data story](https://kochrisdev.github.io/launch-transparency-dashboard/story.html)")
 
 meta = data["meta"]
 tracked = [p for p in ld.tracked(data) if p["name"] in picked]
@@ -88,15 +171,16 @@ PACE_COLOR = {
 }
 
 # ---------------------------------------------------------------- header + banner
-left, right = st.columns([3, 1])
-with left:
-    st.title("LAUNCH Transparency Dashboard")
-    st.caption("Tracking new antimalarial medicines from approval to access — where each product "
-               "stands, and where it is stuck. **Prototype — data presented here may not be accurate.**")
-with right:
-    st.metric("Medicines tracked", len(tracked))
-    n_late = sum(1 for p in tracked if any(s["status"] == "late" for s in p["stages"]))
-    st.metric("Active bottlenecks", n_late)
+st.markdown(f"""
+<div class="lch-head">
+  <span class="lch-title"><span>LAUNCH</span> Transparency Dashboard</span>
+  <span class="lch-badge">Prototype — data presented here may not be accurate</span>
+</div>
+<p class="lch-sub">Tracking new antimalarial medicines from approval to access — where each product
+stands, and where it is stuck.</p>
+<p class="lch-meta">Last updated <b>{E(meta['lastUpdated'])}</b> · data status <b>{E(meta['dataStatus'])}</b> ·
+to be hosted by the RBM Partnership to End Malaria</p>
+""", unsafe_allow_html=True)
 
 BANNERS = {
     "illustrative": ("Design mockup — all values are illustrative placeholders, not real programme data.", st.info),
@@ -106,27 +190,63 @@ BANNERS = {
 if meta["dataStatus"] in BANNERS:
     text, fn = BANNERS[meta["dataStatus"]]
     fn(text, icon="ℹ️")
-st.caption(f"Last updated **{meta['lastUpdated']}** · data status **{meta['dataStatus']}** · "
-           f"to be hosted by the RBM Partnership to End Malaria")
+
+# summary strip
+n_late = sum(1 for p in tracked if any(s["status"] == "late" for s in p["stages"]))
+n_pipe = sum(1 for p in tracked if p["class"] == "pipeline")
+n_tbc = 0
+for p in tracked:
+    c = p["detail"]["country"]
+    n_tbc += sum(1 for k in ("registered", "inGuidelines", "inMft") if c[k] == "TBC")
+    n_tbc += 1 if (p["detail"]["price"]["value"] or "").strip() == "TBC" else 0
+    n_tbc += 0 if p["detail"].get("volume") else 1
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("Medicines tracked", len(tracked))
+m2.metric("Active bottlenecks", n_late, delta="needs action" if n_late else None,
+          delta_color="inverse" if n_late else "off")
+m3.metric("Expected to market ≤ 3 yrs", n_pipe)
+m4.metric("Open data gaps (TBC)", n_tbc, help="Values awaiting verification — the analyst to-do list.")
 
 # ---------------------------------------------------------------- tabs
 tab_board, tab_matrix, tab_map, tab_timing, tab_pipeline, tab_data = st.tabs(
-    ["Journey board", "Comparison matrix", "Country map", "Pathway timing", "Pipeline poster", "Data & export"])
+    ["🚦 Journey board", "🔢 Comparison matrix", "🗺️ Country map",
+     "⏱️ Pathway timing", "🧪 Pipeline poster", "📄 Data & export"])
+
+
+def stage_track_html(p) -> str:
+    cells = []
+    for i, s in enumerate(p["stages"]):
+        pre = "g" if i > 0 and p["stages"][i - 1]["status"] == "done" else ""
+        post = "g" if s["status"] == "done" else ""
+        cur = "cur" if i == p.get("currentStage", -1) else ""
+        tip = f"{ld.STATUS_LABEL[s['status']]}. {s.get('note', '')}".strip()
+        cells.append(
+            f'<div class="lch-st {cur}"><div class="lch-strow">'
+            f'<div class="lch-bar pre {pre}"></div>'
+            f'<span class="lch-dot {s["status"]}" title="{E(tip)}">{STATUS_ICON[s["status"]]}</span>'
+            f'<div class="lch-bar post {post}"></div></div>'
+            f'<div class="lch-stlbl">{E(data["stages"][i])}</div></div>')
+    return '<div class="lch-trackbox"><div class="lch-track">' + "".join(cells) + "</div></div>"
+
 
 # ---------- journey board ----------
 with tab_board:
     for p in tracked:
-        cols = st.columns([2, 5])
-        with cols[0]:
-            st.subheader(p["name"])
-            st.caption(f"{p['inn']}  \n{p['manufacturer']}  \n`{p['classLabel']}`")
-        with cols[1]:
-            lights = " → ".join(
-                f"{ld.STATUS_EMOJI[s['status']]} {data['stages'][i]}"
-                for i, s in enumerate(p["stages"]))
-            st.markdown(lights)
-            if p.get("flag"):
-                st.error(f"▲ {p['flag']}", icon="🚩")
+        chip_cls = "pipe" if p["class"] == "pipeline" else ""
+        flag_html = f'<div class="lch-flag">{E(p["flag"])}</div>' if p.get("flag") else ""
+        st.markdown(f"""
+<div class="lch-card">
+  <div class="lch-prow">
+    <div class="lch-pid">
+      <div class="lch-pname">{E(p['name'])}</div>
+      <div class="lch-pinn">{E(p['inn'])}</div>
+      <div class="lch-pmfr">{E(p['manufacturer'])}</div>
+      <span class="lch-chip {chip_cls}">{E(p['classLabel'])}</span>
+    </div>
+    {stage_track_html(p)}
+  </div>
+  {flag_html}
+</div>""", unsafe_allow_html=True)
         with st.expander(f"{p['name']} — full profile"):
             d = p["detail"]
             c1, c2, c3, c4 = st.columns(4)
@@ -147,10 +267,9 @@ with tab_board:
             st.markdown("**Milestones**")
             mdf = pd.DataFrame([r for r in ld.milestone_rows(data) if r["Product"] == p["name"]])
             st.dataframe(mdf.drop(columns=["Product", "StatusKey"]), width="stretch", hide_index=True)
-        st.divider()
-    if placeholders:
-        for p in placeholders:
-            st.caption(f"⏳ **Coming next: {p['name']}** ({p['manufacturer']}) — {p['note']}")
+    for p in placeholders:
+        st.markdown(f'<div class="lch-coming">⏳ <b>Coming next: {E(p["name"])}</b> '
+                    f'({E(p["manufacturer"])}) — {E(p["note"])}</div>', unsafe_allow_html=True)
 
 # ---------- comparison matrix ----------
 with tab_matrix:
@@ -171,9 +290,10 @@ with tab_matrix:
         fig.update_traces(text=text, texttemplate="%{text}",
                           customdata=hover, hovertemplate="%{customdata}<extra></extra>")
         fig.update_layout(coloraxis_showscale=False, height=420,
-                          margin=dict(l=10, r=10, t=10, b=10))
-        st.plotly_chart(fig, width="stretch")
-        st.caption("✅ complete · 🟡 in progress · 🔴 delayed · ⚪ not started — hover a cell for the status note.")
+                          margin=dict(l=10, r=10, t=10, b=10),
+                          font=dict(size=12))
+        st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
+        st.caption("✅ complete · 🟡 in progress · 🔴 delayed · ⚪ not started — hover (or tap) a cell for the status note.")
         flagged = [p for p in tracked if p.get("flag")]
         if flagged:
             st.markdown("**Where products are stuck right now**")
@@ -203,9 +323,10 @@ with tab_map:
             )
             fig.update_geos(showcountries=True, countrycolor="#D8E0E4",
                             landcolor="#F5F7F8", fitbounds="locations")
-            fig.update_layout(height=480, margin=dict(l=0, r=0, t=0, b=0),
-                              legend_title_text="Access level")
-            st.plotly_chart(fig, width="stretch")
+            fig.update_layout(height=460, margin=dict(l=0, r=0, t=0, b=0),
+                              legend=dict(orientation="h", yanchor="bottom", y=-0.06,
+                                          xanchor="center", x=0.5, title_text=""))
+            st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
 
 # ---------- pathway timing ----------
 with tab_timing:
@@ -221,9 +342,9 @@ with tab_timing:
                           hover_data={"From": True, "To": True, "Years": True,
                                       "Start": False, "End": False, "Pace": False})
         fig.update_yaxes(autorange="reversed", title="")
-        fig.update_layout(height=320, margin=dict(l=10, r=10, t=10, b=10),
-                          legend_title_text="Pace between gates")
-        st.plotly_chart(fig, width="stretch")
+        fig.update_layout(height=300, margin=dict(l=10, r=10, t=10, b=10),
+                          legend=dict(orientation="h", yanchor="bottom", y=1.02, title_text=""))
+        st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
         st.caption(f"Benchmark (configurable in the sidebar): on track ≤ {good_max} yrs per gate; "
                    f"slow {good_max + 1}–{warn_max}; delayed beyond {warn_max}. "
                    "Grey bars run to today where the next gate is still pending.")
@@ -239,17 +360,18 @@ with tab_pipeline:
                     color = STATUS_COLOR["done"] if p["class"] == "market" else ACCENT
                     flag = " 🔴" if p.get("flag") else ""
                     st.markdown(
-                        f"<div style='border-left:5px solid {color};padding:8px 10px;"
-                        f"background:#fff;border:1px solid #D8E0E4;border-left-width:5px;"
+                        f"<div style='border:1px solid var(--lch-line);border-left:5px solid {color};"
+                        f"padding:8px 10px;background:var(--lch-surface);"
                         f"border-radius:8px;margin-bottom:8px'>"
-                        f"<b>{p['name']}</b>{flag}<br><small>{p['inn']}</small><br>"
-                        f"<small style='color:#7C8E99'>{p['manufacturer']}</small></div>",
+                        f"<b>{E(p['name'])}</b>{flag}<br><small>{E(p['inn'])}</small><br>"
+                        f"<small style='color:var(--lch-ink3)'>{E(p['manufacturer'])}</small></div>",
                         unsafe_allow_html=True)
-    if placeholders:
-        st.caption("Prevention — vector control: " + "; ".join(
-            f"**{p['name']}** ({p['manufacturer']}) — phase placement pending funder approval"
-            for p in placeholders))
-    st.caption("🔴 = active bottleneck. Format follows MMV's antimalarial pipeline poster convention.")
+    for p in placeholders:
+        st.markdown(f'<div class="lch-coming">Prevention — vector control: <b>{E(p["name"])}</b> '
+                    f'({E(p["manufacturer"])}) — phase placement pending funder approval</div>',
+                    unsafe_allow_html=True)
+    st.caption("🔴 = active bottleneck. Format follows MMV's antimalarial pipeline poster convention. "
+               "On phones the phase columns stack vertically — read top (earliest) to bottom (latest).")
 
 # ---------- data & export ----------
 with tab_data:
@@ -260,16 +382,16 @@ with tab_data:
     st.markdown("**Milestones**")
     st.dataframe(mdf.drop(columns=["StatusKey"]), width="stretch", hide_index=True)
     c1, c2, c3 = st.columns(3)
-    c1.download_button("Download stages CSV", sdf.to_csv(index=False).encode("utf-8-sig"),
-                       f"launch-stages-{meta['lastUpdated']}.csv", "text/csv")
-    c2.download_button("Download milestones CSV", mdf.to_csv(index=False).encode("utf-8-sig"),
-                       f"launch-milestones-{meta['lastUpdated']}.csv", "text/csv")
-    c3.download_button("Download raw JSON", json.dumps(data, indent=2).encode("utf-8"),
-                       f"launch-data-{meta['lastUpdated']}.json", "application/json")
+    c1.download_button("⬇️ Stages CSV", sdf.to_csv(index=False).encode("utf-8-sig"),
+                       f"launch-stages-{meta['lastUpdated']}.csv", "text/csv", width="stretch")
+    c2.download_button("⬇️ Milestones CSV", mdf.to_csv(index=False).encode("utf-8-sig"),
+                       f"launch-milestones-{meta['lastUpdated']}.csv", "text/csv", width="stretch")
+    c3.download_button("⬇️ Raw JSON", json.dumps(data, indent=2).encode("utf-8"),
+                       f"launch-data-{meta['lastUpdated']}.json", "application/json", width="stretch")
     if data.get("changelog"):
         st.markdown("**Recent updates**")
         st.dataframe(pd.DataFrame(data["changelog"]), width="stretch", hide_index=True)
 
-st.caption("---\nThe LAUNCH dashboard displays publicly available information only; product details appear "
+st.caption("The LAUNCH dashboard displays publicly available information only; product details appear "
            "solely where the manufacturer confirmed release in writing. A LAUNCH initiative of Unitaid "
            "partners, to be hosted by the RBM Partnership to End Malaria.")
