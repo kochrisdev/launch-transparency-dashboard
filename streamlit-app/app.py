@@ -34,7 +34,11 @@ st.markdown("""
   --lch-idle:#9AA8B1; --lch-idle-soft:#EEF1F3; --lch-warn-soft:#FBF0DA;
 }
 #MainMenu, footer, [data-testid="stToolbar"] { visibility: hidden; height: 0; }
-.block-container { padding-top: 1.1rem; padding-bottom: 3rem; max-width: 1200px; }
+/* Streamlit floats a ~3.7rem header bar over the page. Keep it (the sidebar
+   toggle lives there, essential on mobile) but make it a slim transparent
+   strip, and pad the content below it so nothing renders underneath. */
+header[data-testid="stHeader"] { background: transparent; height: 2.6rem; }
+.block-container { padding-top: 3.4rem; padding-bottom: 3rem; max-width: 1200px; }
 
 /* header */
 .lch-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 2px; }
@@ -90,7 +94,8 @@ st.markdown("""
 
 /* mobile */
 @media (max-width: 640px) {
-  .block-container { padding-left: .8rem; padding-right: .8rem; }
+  .block-container { padding-left: .8rem; padding-right: .8rem; padding-top: 3.6rem; }
+  .lch-head { flex-direction: column; align-items: flex-start; gap: 6px; }
   .lch-title { font-size: 1.35rem; }
   .lch-badge { white-space: normal; }
   .lch-card { padding: 12px 12px 8px; }
