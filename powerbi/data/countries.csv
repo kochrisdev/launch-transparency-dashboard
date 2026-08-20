@@ -1,0 +1,33 @@
+﻿productId,productName,iso3,level,levelLabel,levelRank,dataStatus
+pyramax,ASPY,GHA,mft,In MFT plans,3,illustrative
+pyramax,ASPY,BFA,mft,In MFT plans,3,illustrative
+pyramax,ASPY,KEN,mft,In MFT plans,3,illustrative
+pyramax,ASPY,KHM,mft,In MFT plans,3,illustrative
+pyramax,ASPY,VNM,guidelines,In national guidelines,2,illustrative
+pyramax,ASPY,CIV,guidelines,In national guidelines,2,illustrative
+pyramax,ASPY,RWA,guidelines,In national guidelines,2,illustrative
+pyramax,ASPY,UGA,guidelines,In national guidelines,2,illustrative
+pyramax,ASPY,NGA,registered,Registered,1,illustrative
+pyramax,ASPY,COD,registered,Registered,1,illustrative
+pyramax,ASPY,TZA,registered,Registered,1,illustrative
+pyramax,ASPY,MOZ,registered,Registered,1,illustrative
+pyramax,ASPY,SEN,registered,Registered,1,illustrative
+pyramax,ASPY,CMR,registered,Registered,1,illustrative
+pyramax,ASPY,MLI,registered,Registered,1,illustrative
+pyramax,ASPY,MMR,registered,Registered,1,illustrative
+dhappq,DHA–PPQ,KHM,mft,In MFT plans,3,illustrative
+dhappq,DHA–PPQ,VNM,mft,In MFT plans,3,illustrative
+dhappq,DHA–PPQ,MOZ,mft,In MFT plans,3,illustrative
+dhappq,DHA–PPQ,TZA,mft,In MFT plans,3,illustrative
+dhappq,DHA–PPQ,SEN,mft,In MFT plans,3,illustrative
+dhappq,DHA–PPQ,THA,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,MMR,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,LAO,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,IDN,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,GHA,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,ZMB,guidelines,In national guidelines,2,illustrative
+dhappq,DHA–PPQ,CHN,registered,Registered,1,illustrative
+dhappq,DHA–PPQ,IND,registered,Registered,1,illustrative
+dhappq,DHA–PPQ,NGA,registered,Registered,1,illustrative
+dhappq,DHA–PPQ,BFA,registered,Registered,1,illustrative
+dhappq,DHA–PPQ,KEN,registered,Registered,1,illustrative

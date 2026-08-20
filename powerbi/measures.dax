@@ -1,0 +1,90 @@
+-- LAUNCH dashboard — DAX measures.
+-- Create each in Power BI Desktop (Modeling → New measure), on the table noted.
+-- Model relationships to set up first (all one-to-many, single direction):
+--   Products[productId] → Stages[productId]
+--   Products[productId] → Milestones[productId]
+--   Products[productId] → Countries[productId]
+--   Products[productId] → JourneySegments[productId]
+
+-- ===== Summary strip (home page cards) — on Products =====
+
+Medicines Tracked = COUNTROWS ( Products )
+
+Active Bottlenecks =
+CALCULATE (
+    DISTINCTCOUNT ( Stages[productId] ),
+    Stages[status] = "late"
+)
+
+Pipeline Products = CALCULATE ( COUNTROWS ( Products ), Products[class] = "pipeline" )
+
+Open TBC Gaps =
+SUMX (
+    Products,
+    ( IF ( Products[registered] = "TBC", 1, 0 ) )
+        + ( IF ( Products[inGuidelines] = "TBC", 1, 0 ) )
+        + ( IF ( Products[inMft] = "TBC", 1, 0 ) )
+        + ( IF ( Products[priceValue] = "TBC", 1, 0 ) )
+)
+
+Last Updated = MAX ( Meta[lastUpdated] )
+
+Data Status Banner =
+VAR s = SELECTEDVALUE ( Meta[dataStatus] )
+RETURN
+    SWITCH (
+        s,
+        "illustrative", "DESIGN MOCKUP — illustrative placeholder data",
+        "draft", "DRAFT DATA — public sources, pending verification. TBC = not yet verified.",
+        "Verified data"
+    )
+
+-- ===== Journey board / matrix — on Stages =====
+
+Status Emoji =
+SWITCH (
+    SELECTEDVALUE ( Stages[status] ),
+    "done", "✓", "prog", "›", "late", "!", "idle", "○"
+)
+
+-- Use statusRank (0–3) with conditional formatting for cell background:
+-- Format by rules on MAX(Stages[statusRank]):
+--   =0 → #EEF1F3   =1 → #C0392B   =2 → #B87500   =3 → #1E8A5A
+
+Stage Tooltip =
+SELECTEDVALUE ( Stages[statusLabel] ) & ". " & SELECTEDVALUE ( Stages[note] )
+
+-- ===== Pathway timing — on JourneySegments =====
+
+Total Years Elapsed = SUM ( JourneySegments[years] )
+
+Pace Color =
+SWITCH (
+    SELECTEDVALUE ( JourneySegments[pace] ),
+    "On track", "#1E8A5A",
+    "Slow", "#B87500",
+    "Delayed", "#C0392B",
+    "#9AA8B1"
+)
+
+-- ===== Country map — on Countries =====
+
+Access Level Rank = MAX ( Countries[levelRank] )
+-- Filled map: Location = iso3; color saturation/rules on [Access Level Rank]:
+--   1 → #B7D3DD   2 → #5E97AC   3 → #14657E
+
+Map Verification Warning =
+IF (
+    SELECTEDVALUE ( Countries[dataStatus], "verified" ) <> "verified",
+    "ILLUSTRATIVE — country coloring pending the verified LAUNCH survey",
+    ""
+)
+
+-- ===== Bottleneck panel — on Products =====
+
+Bottleneck List =
+CONCATENATEX (
+    FILTER ( Products, Products[flag] <> BLANK () ),
+    Products[name] & " — " & Products[flag],
+    UNICHAR ( 10 )
+)

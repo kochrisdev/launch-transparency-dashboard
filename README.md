@@ -64,6 +64,7 @@ controls the on-page banner.
 | `pipeline.html` | Pipeline poster view (MMV-style phase columns). Reads the same data file. |
 | `story.html` | Scroll-driven data story ("The Waiting Years") for advocacy audiences. Reads the same data file. |
 | `streamlit-app/` | Parallel Python/Streamlit platform: same views, flexible data input (bundled file / URL / upload) and runtime configuration. See [its README](streamlit-app/README.md). |
+| `powerbi/` | Power BI kit: live-refreshing Power Query scripts, CSV exports, LAUNCH theme, DAX measures and a page-by-page build guide. See [its README](powerbi/README.md). |
 | `data/products.js` | **The only file that changes in routine updates** — feeds both design options. Strict JSON wrapped in `window.LAUNCH_DATA =`. |
 | `widget.html` | Embeddable single-product tracker for partner sites (`?product=aspy` etc.). |
 | `data/world-map.js` | Generated map geometry (Natural Earth, public domain) — rerun `scripts/build-map.js` to regenerate. |

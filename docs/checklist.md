@@ -107,6 +107,11 @@ Nothing remaining. ✅
   computed 10-year approval-to-recommendation gap → the three-approvals
   pathway → today's bottlenecks → the access map → the incoming pipeline.
   All figures derived from the data file at render time.
+- **Power BI kit (Aug 2026)** — `powerbi/`: live-refreshing Power Query (M)
+  scripts against the Pages data URL, offline CSV exports + generator, LAUNCH
+  report theme, DAX measures (incl. governance banner and map verification
+  warning), and a page-by-page build guide mirroring the five web views.
+  Assembly in Power BI Desktop is manual by design (~1 hour; guide included).
 - **Streamlit platform (Aug 2026)** — `streamlit-app/`: parallel Python
   implementation (journey board, matrix heatmap, choropleth map, timing
   timeline, pipeline poster, exports) with flexible data input (bundled

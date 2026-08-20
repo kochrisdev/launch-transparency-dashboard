@@ -1,0 +1,34 @@
+{
+  "name": "LAUNCH Transparency Dashboard",
+  "dataColors": ["#14657E", "#3E5C8A", "#1E8A5A", "#B87500", "#C0392B", "#5E97AC", "#9AA8B1", "#B7D3DD"],
+  "good": "#1E8A5A",
+  "neutral": "#B87500",
+  "bad": "#C0392B",
+  "maximum": "#14657E",
+  "center": "#5E97AC",
+  "minimum": "#B7D3DD",
+  "background": "#FFFFFF",
+  "foreground": "#16303F",
+  "tableAccent": "#14657E",
+  "textClasses": {
+    "title": { "color": "#16303F", "fontFace": "Segoe UI Semibold", "fontSize": 14 },
+    "header": { "color": "#16303F", "fontFace": "Segoe UI Semibold", "fontSize": 12 },
+    "label": { "color": "#4E6371", "fontFace": "Segoe UI", "fontSize": 10 },
+    "callout": { "color": "#16303F", "fontFace": "Segoe UI Semibold", "fontSize": 28 }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{ "color": { "solid": { "color": "#FFFFFF" } }, "transparency": 0 }],
+        "border": [{ "show": true, "color": { "solid": { "color": "#D8E0E4" } }, "radius": 10 }],
+        "title": [{ "fontColor": { "solid": { "color": "#16303F" } }, "fontSize": 12 }]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [{ "color": { "solid": { "color": "#F5F7F8" } }, "transparency": 0 }],
+        "outspace": [{ "color": { "solid": { "color": "#F5F7F8" } }, "transparency": 0 }]
+      }
+    }
+  }
+}

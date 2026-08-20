@@ -1,0 +1,33 @@
+﻿productId,productName,stageIndex,stageName,status,statusLabel,statusRank,note,date,nextStep,anticipated,source,asOf
+ganlum,GanLum,0,R&D & clinical,done,Complete,3,"Phase III (KALUMA) met primary endpoint: 97.4% PCR-corrected cure rate; 1,688 adults and children, 34 sites in 12 African countries",Announced 12 Nov 2025,,,"Novartis / MMV press releases, 12 Nov 2025",2026-08-14
+ganlum,GanLum,1,Regulatory approval (SRA),prog,In progress,2,Regulatory submissions in preparation following Phase III success,,Dossier submission (SRA pathway),TBC,"Novartis announcement, Nov 2025",2026-08-14
+ganlum,GanLum,2,WHO guidelines,idle,Not started,0,Not started,,GDG engagement expected alongside regulatory review,,,
+ganlum,GanLum,3,WHO prequalification,idle,Not started,0,Not started,,,,,
+ganlum,GanLum,4,Country registration,idle,Not started,0,Not started,,,,,
+ganlum,GanLum,5,National policy adoption,idle,Not started,0,Not started,,,,,
+ganlum,GanLum,6,Procurement,idle,Not started,0,Not started,,,,,
+ganlum,GanLum,7,In-country delivery,idle,Not started,0,Not started,,,,,
+alaq,ALAQ,0,R&D & clinical,prog,In progress,2,Co-formulated fixed-dose triple ACT in Phase III programme (DeTACT); dose-optimization published 2025; dispersible taste-masked formulation,Phase III targeted completion 2025–26,"Phase III results, then dossier preparation",TBC,"MORU / DeTACT; Clin Pharmacol Ther 2025; WHO PADO malaria, Jun 2025",2026-08-14
+alaq,ALAQ,1,Regulatory approval (SRA),idle,Not started,0,Not started,,SRA/WLA submission — partnership targets approval by ~2027,~2027,DeTACT partnership statements,
+alaq,ALAQ,2,WHO guidelines,idle,Not started,0,Not started,,,,,
+alaq,ALAQ,3,WHO prequalification,idle,Not started,0,Not yet included in WHO PQ Expression of Interest list,,PQ targeted by ~2027 per partnership,~2027,"WHO PADO malaria, Jun 2025",
+alaq,ALAQ,4,Country registration,idle,Not started,0,Not started,,,,,
+alaq,ALAQ,5,National policy adoption,idle,Not started,0,Not started,,,,,
+alaq,ALAQ,6,Procurement,idle,Not started,0,Not started,,,,,
+alaq,ALAQ,7,In-country delivery,idle,Not started,0,Not started,,,,,
+pyramax,ASPY,0,R&D & clinical,done,Complete,3,Development complete (Shin Poong / MMV co-development),,,,MMV,2026-08-14
+pyramax,ASPY,1,Regulatory approval (SRA),done,Complete,3,EMA positive scientific opinion (Article 58); label updated Jul 2025 to include treatment of pregnant women,2012 (label update 2025),,,"EMA; MMV, 31 Jul 2025",2026-08-14
+pyramax,ASPY,2,WHO guidelines,done,Complete,3,Strong recommendation in revised WHO Guidelines for malaria,2022,,,WHO Guidelines for malaria; MMV,2026-08-14
+pyramax,ASPY,3,WHO prequalification,done,Complete,3,WHO prequalified — tablets and paediatric granules,2012–2016,,,WHO PQ list of prequalified medicines,2026-08-14
+pyramax,ASPY,4,Country registration,prog,In progress,2,"Registered in 25+ endemic countries since 2014; further submissions in Asia (Vietnam, Myanmar, Cambodia, Thailand)",Rolling,Pending registrations,TBC,MMV,2026-08-14
+pyramax,ASPY,5,National policy adoption,late,Delayed,1,National guideline inclusion lags WHO's 2022 strong recommendation — the core adoption gap LAUNCH is tracking; verified country count pending,,Country guideline committee reviews,TBC,LAUNCH assessment (draft),2026-08-14
+pyramax,ASPY,6,Procurement,prog,In progress,2,Eligible for Global Fund / PMI procurement; volumes remain modest relative to artemether-lumefantrine,,,,LAUNCH assessment (draft),2026-08-14
+pyramax,ASPY,7,In-country delivery,idle,Not started,0,Routine delivery limited; concentrated in pilot and study settings,,,,,
+dhappq,DHA–PPQ,0,R&D & clinical,done,Complete,3,Development complete,,,,MMV,2026-08-14
+dhappq,DHA–PPQ,1,Regulatory approval (SRA),done,Complete,3,EMA approval (Eurartesim),2011,,,EMA register,2026-08-14
+dhappq,DHA–PPQ,2,WHO guidelines,done,Complete,3,WHO-recommended ACT for uncomplicated malaria,2015 guidelines,,,WHO Guidelines for malaria,2026-08-14
+dhappq,DHA–PPQ,3,WHO prequalification,done,Complete,3,"Eurartesim prequalified 2015, requalified Jan 2025; additional suppliers also prequalified",2015; requal. 20 Jan 2025,,,WHO PQ list,2026-08-14
+dhappq,DHA–PPQ,4,Country registration,done,Complete,3,Registered widely; adopted as first-line in several Southeast Asian countries,Rolling,,,MMV / WHO,2026-08-14
+dhappq,DHA–PPQ,5,National policy adoption,prog,In progress,2,First-line in several SE Asian countries; consideration in African MFT strategies growing; verified country counts pending,,MFT strategy decisions,TBC,LAUNCH assessment (draft),2026-08-14
+dhappq,DHA–PPQ,6,Procurement,late,Delayed,1,Small share of global ACT procurement despite decade-old recommendation and multiple PQ'd suppliers — chronic underuse; verified volume data pending,,Global Fund PQR data pull,2026,LAUNCH assessment (draft),2026-08-14
+dhappq,DHA–PPQ,7,In-country delivery,prog,In progress,2,Routine use concentrated in Southeast Asia and chemoprevention niches,,,,LAUNCH assessment (draft),2026-08-14
