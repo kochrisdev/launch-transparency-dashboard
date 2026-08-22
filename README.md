@@ -84,7 +84,7 @@ controls the on-page banner.
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
-| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue. |
+| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue; scheduled source fetch (weekly trial watch, monthly Global Fund pull — see [sourcing/README.md](sourcing/README.md)). |
 
 ### Embedding a single product on a partner site
 

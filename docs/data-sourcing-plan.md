@@ -337,8 +337,8 @@ Three collection modes, matched to how each source publishes:
 
 | When | Action |
 | --- | --- |
-| Weekly (automated) | Trial watch diff (ClinicalTrials.gov). |
-| Monthly (automated + one manual step) | Global Fund Data Service pull (grants/financials); PQR Tableau crosstab export; MAGICapp version poll; ICTRP XML supplement. |
+| Weekly (automated — `sourcing.yml`, Mon 06:00 UTC) | Trial watch diff (ClinicalTrials.gov) — opens a review issue when changes are found. |
+| Monthly (automated — `sourcing.yml`, 3rd 06:30 UTC — plus one manual step) | Global Fund Data Service pull (grants/financials); PQR Tableau crosstab export (manual); MAGICapp version poll; ICTRP XML supplement. |
 | Quarterly (manual sweep) | PQ FPP/vector-control CSV snapshots + EOI check, NRA register spot-checks for portfolio countries, MMV pipeline diff, Threats Map export, UNICEF/PPM price-list check, MPAG doc archive (Apr/Oct) — feeding the quarterly brief. |
 | Annually (Dec–Jan) | WMR annex ingest (burden 4H–4L, policy 4A/4B, funding 4F, commodities 4G, surveys 4Ca/4Cb); re-validate annex parsers; refresh denominators. |
 | Per event | EMA CHMP opinions, WHO guideline updates, GDG/MPAG outcomes — logged as they happen via the changelog. |

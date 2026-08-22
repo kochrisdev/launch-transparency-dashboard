@@ -1,0 +1,93 @@
+name: Scheduled source fetch
+
+# Runs the public-source fetchers on the cadence set in
+# docs/data-sourcing-plan.md §4 and commits their outputs under sourcing/:
+#   - weekly  (Mon 06:00 UTC):  scripts/fetch-trials.js     (trial watch)
+#   - monthly (3rd 06:30 UTC):  scripts/fetch-globalfund.js (grants + disbursements)
+# When the trial watch detects changes, it opens an issue carrying the
+# what-changed report so an analyst reviews it — the fetchers never touch
+# data/products.js (the analyst + validator remain the only gate).
+#
+# The bot commit touches only sourcing/, which publish.yml's path filter
+# ignores, so it cannot trigger a history snapshot or feed rebuild.
+#
+# Manual run: Actions tab → "Scheduled source fetch" → Run workflow
+# (choose which fetchers; default = all). Locally: see sourcing/README.md.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # weekly — trials
+    - cron: "30 6 3 * *"  # monthly — Global Fund
+  workflow_dispatch:
+    inputs:
+      fetchers:
+        description: "Which fetchers to run"
+        type: choice
+        options: [all, trials, globalfund]
+        default: all
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Decide which fetchers this trigger runs
+        id: plan
+        run: |
+          RUN_TRIALS=false; RUN_GF=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            case "${{ inputs.fetchers }}" in
+              all)        RUN_TRIALS=true; RUN_GF=true ;;
+              trials)     RUN_TRIALS=true ;;
+              globalfund) RUN_GF=true ;;
+            esac
+          elif [ "${{ github.event.schedule }}" = "0 6 * * 1" ]; then
+            RUN_TRIALS=true
+          else
+            RUN_GF=true
+          fi
+          echo "trials=$RUN_TRIALS" >> "$GITHUB_OUTPUT"
+          echo "globalfund=$RUN_GF" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch trials (ClinicalTrials.gov)
+        if: steps.plan.outputs.trials == 'true'
+        run: node scripts/fetch-trials.js
+
+      - name: Fetch Global Fund grants and disbursements
+        if: steps.plan.outputs.globalfund == 'true'
+        run: node scripts/fetch-globalfund.js
+
+      - name: Commit sourcing outputs
+        run: |
+          git config user.name "launch-dashboard-bot"
+          git config user.email "actions@github.com"
+          git add sourcing
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "chore: scheduled source fetch [bot]"
+            git push
+          fi
+
+      - name: Open an issue if the trial watch found changes
+        if: steps.plan.outputs.trials == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DATE=$(date -u +%F)
+          REPORT="sourcing/reports/trials-watch-$DATE.md"
+          if [ -f "$REPORT" ] && grep -q "Changes since" "$REPORT"; then
+            gh issue create --repo "$GITHUB_REPOSITORY" \
+              --title "Trial watch: changes detected — $DATE" \
+              --body-file "$REPORT"
+          else
+            echo "No trial changes — no issue."
+          fi

@@ -22,6 +22,54 @@ provenance carried over.
 | `node scripts/fetch-trials.js` | ClinicalTrials.gov API v2 (US public domain) | Weekly | `staging/trials.csv`, snapshot, and `reports/trials-watch-<date>.md` diffing status / completion-date / phase / results changes vs the previous snapshot — slipped dates are early bottleneck warnings. |
 | `node scripts/fetch-globalfund.js` | Global Fund Data Service OData v4.2 (no auth; Terms of Use, attribute) | Monthly | `staging/globalfund_grants.csv` (one row per malaria grant: country, status, signed/committed/disbursed, period) and `staging/globalfund_disbursements.csv` (grant × year totals). |
 
+## Running manually
+
+Requirements: Node 18+ (global `fetch`), network access. No dependencies to
+install. Run from the repo root:
+
+```bash
+node scripts/fetch-trials.js
+```
+
+```bash
+node scripts/fetch-globalfund.js
+```
+
+Each run prints a summary and writes the outputs above. Runs are **safe to
+repeat**: a same-day rerun overwrites only that day's snapshot and regenerates
+the staging CSVs — earlier days' snapshots are never touched. The trial-watch
+diff always compares against the most recent snapshot from a *previous* day.
+After a manual run, commit whatever changed under `sourcing/` (nothing else is
+touched).
+
+The trials fetcher takes seconds; the Global Fund fetcher pulls ~37k
+transaction rows and typically takes 1–3 minutes.
+
+## Scheduled runs (GitHub Actions)
+
+[`.github/workflows/sourcing.yml`](../.github/workflows/sourcing.yml) runs the
+fetchers automatically and bot-commits the outputs (same pattern as the
+history-snapshot bot):
+
+| When (UTC) | What runs |
+| --- | --- |
+| Mondays 06:00 | `fetch-trials.js` — and if the watch report contains changes, the workflow **opens a GitHub issue** carrying the report for analyst review. |
+| 3rd of each month 06:30 | `fetch-globalfund.js` |
+| On demand | *Actions tab → "Scheduled source fetch" → Run workflow* — choose `all`, `trials`, or `globalfund`. |
+
+Notes:
+
+- The bot commit touches only `sourcing/`, which `publish.yml`'s path filter
+  ignores — scheduled fetches can never trigger a history snapshot, feed
+  rebuild, or any dashboard change.
+- A trial-watch issue is the hand-off point: review the changes, update
+  `data/products.js` if warranted (validator, changelog, `lastUpdated` — the
+  normal loop), then close the issue.
+- Repo weight: the monthly Global Fund disbursements snapshot is ~2.8 MB
+  (gzipped), ~34 MB/year. If that becomes a burden, prune old raw snapshots to
+  a yearly keeper or move `raw/` to a separate data-collection repo — the
+  staging CSVs and reports are the operationally needed parts.
+
 ## Reading notes
 
 - **Trials**: `productId` maps to `data/products.js` ids. The search terms live

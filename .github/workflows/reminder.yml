@@ -2,9 +2,10 @@ name: Monthly data review reminder
 
 # Opens a checklist issue on the first of each month so the milestone scan
 # from docs/data-analyst-guide.md happens on cadence. Deliberately a reminder,
-# not an automated scraper: the public sources are CMS pages that change
-# cosmetically all the time, so hash-watching them would cry wolf. Revisit
-# automated ingestion when stable data APIs are identified.
+# not an automated scraper: most public sources are CMS pages that change
+# cosmetically all the time, so hash-watching them would cry wolf. Sources
+# with stable APIs (ClinicalTrials.gov, Global Fund Data Service) ARE fetched
+# automatically by sourcing.yml — this scan covers everything that isn't.
 on:
   schedule:
     - cron: "0 6 1 * *"
@@ -30,7 +31,8 @@ jobs:
           - [ ] WHO Guidelines for malaria — updates, GDG meeting outcomes
           - [ ] EMA — Article 58 opinions, label changes
           - [ ] Novartis / MMV / MORU-DeTACT / Shin Poong announcements
-          - [ ] Global Fund PQR + PMI (quarterly — check if due)
+          - [ ] Global Fund PQR Tableau crosstab export (quarterly — check if due; grants/disbursements arrive automatically via the scheduled source fetch — see sourcing/README.md)
+          - [ ] Review recent sourcing/reports/trials-watch-*.md and any open "Trial watch" issues
           - [ ] Country survey refresh (quarterly — check if due)
           - [ ] Update data/products.js, run the validator, add changelog entries, bump lastUpdated
           - [ ] Quarterly (check if due): generate the what-changed brief — node scripts/make-brief.js — and circulate briefs/latest.md
