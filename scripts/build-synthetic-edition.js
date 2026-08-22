@@ -49,8 +49,9 @@ for (const p of PAGES) {
   // the synthetic dataset, then everything else in data/, live one level up
   html = html.replace(/src="data\/products\.js"/g, 'src="../data/products.synthetic.js"');
   html = html.replace(/src="data\//g, 'src="../data/');
-  // cross-edition links escape the folder; same-edition page links stay relative
-  html = html.replace(/href="unitaid\//g, 'href="../unitaid/');
+  // drop the Unitaid brand-preview link (and its separator) — that edition
+  // runs on real data and doesn't belong in the synthetic navigation
+  html = html.replace(/\s*·\s*<a href="unitaid\/[^"]*"[^>]*>Unitaid brand preview<\/a>/g, "");
   if (p.strip) html = html.replace(/<\/style>/, "</style>" + STRIP);
   fs.writeFileSync(path.join(outDir, p.out), html);
   console.log(`synthetic/${p.out} <- ${p.src}`);
