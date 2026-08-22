@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-// Validates data/products.js. Run after every data edit:
+// Validates data/products.js (or another data file passed as the first
+// argument, e.g. the synthetic development set). Run after every data edit:
 //   node scripts/validate-data.js
+//   node scripts/validate-data.js data/products.synthetic.js
 // Exits 1 on any error (bad JSON, broken rules); prints warnings for
 // missing provenance. Rules are the governance of the dashboard — a
 // traffic light must never be able to lie silently.
@@ -8,7 +10,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const FILE = path.join(__dirname, "..", "data", "products.js");
+const FILE = process.argv[2]
+  ? path.resolve(process.cwd(), process.argv[2])
+  : path.join(__dirname, "..", "data", "products.js");
 const STATUSES = ["done", "prog", "late", "idle"];
 
 const errors = [];

@@ -1,0 +1,392 @@
+<title>The Waiting Years · Synthetic Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #F5F7F8; --surface: #FFFFFF; --surface-2: #EDF1F3;
+    --ink: #16303F; --ink-2: #4E6371; --ink-3: #7C8E99; --line: #D8E0E4;
+    --accent: #14657E; --accent-soft: #E3EEF2;
+    --good: #1E8A5A; --good-soft: #E2F2EA;
+    --warn: #B87500; --warn-soft: #FBF0DA;
+    --crit: #C0392B; --crit-soft: #FAE7E4;
+    --idle: #9AA8B1; --idle-soft: #EEF1F3;
+    --map1: #B7D3DD; --map2: #5E97AC; --map3: #14657E;
+    --shadow: 0 1px 2px rgba(22,48,63,.06), 0 4px 16px rgba(22,48,63,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101B22; --surface: #17252E; --surface-2: #1E3039;
+      --ink: #E7EEF2; --ink-2: #A9BBC5; --ink-3: #7C919D; --line: #2B404C;
+      --accent: #4FA8C3; --accent-soft: #1C3947;
+      --good: #47B983; --good-soft: #16352A;
+      --warn: #E0A63C; --warn-soft: #3A2E14;
+      --crit: #E06A5C; --crit-soft: #40201C;
+      --idle: #647883; --idle-soft: #22333C;
+      --map1: #2B4E5C; --map2: #3E7A91; --map3: #4FA8C3;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101B22; --surface: #17252E; --surface-2: #1E3039;
+    --ink: #E7EEF2; --ink-2: #A9BBC5; --ink-3: #7C919D; --line: #2B404C;
+    --accent: #4FA8C3; --accent-soft: #1C3947;
+    --good: #47B983; --good-soft: #16352A;
+    --warn: #E0A63C; --warn-soft: #3A2E14;
+    --crit: #E06A5C; --crit-soft: #40201C;
+    --idle: #647883; --idle-soft: #22333C;
+    --map1: #2B4E5C; --map2: #3E7A91; --map3: #4FA8C3;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink);
+    font: 16px/1.6 -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased; }
+
+  .top { max-width: 1180px; margin: 0 auto; padding: 22px 24px 0; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
+  .top .mark { font-weight: 750; color: var(--accent); letter-spacing: -.01em; }
+  .top a { color: var(--accent); font-size: 13px; }
+  .top .spacer { margin-left: auto; }
+  .proto { font-size: 11px; font-weight: 650; padding: 2px 9px; border-radius: 999px;
+    background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+
+  .hero { max-width: 780px; margin: 0 auto; padding: 60px 24px 30px; text-align: left; }
+  .hero h1 { margin: 0; font-size: clamp(34px, 6vw, 56px); line-height: 1.1; letter-spacing: -.02em; font-weight: 800; }
+  .hero h1 em { font-style: normal; color: var(--crit); }
+  .hero p { color: var(--ink-2); font-size: 18px; max-width: 58ch; }
+  .hero .scrollhint { color: var(--ink-3); font-size: 13px; margin-top: 26px; }
+  .banner { max-width: 732px; margin: 0 auto; padding: 9px 14px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--ink-2); font-size: 13px; border: 1px solid var(--line); }
+  .banner b { color: var(--ink); }
+
+  /* ---------- scrolly layout ---------- */
+  .scrolly { max-width: 1180px; margin: 30px auto 0; padding: 0 24px;
+    display: grid; grid-template-columns: minmax(280px, 5fr) 7fr; gap: 0 36px; }
+  .steps { }
+  .step { min-height: 88vh; display: flex; align-items: center; }
+  .step .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 22px 24px; opacity: .35; transition: opacity .3s; }
+  .step.active .card { opacity: 1; }
+  .step h2 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.01em; }
+  .step p { margin: 8px 0 0; color: var(--ink-2); font-size: 15px; }
+  .step .kicker { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+  .stage { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+  .stage-inner { position: relative; width: 100%; }
+  .layer { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity .45s; }
+  .layer.on { opacity: 1; visibility: visible; position: relative; }
+  @media (prefers-reduced-motion: reduce) {
+    .layer, .step .card { transition: none; }
+  }
+
+  .bignum { font-size: clamp(56px, 8vw, 104px); font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    font-variant-numeric: tabular-nums; }
+  .bignum.crit { color: var(--crit); }
+  .bignum.good { color: var(--good); }
+  .bignum .unit { font-size: .35em; font-weight: 700; color: var(--ink-2); letter-spacing: 0; }
+  .biglbl { color: var(--ink-2); font-size: 15px; margin-top: 6px; max-width: 44ch; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 20px; margin-top: 18px; }
+
+  /* mini pipeline cards */
+  .mini-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mcard { border: 1.5px solid var(--accent); border-left-width: 5px; border-radius: 8px; padding: 10px 12px; background: var(--surface); }
+  .mcard.market { border-color: var(--good); }
+  .mcard b { font-size: 15px; }
+  .mcard .s { display: block; font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+
+  /* story timeline */
+  .stl { position: relative; height: 84px; margin: 26px 6px 0; }
+  .stl .base { position: absolute; top: 40px; left: 0; right: 0; height: 3px; background: var(--line); }
+  .stl .seg { position: absolute; top: 36px; height: 11px; border-radius: 6px; transition: opacity .45s; }
+  .stl .seg.good { background: var(--good); } .stl .seg.warn { background: var(--warn); } .stl .seg.crit { background: var(--crit); }
+  .stl .gate { position: absolute; top: 34px; width: 15px; height: 15px; margin-left: -8px; border-radius: 50%;
+    background: var(--surface); border: 3.5px solid var(--ink-2); }
+  .stl .yr { position: absolute; top: 58px; transform: translateX(-50%); font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .stl .glbl { position: absolute; top: 2px; transform: translateX(-50%); font-size: 11px; color: var(--ink-2); max-width: 110px; text-align: center; line-height: 1.25; }
+  .stl.dim-late .seg.crit, .stl.dim-late .seg.warn { opacity: .18; }
+  .stl.dim-early .seg.good { opacity: .18; }
+
+  /* stage-dot track */
+  .trk { display: flex; align-items: flex-start; margin-top: 18px; }
+  .trk .st { flex: 1; text-align: center; }
+  .trk .row { display: flex; align-items: center; }
+  .trk .bar { flex: 1; height: 3px; background: var(--line); }
+  .trk .bar.g { background: var(--good); }
+  .trk .st:first-child .pre, .trk .st:last-child .post { visibility: hidden; }
+  .trk .dot { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #fff; flex: none; margin: 0 2px; }
+  .trk .dot.done { background: var(--good); } .trk .dot.prog { background: var(--warn); }
+  .trk .dot.late { background: var(--crit); } .trk .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
+  .trk .lbl { font-size: 10.5px; line-height: 1.25; color: var(--ink-3); margin-top: 6px; padding: 0 2px; }
+  .halves { display: flex; margin-top: 10px; font-size: 12px; font-weight: 650; }
+  .halves div { flex: 1; text-align: center; padding: 5px; border-radius: 6px; }
+  .halves .h1 { background: var(--good-soft); color: var(--good); margin-right: 4px; }
+  .halves .h2 { background: var(--crit-soft); color: var(--crit); }
+
+  /* flags */
+  .flagcard { border-left: 4px solid var(--crit); background: var(--surface); border: 1px solid var(--line);
+    border-left: 4px solid var(--crit); border-radius: 10px; padding: 12px 16px; margin-top: 10px; box-shadow: var(--shadow); }
+  .flagcard b { font-size: 15px; }
+  .flagcard p { margin: 3px 0 0; font-size: 13.5px; color: var(--ink-2); }
+
+  /* map */
+  .storymap { position: relative; }
+  .storymap svg { width: 100%; height: auto; background: var(--surface-2); border-radius: 10px; display: block; }
+  .storymap path { fill: var(--surface); stroke: var(--line); stroke-width: .6; }
+  .storymap path.lvl-registered { fill: var(--map1); }
+  .storymap path.lvl-guidelines { fill: var(--map2); }
+  .storymap path.lvl-mft { fill: var(--map3); }
+  .storymap .ovl { position: absolute; top: 10px; left: 10px; background: var(--warn-soft); color: var(--warn);
+    border: 1px solid var(--warn); border-radius: 8px; padding: 5px 10px; font-size: 11.5px; font-weight: 650; max-width: 380px; }
+
+  .cta { max-width: 780px; margin: 0 auto; padding: 20px 24px 80px; }
+  .cta .panel { padding: 26px; }
+  .cta h2 { margin: 0 0 6px; font-size: 24px; }
+  .cta p { color: var(--ink-2); }
+  .cta .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .cta .links a { background: var(--accent); color: #fff; text-decoration: none; font-weight: 650; font-size: 14px;
+    padding: 9px 16px; border-radius: 8px; }
+  .cta .links a.ghost { background: var(--surface-2); color: var(--accent); }
+
+  footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; }
+
+  @media (max-width: 860px) {
+    .scrolly { grid-template-columns: 1fr; padding: 0 14px; }
+    .stage { position: sticky; top: 0; height: 54vh; background: var(--ground); z-index: 2; order: -1;
+      border-bottom: 1px solid var(--line); padding: 8px 0; align-items: flex-start; }
+    .stage-inner { max-height: 100%; }
+    .layer.on { max-height: calc(54vh - 16px); overflow-y: auto; }
+    .step { min-height: 68vh; }
+    .step .card { padding: 16px 16px; }
+    .bignum { font-size: 40px; }
+    .biglbl { font-size: 13px; }
+    .panel { padding: 12px; margin-top: 10px; }
+    .mini-cards { grid-template-columns: 1fr; }
+    .hero { padding-top: 34px; }
+    .stl .glbl { max-width: 84px; }
+  }
+</style>
+<style id="synthetic-strip">
+  /* warning strip so reviewers know every figure on the page is fictional */
+  body::before {
+    content: "SYNTHETIC DATA EDITION — every company, product and figure on this page is fictional (development preview)";
+    display: block; background: #4B2E83; color: #D9C9F2; padding: 6px 24px;
+    font: 600 11px/1.5 "Segoe UI", Arial, sans-serif; letter-spacing: .05em;
+  }
+</style>
+
+<div class="top">
+  <span class="mark">LAUNCH</span>
+  <span class="proto">Prototype — data presented here may not be accurate</span>
+  <span class="spacer"></span>
+  <a href="index.html">Journey board (A)</a> <a href="option-b.html">Comparison matrix (B)</a>
+  <a href="pipeline.html">Pipeline poster</a>
+</div>
+
+<div class="hero">
+  <h1>The <em>waiting</em> years</h1>
+  <p>New malaria medicines exist. Getting them approved is no longer the hard part —
+     getting them <b>used</b> is. This is the story the LAUNCH dashboard tracks, told
+     through one medicine that has been ready for over a decade.</p>
+  <p class="scrollhint">Scroll ↓</p>
+</div>
+<div class="banner" id="banner" hidden></div>
+
+<div class="scrolly">
+  <div class="steps" id="steps"></div>
+  <div class="stage"><div class="stage-inner" id="stageInner"></div></div>
+</div>
+
+<div class="cta">
+  <div class="panel">
+    <h2>Watch the whole board, not one story</h2>
+    <p>LAUNCH tracks every gate for every product — with a red flag and a dated reason
+       wherever one is stuck — so donors, ministries, manufacturers and WHO can act on
+       delays instead of discovering them years later.</p>
+    <div class="links">
+      <a href="index.html">Open the journey board (A)</a>
+      <a class="ghost" href="option-b.html">Comparison matrix (B)</a>
+      <a class="ghost" href="pipeline.html">Pipeline poster</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <b>About the data.</b> Publicly available information only; product details appear solely where the
+  manufacturer confirmed release in writing. Country coloring on the map is an illustrative subset pending
+  the verified LAUNCH country survey. A LAUNCH initiative of Unitaid partners, to be hosted by the RBM
+  Partnership to End Malaria.
+</footer>
+
+<script src="../data/products.synthetic.js"></script>
+<script src="../data/world-map.js"></script>
+<script>
+(function () {
+  if (!window.LAUNCH_DATA) return;
+  const DATA = window.LAUNCH_DATA;
+  const tracked = DATA.products.filter(p => !p.placeholder);
+  const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  const nowYear = parseInt(DATA.meta.lastUpdated.slice(0, 4), 10);
+
+  // banner
+  const banner = document.getElementById("banner");
+  const BANNERS = {
+    illustrative: "<b>Design mockup.</b> All values below are illustrative placeholders — not real programme data.",
+    draft: "<b>Draft data.</b> Compiled from public sources, pending LAUNCH verification. Unverified values are TBC, never estimated."
+  };
+  if (BANNERS[DATA.meta.dataStatus]) { banner.hidden = false; banner.innerHTML = BANNERS[DATA.meta.dataStatus]; }
+
+  // ---- derive the story's numbers from the data (no hand-typed facts) ----
+  const hero = tracked.find(p => p.id === "pyramax") || tracked.find(p => p.class === "market");
+  const journey = (hero.detail.journey || []).filter(g => Number.isInteger(g.year));
+  const firstYear = journey.length ? journey[0].year : null;
+  const recGate = journey.find(g => /recommend/i.test(g.label));
+  const yearsToRec = recGate && firstYear != null ? recGate.year - firstYear : null;
+  const lastYear = journey.length ? journey[journey.length - 1].year : null;
+  const yearsWaiting = firstYear != null ? nowYear - firstYear : null;
+  const flagged = tracked.filter(p => p.flag);
+  const pipelineProducts = tracked.filter(p => p.class === "pipeline");
+  const heroCountries = hero.detail.countries ? hero.detail.countries.list : [];
+  const inGuidelinesCount = hero.detail.country.inGuidelines;
+  const ganlum = tracked.find(p => p.id === "ganlum");
+
+  // ---- steps (left column) ----
+  const steps = [
+    { viz: "poster", kicker: "The portfolio", h: "Four medicines, one goal",
+      t: `LAUNCH tracks ${tracked.length} antimalarials: ${pipelineProducts.map(p => p.name).join(" and ")} coming through the pipeline, and ${flagged.map(p => p.name).join(" and ")} — already approved, already recommended, and barely used. Follow one of them.` },
+    { viz: "tl-early", kicker: hero.name + " · " + hero.inn, h: "The fast part: proving it works",
+      t: `${hero.name} cleared the hardest scientific hurdles years ago${firstYear ? " — a stringent regulatory opinion in " + firstYear : ""}, WHO quality prequalification soon after. By the standards of drug development, this was success.` },
+    { viz: "tl-gap", kicker: "Then, nothing", h: yearsToRec ? `${yearsToRec} years of waiting` : "The waiting begins",
+      t: `${recGate && firstYear ? "From approval in " + firstYear + " to WHO's strong recommendation in " + recGate.year + " took " + yearsToRec + " years." : "The gap between approval and recommendation stretched on."} No new science was needed — the medicine sat in committee calendars and evidence-review queues while resistance to existing drugs spread.` },
+    { viz: "track", kicker: "Why it happens", h: "Approved is not available",
+      t: "Three separate systems must each say yes — a stringent regulator, WHO's guideline group, WHO's quality team — and then every country must register it, write it into national guidelines, budget for it, and deliver it. Green on the left half of the pathway means nothing to a patient until the right half turns green too." },
+    { viz: "flags", kicker: "Today", h: `${flagged.length} products are stuck right now`,
+      t: "This is what the dashboard exists to surface: not history, but the current bottleneck for every product, named and dated, so the actor who can fix it knows it's theirs." },
+    { viz: "map", kicker: "The access map", h: inGuidelinesCount === "TBC" ? "The map is mostly blank" : "The map is mostly blank",
+      t: `Where ${hero.name} can actually be used remains a short list${typeof hero.detail.country.registered === "number" ? " — registered in " + hero.detail.country.registered + "+ countries" : ""}, and national guideline inclusion is the choke point. (Country coloring is illustrative until the LAUNCH survey is verified.)` },
+    { viz: "next", kicker: "The next arrivals", h: "Will the new ones wait too?",
+      t: `${ganlum ? ganlum.name + " met its Phase III endpoint with a " + "97.4% cure rate — a genuinely new weapon against resistance. " : ""}The pipeline products will hit the exact same gates. Whether they take ${yearsToRec || "ten"} years or two is a choice the malaria community makes — and transparency is how LAUNCH intends to force the question.` }
+  ];
+
+  document.getElementById("steps").innerHTML = steps.map((s, i) => `
+    <article class="step" data-i="${i}">
+      <div class="card">
+        <div class="kicker">${esc(s.kicker)}</div>
+        <h2>${esc(s.h)}</h2>
+        <p>${esc(s.t)}</p>
+      </div>
+    </article>`).join("");
+
+  // ---- stage layers (right column) ----
+  const L = [];
+
+  // poster
+  L.push(`<div class="layer" data-viz="poster"><div class="panel"><div class="mini-cards">` +
+    tracked.map(p => `<div class="mcard ${p.class === "market" ? "market" : ""}"><b>${esc(p.name)}</b><span class="s">${esc(p.inn)}</span><span class="s">${esc(p.classLabel)}</span></div>`).join("") +
+    `</div></div></div>`);
+
+  // timeline (built once, dimming varies by step)
+  function timelineHtml(extraClass) {
+    if (journey.length < 2) return "";
+    const min = journey[0].year, span = Math.max(nowYear - min, 1);
+    const px = y => ((y - min) / span * 100);
+    let segs = "";
+    for (let i = 1; i < journey.length; i++) {
+      const a = journey[i - 1].year, b = journey[i].year, gap = b - a;
+      if (!gap) continue;
+      const cls = gap <= 2 ? "good" : gap <= 5 ? "warn" : "crit";
+      segs += `<div class="seg ${cls}" style="left:${px(a)}%;width:${px(b) - px(a)}%"></div>`;
+    }
+    const gates = journey.map((g, i) => `<div class="gate" style="left:${px(g.year)}%"></div>` +
+      `<div class="yr" style="left:${px(g.year)}%">${g.year}</div>` +
+      (i === 0 || i === journey.length - 1 ? `<div class="glbl" style="left:${px(g.year)}%">${esc(g.label)}</div>` : "")).join("");
+    return `<div class="stl ${extraClass}"><div class="base"></div>${segs}${gates}</div>`;
+  }
+  L.push(`<div class="layer" data-viz="tl-early">
+    <div class="bignum good">${firstYear || "—"}</div>
+    <div class="biglbl">${esc(hero.name)} approved by a stringent regulator. Science: done.</div>
+    <div class="panel">${timelineHtml("dim-late")}</div></div>`);
+  L.push(`<div class="layer" data-viz="tl-gap">
+    <div class="bignum crit" data-count="${yearsToRec || 0}">0<span class="unit"> years</span></div>
+    <div class="biglbl">from regulatory approval to WHO's strong recommendation${yearsWaiting ? " — and " + yearsWaiting + " years on, broad national adoption is still pending" : ""}.</div>
+    <div class="panel">${timelineHtml("dim-early")}</div></div>`);
+
+  // stage track
+  const trk = hero.stages.map((s, i) => {
+    const preDone = i > 0 && hero.stages[i - 1].status === "done";
+    const icon = { done: "✓", prog: "›", late: "!", idle: "" }[s.status];
+    return `<div class="st"><div class="row"><div class="bar pre ${preDone ? "g" : ""}"></div>` +
+      `<span class="dot ${s.status}">${icon}</span>` +
+      `<div class="bar post ${s.status === "done" ? "g" : ""}"></div></div>` +
+      `<div class="lbl">${esc(DATA.stages[i])}</div></div>`;
+  }).join("");
+  L.push(`<div class="layer" data-viz="track"><div class="panel">
+    <div class="trk">${trk}</div>
+    <div class="halves"><div class="h1">Science &amp; global approvals ✓</div><div class="h2">Country adoption — where it stalls</div></div>
+    </div></div>`);
+
+  // flags
+  L.push(`<div class="layer" data-viz="flags">
+    <div class="bignum crit">${flagged.length}</div>
+    <div class="biglbl">active bottlenecks on the board today</div>` +
+    flagged.map(p => `<div class="flagcard"><b>${esc(p.name)}</b><p>▲ ${esc(p.flag)}</p></div>`).join("") +
+    `</div>`);
+
+  // map
+  let mapHtml = "";
+  if (window.LAUNCH_MAP) {
+    const M = window.LAUNCH_MAP;
+    const byIso = {}; heroCountries.forEach(e => byIso[e.iso3] = e.level);
+    mapHtml = `<div class="storymap"><svg viewBox="0 0 ${M.w} ${M.h}" role="img" aria-label="Country access map">` +
+      Object.entries(M.countries).map(([iso, c]) =>
+        `<path class="${byIso[iso] ? "lvl-" + byIso[iso] : ""}" d="${c.d}"></path>`).join("") +
+      `</svg>` + (hero.detail.countries && hero.detail.countries.status !== "verified"
+        ? `<div class="ovl">ILLUSTRATIVE — pending verified country survey</div>` : "") + `</div>`;
+  }
+  L.push(`<div class="layer" data-viz="map"><div class="panel">${mapHtml}
+    <div class="biglbl" style="margin-top:12px">${esc(hero.name)}: registered (light) → in national guidelines (medium) → in MFT plans (dark).</div>
+  </div></div>`);
+
+  // next arrivals
+  L.push(`<div class="layer" data-viz="next">
+    <div class="bignum good">97.4<span class="unit"> %</span></div>
+    <div class="biglbl">PCR-corrected cure rate in ${esc(ganlum ? ganlum.name : "the lead candidate")}'s Phase III trial (KALUMA, announced Nov 2025).</div>
+    <div class="panel"><div class="mini-cards">` +
+    pipelineProducts.map(p => `<div class="mcard"><b>${esc(p.name)}</b><span class="s">${esc(p.inn)}</span><span class="s">Next: ${esc((p.detail.milestones.find(m => m.status !== "done") || {}).milestone || "—")}</span></div>`).join("") +
+    `</div></div></div>`);
+
+  document.getElementById("stageInner").innerHTML = L.join("");
+  const layers = Array.from(document.querySelectorAll(".layer"));
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+
+  function activate(i) {
+    stepEls.forEach((el, j) => el.classList.toggle("active", j === i));
+    const viz = steps[i].viz;
+    layers.forEach(l => l.classList.toggle("on", l.dataset.viz === viz));
+    // count-up on the big number, once, unless reduced motion
+    const layer = layers.find(l => l.dataset.viz === viz);
+    const num = layer && layer.querySelector("[data-count]");
+    if (num && !num.dataset.done) {
+      num.dataset.done = "1";
+      const target = parseInt(num.dataset.count, 10);
+      const unit = num.querySelector(".unit") ? num.querySelector(".unit").outerHTML : "";
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !target) {
+        num.innerHTML = target + unit;
+      } else {
+        let v = 0;
+        const tick = () => { v++; num.innerHTML = v + unit; if (v < target) setTimeout(tick, 700 / target); };
+        tick();
+      }
+    }
+  }
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) activate(parseInt(e.target.dataset.i, 10)); });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    stepEls.forEach(el => io.observe(el));
+  }
+  activate(0);
+})();
+</script>

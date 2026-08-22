@@ -1,0 +1,874 @@
+<title>LAUNCH Dashboard · Synthetic Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #F5F7F8;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F3;
+    --ink: #16303F;
+    --ink-2: #4E6371;
+    --ink-3: #7C8E99;
+    --line: #D8E0E4;
+    --accent: #14657E;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E3EEF2;
+    --good: #1E8A5A;
+    --good-soft: #E2F2EA;
+    --warn: #B87500;
+    --warn-soft: #FBF0DA;
+    --crit: #C0392B;
+    --crit-soft: #FAE7E4;
+    --idle: #9AA8B1;
+    --idle-soft: #EEF1F3;
+    --map1: #B7D3DD;
+    --map2: #5E97AC;
+    --map3: #14657E;
+    --shadow: 0 1px 2px rgba(22,48,63,.06), 0 4px 16px rgba(22,48,63,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101B22;
+      --surface: #17252E;
+      --surface-2: #1E3039;
+      --ink: #E7EEF2;
+      --ink-2: #A9BBC5;
+      --ink-3: #7C919D;
+      --line: #2B404C;
+      --accent: #4FA8C3;
+      --accent-ink: #0D1D25;
+      --accent-soft: #1C3947;
+      --good: #47B983;
+      --good-soft: #16352A;
+      --warn: #E0A63C;
+      --warn-soft: #3A2E14;
+      --crit: #E06A5C;
+      --crit-soft: #40201C;
+      --idle: #647883;
+      --idle-soft: #22333C;
+      --map1: #2B4E5C;
+      --map2: #3E7A91;
+      --map3: #4FA8C3;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101B22;
+    --surface: #17252E;
+    --surface-2: #1E3039;
+    --ink: #E7EEF2;
+    --ink-2: #A9BBC5;
+    --ink-3: #7C919D;
+    --line: #2B404C;
+    --accent: #4FA8C3;
+    --accent-ink: #0D1D25;
+    --accent-soft: #1C3947;
+    --good: #47B983;
+    --good-soft: #16352A;
+    --warn: #E0A63C;
+    --warn-soft: #3A2E14;
+    --crit: #E06A5C;
+    --crit-soft: #40201C;
+    --idle: #647883;
+    --idle-soft: #22333C;
+    --map1: #2B4E5C;
+    --map2: #3E7A91;
+    --map3: #4FA8C3;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 15px/1.5 -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 56px; }
+
+  /* ---------- header ---------- */
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; margin-bottom: 6px; }
+  .brand h1 { margin: 0; font-size: 26px; font-weight: 750; letter-spacing: -.01em; }
+  .brand h1 span { color: var(--accent); }
+  .brand h1 span.proto-badge {
+    display: inline-block; vertical-align: 4px; margin-left: 8px;
+    font-size: 11.5px; font-weight: 650; letter-spacing: .02em; line-height: 1.4;
+    padding: 3px 10px; border-radius: 999px;
+    background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn);
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) { .brand h1 span.proto-badge { white-space: normal; margin-left: 0; margin-top: 6px; display: block; width: fit-content; } }
+  .brand p { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; max-width: 60ch; }
+  .meta { margin-left: auto; text-align: right; font-size: 12.5px; color: var(--ink-3); line-height: 1.6; }
+  .meta b { color: var(--ink-2); font-weight: 600; }
+  .demo-banner {
+    margin: 18px 0 20px; padding: 9px 14px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--ink-2); font-size: 13px;
+    border: 1px solid var(--line);
+  }
+  .demo-banner b { color: var(--ink); }
+  .demo-banner.error { background: var(--crit-soft); color: var(--crit); }
+
+  /* ---------- summary + legend strip ---------- */
+  .strip {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px;
+    padding: 12px 18px; margin-bottom: 22px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+  }
+  .stat { display: flex; align-items: baseline; gap: 7px; }
+  .stat .n { font-size: 22px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .stat .n.crit-n { color: var(--crit); }
+  .stat .l { font-size: 12.5px; color: var(--ink-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-left: auto; font-size: 12.5px; color: var(--ink-2); }
+  .legend .key { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* status dots (shape + color, never color alone) */
+  .dot { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 11px; font-weight: 800; }
+  .dot.done { background: var(--good); color: #fff; }
+  .dot.prog { background: var(--warn); color: #fff; }
+  .dot.late { background: var(--crit); color: #fff; }
+  .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
+
+  /* ---------- product rows ---------- */
+  .board { display: flex; flex-direction: column; gap: 14px; }
+  .product {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .product.future { opacity: .78; }
+  .prow {
+    display: grid; grid-template-columns: 250px 1fr; gap: 20px; align-items: center;
+    padding: 18px 20px; cursor: pointer; width: 100%;
+    background: none; border: 0; text-align: left; color: inherit; font: inherit;
+  }
+  .prow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 14px; }
+  .pid .name { font-size: 16.5px; font-weight: 700; letter-spacing: -.005em; }
+  .pid .inn { color: var(--ink-2); font-size: 13px; margin-top: 1px; }
+  .pid .mfr { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    font-size: 11px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+    padding: 2.5px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2);
+  }
+  .chip.pipeline { background: var(--accent-soft); color: var(--accent); }
+  .chip.soon { background: var(--idle-soft); color: var(--ink-3); }
+
+  /* pipeline track */
+  .trackbox { overflow-x: auto; }
+  .track { display: flex; align-items: flex-start; min-width: 640px; }
+  .stage { flex: 1; min-width: 76px; position: relative; text-align: center; }
+  .stage .row { display: flex; align-items: center; }
+  .stage .bar { flex: 1; height: 3px; background: var(--line); }
+  .stage .bar.done-bar { background: var(--good); }
+  .stage:first-child .bar.pre, .stage:last-child .bar.post { visibility: hidden; }
+  .stage .lbl { font-size: 11px; line-height: 1.25; color: var(--ink-3); margin-top: 7px; padding: 0 3px; }
+  .stage.cur .lbl { color: var(--ink); font-weight: 650; }
+  .stage .dot { margin: 0 2px; cursor: help; }
+  .stage.cur .dot { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .flagnote {
+    margin: 10px 20px 0 290px; font-size: 12.5px; color: var(--crit);
+    display: flex; gap: 7px; align-items: baseline;
+  }
+  .flagnote::before { content: "▲"; font-size: 9px; }
+
+  /* ---------- tooltip ---------- */
+  #tip {
+    position: fixed; z-index: 50; max-width: 280px; pointer-events: none;
+    background: var(--ink); color: var(--ground); padding: 10px 12px; border-radius: 8px;
+    font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow); display: none;
+  }
+  #tip b { display: block; margin-bottom: 2px; }
+  #tip .trow { display: flex; gap: 8px; justify-content: space-between; }
+  #tip .trow span:first-child { opacity: .7; }
+
+  /* ---------- detail panel ---------- */
+  .detail { display: none; border-top: 1px solid var(--line); background: var(--surface-2); padding: 20px; }
+  .product.open .detail { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .card .big { font-size: 24px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .card .sub { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  .card .prov { font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); }
+  .card ul li { margin: 3px 0; }
+  .card p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+  .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+  .kv:last-child { border-bottom: 0; }
+  .kv span:first-child { color: var(--ink-2); }
+  .kv span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+  .mtable-box { overflow-x: auto; margin-top: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  table.mtable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+  .mtable th {
+    text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 700; padding: 10px 14px; border-bottom: 1px solid var(--line);
+  }
+  .mtable td { padding: 9px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+  .mtable tr:last-child td { border-bottom: 0; }
+  .mtable td:first-child { color: var(--ink); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--good-soft); color: var(--good); }
+  .pill.prog { background: var(--warn-soft); color: var(--warn); }
+  .pill.late { background: var(--crit-soft); color: var(--crit); }
+  .pill.idle { background: var(--idle-soft); color: var(--ink-3); }
+  .src { font-size: 11.5px; color: var(--ink-3); margin-top: 10px; }
+
+  /* channel split bar */
+  .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin: 8px 0 6px; }
+  .split div + div { margin-left: 2px; }
+  .split-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+  .split-legend .key { display: inline-flex; align-items: center; gap: 5px; }
+  .sw { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+  /* recent updates */
+  .updates {
+    margin-top: 22px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; box-shadow: var(--shadow); padding: 12px 18px;
+  }
+  .updates summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+  .updates ul { margin: 10px 0 4px; padding-left: 0; list-style: none; }
+  .updates li { display: flex; gap: 12px; font-size: 13px; color: var(--ink-2); padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .updates li:last-child { border-bottom: 0; }
+  .updates .ud { flex: none; width: 84px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .updates .up { flex: none; width: 84px; font-weight: 650; color: var(--ink); }
+
+  footer { margin-top: 30px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer b { color: var(--ink-2); }
+
+  /* glossary terms */
+  .gloss { text-decoration: underline dotted; text-decoration-color: var(--ink-3); text-underline-offset: 2px; cursor: help; }
+  .gloss:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+  .glossary-panel .gt { flex: none; width: 84px; font-weight: 650; color: var(--ink); }
+
+  /* pathway timing (journey) */
+  .journey-wrap { margin-top: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .journey-wrap h3 { margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .journey-wrap .jnote { font-size: 12px; color: var(--ink-3); margin: 0 0 10px; }
+  .journey { display: flex; align-items: flex-start; overflow-x: auto; padding-bottom: 4px; }
+  .jnode { text-align: center; min-width: 108px; flex: none; }
+  .jnode .jyear { font-weight: 750; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .jnode .jyear.tbc { color: var(--ink-3); }
+  .jnode .jlbl { font-size: 11.5px; line-height: 1.3; color: var(--ink-2); margin-top: 3px; padding: 0 4px; }
+  .jgap { align-self: flex-start; margin: 1px 4px 0; flex: none; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 650; white-space: nowrap; }
+  .jgap.g-good { background: var(--good-soft); color: var(--good); }
+  .jgap.g-warn { background: var(--warn-soft); color: var(--warn); }
+  .jgap.g-crit { background: var(--crit-soft); color: var(--crit); }
+  .jgap.g-tbc { background: var(--idle-soft); color: var(--ink-3); }
+
+  /* ---------- visualization sections (map, timing) ---------- */
+  .viz {
+    margin-top: 22px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; box-shadow: var(--shadow); padding: 18px 20px;
+  }
+  .viz h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.005em; }
+  .viz .viznote { margin: 3px 0 12px; font-size: 12.5px; color: var(--ink-3); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .tab {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 14px; font: inherit; font-size: 13px; font-weight: 650; color: var(--ink-2); cursor: pointer;
+  }
+  .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .mapwrap { position: relative; overflow-x: auto; }
+  .mapwrap svg { display: block; width: 100%; min-width: 640px; height: auto; background: var(--surface-2); border-radius: 10px; }
+  .mapwrap path { fill: var(--surface); stroke: var(--line); stroke-width: .6; }
+  .mapwrap path.lvl-registered { fill: var(--map1); }
+  .mapwrap path.lvl-guidelines { fill: var(--map2); }
+  .mapwrap path.lvl-mft { fill: var(--map3); }
+  .mapwrap path.haslvl { cursor: help; }
+  .map-overlay {
+    position: absolute; top: 10px; left: 10px; z-index: 2; max-width: 400px;
+    background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 650; line-height: 1.4;
+  }
+  .map-empty {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 13.5px; color: var(--ink-3); text-align: center; padding: 20px;
+  }
+  .map-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); }
+  .map-legend .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid var(--line); }
+
+  .timing-axis { position: relative; height: 18px; margin-left: 150px; }
+  .timing-axis span { position: absolute; transform: translateX(-50%); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .trow2 { display: flex; align-items: center; gap: 0; margin: 10px 0; }
+  .trow2 .tname { flex: none; width: 150px; font-size: 13px; font-weight: 650; padding-right: 10px; }
+  .trow2 .tbar { position: relative; flex: 1; height: 26px; }
+  .trow2 .tbase { position: absolute; top: 12px; left: 0; right: 0; height: 2px; background: var(--line); }
+  .tseg { position: absolute; top: 8px; height: 10px; border-radius: 5px; }
+  .tseg.g-good { background: var(--good); }
+  .tseg.g-warn { background: var(--warn); }
+  .tseg.g-crit { background: var(--crit); }
+  .tseg.g-tbc { background: repeating-linear-gradient(90deg, var(--idle) 0 6px, transparent 6px 12px); height: 4px; top: 11px; border-radius: 2px; }
+  .tgate { position: absolute; top: 6px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--surface); border: 3px solid var(--ink-2); cursor: help; z-index: 1; }
+  .tgate:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .ttotal { flex: none; width: 96px; padding-left: 10px; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .timing-pending { font-size: 12.5px; color: var(--ink-3); margin: 8px 0 0 150px; }
+  .timing-scroll { overflow-x: auto; }
+  .timing-inner { min-width: 640px; }
+
+  /* download button */
+  .dl-btn {
+    margin-left: auto; background: var(--accent); color: var(--accent-ink); border: 0;
+    border-radius: 8px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+  }
+  .dl-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .strip .legend { margin-left: 0; }
+
+  /* print view */
+  @media print {
+    body { background: #fff; }
+    .product .detail { display: block !important; }
+    .product { break-inside: avoid; box-shadow: none; }
+    .dl-btn, #tip { display: none !important; }
+    .updates, .glossary-panel { display: block; }
+    .updates[open] summary, .glossary-panel[open] summary { list-style: none; }
+  }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 20px 14px 48px; }
+    .prow { grid-template-columns: 1fr; padding: 14px 14px; }
+    .flagnote { margin-left: 14px; margin-right: 14px; }
+    .meta { text-align: left; margin-left: 0; }
+    .updates li { flex-wrap: wrap; gap: 4px 12px; }
+    .strip { padding: 10px 14px; }
+    .dl-btn { margin-left: 0; }
+    .detail { padding: 14px; }
+    .timing-axis { margin-left: 110px; }
+    .trow2 .tname { width: 110px; font-size: 12px; }
+    .ttotal { width: 78px; font-size: 11px; }
+    .timing-pending { margin-left: 0; }
+  }
+</style>
+<style id="synthetic-strip">
+  /* warning strip so reviewers know every figure on the page is fictional */
+  body::before {
+    content: "SYNTHETIC DATA EDITION — every company, product and figure on this page is fictional (development preview)";
+    display: block; background: #4B2E83; color: #D9C9F2; padding: 6px 24px;
+    font: 600 11px/1.5 "Segoe UI", Arial, sans-serif; letter-spacing: .05em;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1><span>LAUNCH</span> Transparency Dashboard <span class="proto-badge">Prototype — data presented here may not be accurate</span></h1>
+      <p>Tracking new antimalarial medicines from approval to access — where each product stands, and where it is stuck.</p>
+    </div>
+    <div class="meta">
+      <b id="host-note">To be hosted by the RBM Partnership to End Malaria</b><br>
+      <span id="updated"></span><span id="meta-note"></span><br>
+      <a href="option-b.html" style="color:var(--accent)">Comparison matrix (B)</a> ·
+      <a href="pipeline.html" style="color:var(--accent)">Pipeline poster</a> ·
+      <a href="story.html" style="color:var(--accent)">Data story</a> ·
+      <a href="../unitaid/index.html" style="color:var(--accent)">Unitaid brand preview</a>
+    </div>
+  </header>
+
+  <div class="demo-banner" id="banner" hidden></div>
+
+  <div class="strip" role="group" aria-label="Summary">
+    <div class="stat"><span class="n" id="stat-tracked">–</span><span class="l">medicines tracked</span></div>
+    <div class="stat"><span class="n crit-n" id="stat-bottlenecks">–</span><span class="l">active bottlenecks</span></div>
+    <div class="stat"><span class="n" id="stat-pipeline">–</span><span class="l">expected to market ≤ 3 yrs</span></div>
+    <div class="legend" aria-label="Status legend">
+      <span class="key"><span class="dot done" aria-hidden="true">✓</span> Complete</span>
+      <span class="key"><span class="dot prog" aria-hidden="true">›</span> In progress</span>
+      <span class="key"><span class="dot late" aria-hidden="true">!</span> Delayed / bottleneck</span>
+      <span class="key"><span class="dot idle" aria-hidden="true"></span> Not started</span>
+    </div>
+    <button class="dl-btn" id="dl-csv" type="button">Download CSV</button>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <section class="viz" id="mapsec" hidden>
+    <h2>Country access map</h2>
+    <p class="viznote" id="mapnote">Where the selected medicine is registered, in national guidelines, and in MFT plans.</p>
+    <div class="tabs" id="maptabs" role="tablist" aria-label="Select medicine for map"></div>
+    <div class="mapwrap" id="mapwrap"></div>
+    <div class="map-legend">
+      <span class="key"><span class="sw" style="background:var(--map1)"></span> Registered</span>
+      <span class="key"><span class="sw" style="background:var(--map2)"></span> In national guidelines</span>
+      <span class="key"><span class="sw" style="background:var(--map3)"></span> In MFT plans</span>
+      <span class="key"><span class="sw" style="background:var(--surface)"></span> No data</span>
+    </div>
+  </section>
+
+  <section class="viz" id="timingsec" hidden>
+    <h2>Pathway timing across products</h2>
+    <p class="viznote">Actual years between access gates, from each product's first milestone. LAUNCH best-practice benchmark (draft): ≤ 2 years per gate — green ≤ 2, amber 3–5, red over 5. Dashes run to today where the next gate is still pending.</p>
+    <div class="timing-scroll"><div class="timing-inner" id="timing"></div></div>
+    <div class="timing-pending" id="timing-pending"></div>
+  </section>
+
+  <details class="updates" id="updates" hidden>
+    <summary>Recent updates</summary>
+    <ul id="updates-list"></ul>
+  </details>
+
+  <details class="updates glossary-panel" id="glossary" hidden>
+    <summary>Definitions</summary>
+    <ul id="glossary-list"></ul>
+  </details>
+
+  <footer>
+    <b>About the data.</b> The LAUNCH dashboard displays publicly available information only. Product-specific details
+    (including pricing) appear solely where the manufacturer has confirmed in writing that they may be shared.
+    Hover any stage for status detail; select a medicine to open its full profile.<br>
+    <b>Sources.</b> WHO Guidelines &amp; Prequalification updates · stringent regulatory authority registers ·
+    national regulatory authorities · Global Fund / PMI procurement data · manufacturer communications.
+    A LAUNCH initiative of Unitaid partners, hosted on RBM dashboards.
+  </footer>
+</div>
+
+<div id="tip" role="tooltip"></div>
+
+<script src="../data/products.synthetic.js"></script>
+<script src="../data/world-map.js"></script>
+<script>
+(function () {
+  const board = document.getElementById("board");
+  const banner = document.getElementById("banner");
+
+  if (!window.LAUNCH_DATA) {
+    banner.hidden = false;
+    banner.classList.add("error");
+    banner.innerHTML = "<b>Data failed to load.</b> data/products.js is missing or has a syntax error — run <code>node scripts/validate-data.js</code>.";
+    return;
+  }
+
+  const DATA = window.LAUNCH_DATA;
+  const STAGES = DATA.stages;
+  const PRODUCTS = DATA.products;
+  const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
+  const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+
+  // header + banner from meta
+  const dt = new Date(DATA.meta.lastUpdated + "T00:00:00");
+  document.getElementById("updated").textContent = "Last updated " +
+    dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+  const status = DATA.meta.dataStatus;
+  const BANNERS = {
+    illustrative: "<b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.",
+    draft: "<b>Draft data.</b> Compiled from public sources and pending LAUNCH team verification and manufacturer written confirmation. Unverified values are shown as TBC, never estimated."
+  };
+  if (BANNERS[status]) { banner.hidden = false; banner.innerHTML = BANNERS[status]; }
+  document.getElementById("meta-note").textContent =
+    status === "live" ? " · Data confirmed by manufacturers for public release" : " · " + status + " data";
+
+  // changelog
+  const updates = DATA.changelog || [];
+  if (updates.length) {
+    document.getElementById("updates").hidden = false;
+    document.getElementById("updates-list").innerHTML = updates.slice(0, 8).map(u =>
+      `<li><span class="ud">${u.date}</span><span class="up">${u.product}</span><span>${u.change}</span></li>`
+    ).join("");
+  }
+
+  // summary stats derived from the data, never hand-typed
+  const tracked = PRODUCTS.filter(p => !p.placeholder);
+  document.getElementById("stat-tracked").textContent = tracked.length;
+  document.getElementById("stat-bottlenecks").textContent =
+    tracked.filter(p => p.stages.some(s => s.status === "late")).length;
+  document.getElementById("stat-pipeline").textContent =
+    tracked.filter(p => p.class === "pipeline").length;
+
+  function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+
+  tracked.forEach(p => {
+    const stagesHtml = p.stages.map((st, i) => {
+      const preDone = i > 0 && (p.stages[i - 1].status === "done");
+      const postDone = st.status === "done";
+      return `
+        <div class="stage ${i === p.currentStage ? "cur" : ""}">
+          <div class="row">
+            <div class="bar pre ${preDone ? "done-bar" : ""}"></div>
+            <span class="dot ${st.status}" tabindex="0" role="img"
+              aria-label="${esc(STAGES[i])}: ${LABEL[st.status]}. ${esc(st.note)}"
+              data-stage="${esc(STAGES[i])}" data-status="${st.status}"
+              data-note="${esc(st.note)}" data-date="${esc(st.date)}"
+              data-next="${esc(st.next)}" data-nextdate="${esc(st.nextDate)}"
+              data-asof="${esc(st.asOf)}">${ICON[st.status]}</span>
+            <div class="bar post ${postDone ? "done-bar" : ""}"></div>
+          </div>
+          <div class="lbl">${STAGES[i]}</div>
+        </div>`;
+    }).join("");
+
+    const d = p.detail;
+    const shades = ["#14657E", "#3E8CA3", "#77AFC0", "#B4D2DC"];
+    const volumeCard = d.volume ? `
+      <div class="card">
+        <h3>Treatments procured · ${esc(d.volume.period)}</h3>
+        <div class="big">${esc(d.volume.total)}</div>
+        <div class="split" aria-hidden="true">
+          ${d.volume.split.map((s, i) => `<div style="width:${s.pct}%;background:${shades[i % shades.length]}" title="${esc(s.channel)} ${s.pct}%"></div>`).join("")}
+        </div>
+        <div class="split-legend">
+          ${d.volume.split.map((s, i) => `<span class="key"><span class="sw" style="background:${shades[i % shades.length]}"></span>${esc(s.channel)} ${s.pct}%</span>`).join("")}
+        </div>
+        ${d.volume.source ? `<div class="prov">Source: ${esc(d.volume.source)}</div>` : ""}
+      </div>` : `
+      <div class="card">
+        <h3>Treatments procured</h3>
+        <div class="big">—</div>
+        <div class="sub">${esc(d.volumeNote || "Data not yet available")}</div>
+      </div>`;
+
+    const journeyHtml = d.journey ? (() => {
+      const parts = [];
+      d.journey.forEach((g, i) => {
+        if (i > 0) {
+          const a = d.journey[i - 1].year, b = g.year;
+          let cls = "g-tbc", txt = "pending";
+          if (Number.isInteger(a) && Number.isInteger(b)) {
+            const gap = b - a;
+            txt = gap === 0 ? "same year" : "+" + gap + " yr" + (gap === 1 ? "" : "s");
+            cls = gap <= 2 ? "g-good" : gap <= 5 ? "g-warn" : "g-crit";
+          }
+          parts.push(`<span class="jgap ${cls}">${txt}</span>`);
+        }
+        parts.push(`<div class="jnode"><div class="jyear ${g.year === "TBC" ? "tbc" : ""}">${esc(g.year)}</div><div class="jlbl">${esc(g.label)}</div></div>`);
+      });
+      return `<div class="journey-wrap">
+        <h3>Time between gates</h3>
+        <p class="jnote">Elapsed time between access milestones. Benchmark (LAUNCH deep-dive, draft): ≤ 2 yrs between gates; 3–5 yrs slow; over 5 yrs a systemic delay.</p>
+        <div class="journey">${parts.join("")}</div>
+      </div>`;
+    })() : "";
+
+    const priceProv = [
+      d.price.source ? "Source: " + d.price.source : "",
+      d.price.confirmedInWriting ? "Manufacturer-confirmed in writing" : "",
+      d.price.asOf ? "as of " + d.price.asOf : ""
+    ].filter(Boolean).join(" · ");
+
+    const node = el(`
+      <section class="product" id="${esc(p.id)}">
+        <button class="prow" aria-expanded="false" aria-controls="${esc(p.id)}-detail">
+          <div class="pid">
+            <div class="name">${esc(p.name)}</div>
+            <div class="inn">${esc(p.inn)}</div>
+            <div class="mfr">${esc(p.manufacturer)}</div>
+            <div class="chips">
+              <span class="chip ${p.class === "pipeline" ? "pipeline" : ""}">${esc(p.classLabel)}</span>
+            </div>
+          </div>
+          <div class="trackbox"><div class="track">${stagesHtml}</div></div>
+        </button>
+        ${p.flag ? `<div class="flagnote">${esc(p.flag)}</div>` : ""}
+        <div style="height:14px"></div>
+        <div class="detail" id="${esc(p.id)}-detail">
+          <div class="cards">
+            <div class="card">
+              <h3>Indicative price per treatment</h3>
+              <div class="big">${esc(d.price.value)}</div>
+              <div class="sub">${esc(d.price.note)}</div>
+              ${priceProv ? `<div class="prov">${esc(priceProv)}</div>` : ""}
+            </div>
+            <div class="card">
+              <h3>Target use case</h3>
+              <p>${esc(d.useCase)}</p>
+            </div>
+            <div class="card">
+              <h3>Access &amp; supply commitments</h3>
+              <ul>${d.access.map(a => `<li>${esc(a)}</li>`).join("")}</ul>
+            </div>
+            <div class="card">
+              <h3>Adoption requirements</h3>
+              <ul>${d.adoption.map(a => `<li>${esc(a)}</li>`).join("")}</ul>
+            </div>
+            <div class="card">
+              <h3>Country access</h3>
+              <div class="kv"><span>Registered</span><span>${d.country.registered}</span></div>
+              <div class="kv"><span>In national guidelines</span><span>${d.country.inGuidelines}</span></div>
+              <div class="kv"><span>In MFT plans</span><span>${d.country.inMft}</span></div>
+              <div class="kv"><span>Forecast demand</span><span>${esc(d.country.forecastDemand)}</span></div>
+            </div>
+            <div class="card">
+              <h3>Operational research</h3>
+              <div class="kv"><span>Lead</span><span>${esc(d.research.lead)}</span></div>
+              <div class="kv"><span>Geographies</span><span>${esc(d.research.geographies)}</span></div>
+              <div class="kv"><span>Timeline</span><span>${esc(d.research.timeline)}</span></div>
+              <p style="margin-top:6px"><em>${esc(d.research.question)}</em></p>
+            </div>
+            ${volumeCard}
+          </div>
+          ${journeyHtml}
+          <div class="mtable-box">
+            <table class="mtable">
+              <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
+              <tbody>
+                ${d.milestones.map(m => `
+                  <tr>
+                    <td>${esc(m.milestone)}</td>
+                    <td><span class="pill ${m.status}">${ICON[m.status] ? ICON[m.status] + " " : ""}${esc(m.label)}</span></td>
+                    <td>${esc(m.date)}</td>
+                    <td>${esc(m.next)}</td>
+                    <td>${esc(m.anticipated)}</td>
+                  </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+          <div class="src">${status === "illustrative"
+            ? "Illustrative data for design review. Live version: each figure links to its public source and the date the manufacturer confirmed release."
+            : status === "draft"
+            ? "Draft data compiled from public sources — pending verification. Manufacturer-specific details will appear only once release is confirmed in writing."
+            : "Each figure reflects its cited public source; manufacturer-specific details are shown only where release was confirmed in writing."}</div>
+        </div>
+      </section>
+    `);
+    board.appendChild(node);
+  });
+
+  // placeholder rows (e.g. prevention tools not yet approved for tracking)
+  PRODUCTS.filter(p => p.placeholder).forEach(p => {
+    board.appendChild(el(`
+      <section class="product future">
+        <div class="prow" style="cursor:default">
+          <div class="pid">
+            <div class="name">${esc(p.name)}</div>
+            <div class="inn">${esc(p.inn)}</div>
+            <div class="mfr">${esc(p.manufacturer)}</div>
+            <div class="chips"><span class="chip soon">${esc(p.classLabel)}</span></div>
+          </div>
+          <div style="color:var(--ink-3);font-size:13.5px">${esc(p.note)}</div>
+        </div>
+        <div style="height:14px"></div>
+      </section>
+    `));
+  });
+
+  // expand/collapse
+  document.querySelectorAll(".prow[aria-controls]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      if (e.target.closest(".dot")) return; // dots are for tooltips
+      const prod = btn.closest(".product");
+      const open = prod.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+
+  // tooltip
+  const tip = document.getElementById("tip");
+  function showTipAt(el, html) {
+    tip.innerHTML = html;
+    tip.style.display = "block";
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = r.left + r.width / 2 - tw / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+    let y = r.top - th - 10;
+    if (y < 8) y = r.bottom + 10;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  function hideTip() { tip.style.display = "none"; }
+  function showStageTip(dot) {
+    const rows = [];
+    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
+    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
+    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
+    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
+    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
+    showTipAt(dot, `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`);
+  }
+  document.querySelectorAll(".stage .dot").forEach(dot => {
+    dot.addEventListener("mouseenter", () => showStageTip(dot));
+    dot.addEventListener("focus", () => showStageTip(dot));
+    dot.addEventListener("mouseleave", hideTip);
+    dot.addEventListener("blur", hideTip);
+    dot.addEventListener("click", e => e.stopPropagation());
+  });
+
+  // glossary: definitions panel + inline dotted-underline terms
+  const GLOSS = DATA.glossary || {};
+  const terms = Object.keys(GLOSS).sort((a, b) => b.length - a.length);
+  if (terms.length) {
+    document.getElementById("glossary").hidden = false;
+    document.getElementById("glossary-list").innerHTML = Object.keys(GLOSS).sort().map(t =>
+      `<li><span class="gt">${esc(t)}</span><span>${esc(GLOSS[t])}</span></li>`).join("");
+
+    const re = new RegExp("\\b(" + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")\\b", "g");
+    document.querySelectorAll("#board .product").forEach(section => {
+      const seen = new Set(); // first occurrence per product only — repetition is noise
+      const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, {
+        acceptNode(n) {
+          const parent = n.parentElement;
+          if (!parent || parent.closest(".gloss")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        const text = node.nodeValue;
+        let m, frag = null, last = 0;
+        re.lastIndex = 0;
+        while ((m = re.exec(text))) {
+          if (seen.has(m[1])) continue;
+          seen.add(m[1]);
+          if (!frag) frag = document.createDocumentFragment();
+          frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+          const s = document.createElement("span");
+          s.className = "gloss";
+          s.tabIndex = 0;
+          s.textContent = m[1];
+          s.dataset.term = m[1];
+          frag.appendChild(s);
+          last = m.index + m[1].length;
+        }
+        if (frag) {
+          frag.appendChild(document.createTextNode(text.slice(last)));
+          node.parentNode.replaceChild(frag, node);
+        }
+      });
+    });
+    document.querySelectorAll(".gloss").forEach(g => {
+      const show = () => showTipAt(g, `<b>${esc(g.dataset.term)}</b>${esc(GLOSS[g.dataset.term])}`);
+      g.addEventListener("mouseenter", show);
+      g.addEventListener("focus", show);
+      g.addEventListener("mouseleave", hideTip);
+      g.addEventListener("blur", hideTip);
+    });
+  }
+
+  // ---- country access map ----
+  const LEVEL_LABEL = { registered: "Registered", guidelines: "In national guidelines", mft: "In MFT plans" };
+  if (window.LAUNCH_MAP) {
+    const mapsec = document.getElementById("mapsec");
+    mapsec.hidden = false;
+    const wrap = document.getElementById("mapwrap");
+    const M = window.LAUNCH_MAP;
+    const paths = Object.entries(M.countries).map(([iso3, c]) =>
+      `<path data-iso3="${iso3}" data-name="${esc(c.n)}" d="${c.d}"></path>`).join("");
+    wrap.innerHTML = `<svg viewBox="0 0 ${M.w} ${M.h}" role="img" aria-label="World map of country access">${paths}</svg>
+      <div class="map-overlay" id="map-overlay" hidden></div>
+      <div class="map-empty" id="map-empty" hidden></div>`;
+
+    const tabs = document.getElementById("maptabs");
+    tabs.innerHTML = tracked.map((p, i) =>
+      `<button class="tab" role="tab" data-id="${esc(p.id)}" aria-selected="false">${esc(p.name)}</button>`).join("");
+
+    function selectMap(id) {
+      const p = tracked.find(x => x.id === id);
+      tabs.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.id === id ? "true" : "false"));
+      const byIso = {};
+      (p.detail.countries ? p.detail.countries.list : []).forEach(e => byIso[e.iso3] = e.level);
+      wrap.querySelectorAll("path").forEach(el => {
+        const lvl = byIso[el.dataset.iso3];
+        el.setAttribute("class", lvl ? "lvl-" + lvl + " haslvl" : "");
+        if (lvl) el.setAttribute("tabindex", "0"); else el.removeAttribute("tabindex");
+        el.dataset.lvl = lvl || "";
+      });
+      const overlay = document.getElementById("map-overlay");
+      const empty = document.getElementById("map-empty");
+      if (!p.detail.countries) {
+        overlay.hidden = true;
+        empty.hidden = false;
+        empty.textContent = p.class === "pipeline"
+          ? p.name + " is pre-launch — no country access yet."
+          : "No country-level data yet for " + p.name + ".";
+      } else {
+        empty.hidden = true;
+        const c = p.detail.countries;
+        overlay.hidden = c.status === "verified";
+        overlay.textContent = (c.status === "illustrative" ? "ILLUSTRATIVE — " : "DRAFT — ") + c.note;
+      }
+    }
+    tabs.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => selectMap(t.dataset.id)));
+    // default to the first product that has country data
+    selectMap((tracked.find(p => p.detail.countries) || tracked[0]).id);
+
+    wrap.querySelectorAll("path").forEach(el => {
+      const show = () => { if (el.dataset.lvl) showTipAt(el, `<b>${esc(el.dataset.name)}</b>${LEVEL_LABEL[el.dataset.lvl]}`); };
+      el.addEventListener("mouseenter", show);
+      el.addEventListener("focus", show);
+      el.addEventListener("mouseleave", hideTip);
+      el.addEventListener("blur", hideTip);
+    });
+  }
+
+  // ---- cross-product pathway timing ----
+  (function renderTiming() {
+    const nowYear = parseInt(DATA.meta.lastUpdated.slice(0, 4), 10);
+    const withJourney = tracked.filter(p => p.detail.journey && p.detail.journey.filter(g => Number.isInteger(g.year)).length >= 2);
+    const without = tracked.filter(p => !withJourney.includes(p));
+    if (!withJourney.length) return;
+    document.getElementById("timingsec").hidden = false;
+
+    let minY = Infinity, maxY = nowYear;
+    withJourney.forEach(p => p.detail.journey.forEach(g => { if (Number.isInteger(g.year)) minY = Math.min(minY, g.year); }));
+    const span = maxY - minY || 1;
+    const px = y => ((y - minY) / span * 100);
+
+    const rows = withJourney.map(p => {
+      const gates = p.detail.journey;
+      const dated = gates.filter(g => Number.isInteger(g.year));
+      const last = dated[dated.length - 1];
+      const hasPending = gates.some(g => g.year === "TBC");
+      let segs = "";
+      for (let i = 1; i < dated.length; i++) {
+        const a = dated[i - 1].year, b = dated[i].year, gap = b - a;
+        if (gap === 0) continue;
+        const cls = gap <= 2 ? "g-good" : gap <= 5 ? "g-warn" : "g-crit";
+        segs += `<div class="tseg ${cls}" style="left:${px(a)}%;width:${px(b) - px(a)}%" title="+${gap} yr${gap === 1 ? "" : "s"}"></div>`;
+      }
+      if (hasPending && last.year < nowYear)
+        segs += `<div class="tseg g-tbc" style="left:${px(last.year)}%;width:${px(nowYear) - px(last.year)}%" title="Next gate still pending"></div>`;
+      const markers = dated.map(g =>
+        `<span class="tgate" tabindex="0" style="left:${px(g.year)}%" data-lbl="${esc(g.label)}" data-yr="${g.year}"></span>`).join("");
+      const totalYrs = (hasPending ? nowYear : last.year) - dated[0].year;
+      const total = hasPending ? totalYrs + " yrs, ongoing" : totalYrs + " yrs";
+      return `<div class="trow2"><div class="tname">${esc(p.name)}</div><div class="tbar"><div class="tbase"></div>${segs}${markers}</div><div class="ttotal">${total}</div></div>`;
+    }).join("");
+
+    const step = span > 12 ? 4 : 3;
+    let axis = "";
+    for (let y = minY; y <= maxY; y += step) axis += `<span style="left:${px(y)}%">${y}</span>`;
+    document.getElementById("timing").innerHTML =
+      `<div class="timing-axis" style="margin-right:96px">${axis}</div>${rows}`;
+    if (without.length)
+      document.getElementById("timing-pending").textContent =
+        "Not yet plotted (pathway starting): " + without.map(p => p.name).join(", ") + ".";
+
+    document.querySelectorAll(".tgate").forEach(g => {
+      const show = () => showTipAt(g, `<b>${g.dataset.yr}</b>${g.dataset.lbl}`);
+      g.addEventListener("mouseenter", show);
+      g.addEventListener("focus", show);
+      g.addEventListener("mouseleave", hideTip);
+      g.addEventListener("blur", hideTip);
+    });
+  })();
+
+  // CSV download — stages and milestones for every tracked product
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  document.getElementById("dl-csv").addEventListener("click", () => {
+    const rows = [["Product", "Record", "Item", "Status", "Detail", "Date", "Next step", "Anticipated", "Source", "As of"]];
+    tracked.forEach(p => {
+      p.stages.forEach((s, i) =>
+        rows.push([p.name, "Stage", STAGES[i], LABEL[s.status], s.note, s.date, s.next, s.nextDate, s.source || "", s.asOf || ""]));
+      p.detail.milestones.forEach(m =>
+        rows.push([p.name, "Milestone", m.milestone, LABEL[m.status], m.label, m.date, m.next, m.anticipated, m.source || "", ""]));
+    });
+    const csv = rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "launch-dashboard-data-" + DATA.meta.lastUpdated + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // print: open every panel so the printout is complete
+  window.addEventListener("beforeprint", () => {
+    document.getElementById("updates").open = true;
+    document.getElementById("glossary").open = true;
+  });
+})();
+</script>

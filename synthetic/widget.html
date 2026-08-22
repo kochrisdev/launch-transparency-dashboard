@@ -1,0 +1,92 @@
+<title>LAUNCH Product Tracker Widget · Synthetic Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #FFFFFF; --surface-2: #EDF1F3; --ink: #16303F; --ink-2: #4E6371; --ink-3: #7C8E99;
+    --line: #D8E0E4; --accent: #14657E; --accent-soft: #E3EEF2;
+    --good: #1E8A5A; --warn: #B87500; --crit: #C0392B; --crit-soft: #FAE7E4;
+    --idle: #9AA8B1; --idle-soft: #EEF1F3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font: 14px/1.45 -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", sans-serif;
+    padding: 14px 16px;
+  }
+  .head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .name { font-size: 16px; font-weight: 750; }
+  .inn { font-size: 12px; color: var(--ink-2); }
+  .badge { margin-left: auto; font-size: 10px; font-weight: 650; letter-spacing: .03em; padding: 2px 8px; border-radius: 999px; background: #FBF0DA; color: #B87500; border: 1px solid #B87500; white-space: nowrap; }
+  .trackbox { overflow-x: auto; margin-top: 10px; }
+  .track { display: flex; align-items: flex-start; min-width: 352px; }
+  .stage { flex: 1; min-width: 44px; text-align: center; }
+  .stage .row { display: flex; align-items: center; }
+  .bar { flex: 1; height: 2.5px; background: var(--line); }
+  .bar.done-bar { background: var(--good); }
+  .stage:first-child .pre, .stage:last-child .post { visibility: hidden; }
+  .dot { width: 15px; height: 15px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 9px; font-weight: 800; margin: 0 1px; }
+  .dot.done { background: var(--good); color: #fff; }
+  .dot.prog { background: var(--warn); color: #fff; }
+  .dot.late { background: var(--crit); color: #fff; }
+  .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
+  .lbl { font-size: 8.5px; line-height: 1.2; color: var(--ink-3); margin-top: 4px; padding: 0 1px; }
+  .flag { margin-top: 8px; font-size: 11.5px; color: var(--crit); }
+  .flag::before { content: "▲ "; font-size: 8px; }
+  .foot { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 11px; color: var(--ink-3); }
+  .foot .navlinks { margin-left: auto; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+  .foot a { color: var(--accent); font-weight: 650; text-decoration: none; }
+  .foot a:hover { text-decoration: underline; }
+  .err { color: var(--crit); background: var(--crit-soft); border-radius: 8px; padding: 8px 12px; font-size: 12.5px; }
+</style>
+
+<div id="root"></div>
+
+<script src="../data/products.synthetic.js"></script>
+<script>
+(function () {
+  // Embeddable single-product tracker. Usage on a partner site:
+  //   <iframe src="https://<host>/widget.html?product=aspy"
+  //           style="width:100%;max-width:720px;height:190px;border:1px solid #ddd;border-radius:10px" ...>
+  const root = document.getElementById("root");
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+  if (!window.LAUNCH_DATA) { root.innerHTML = '<div class="err">LAUNCH widget: data failed to load.</div>'; return; }
+
+  const DATA = window.LAUNCH_DATA;
+  const id = (new URLSearchParams(location.search).get("product") || "").toLowerCase();
+  const tracked = DATA.products.filter(p => !p.placeholder);
+  // match by stable id or by display name, so ?product=aspy works even though
+  // ASPY's id remains "pyramax" (ids never change; names may)
+  const p = tracked.find(x => x.id === id || x.name.toLowerCase().replace(/[^a-z0-9]/g, "") === id.replace(/[^a-z0-9]/g, ""));
+  if (!p) {
+    root.innerHTML = '<div class="err">LAUNCH widget: unknown product "' + esc(id) +
+      '". Use ?product= one of: ' + tracked.map(x => x.id).join(", ") + '.</div>';
+    return;
+  }
+  const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
+  const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+
+  const stages = p.stages.map((st, i) => {
+    const preDone = i > 0 && p.stages[i - 1].status === "done";
+    return `<div class="stage">
+      <div class="row"><div class="bar pre ${preDone ? "done-bar" : ""}"></div>
+      <span class="dot ${st.status}" title="${esc(DATA.stages[i])}: ${LABEL[st.status]}">${ICON[st.status]}</span>
+      <div class="bar post ${st.status === "done" ? "done-bar" : ""}"></div></div>
+      <div class="lbl">${esc(DATA.stages[i])}</div></div>`;
+  }).join("");
+
+  root.innerHTML = `
+    <div class="head">
+      <span class="name">${esc(p.name)}</span>
+      <span class="inn">${esc(p.inn)}</span>
+      <span class="badge">Prototype · ${esc(DATA.meta.dataStatus)} data</span>
+    </div>
+    <div class="trackbox"><div class="track">${stages}</div></div>
+    ${p.flag ? `<div class="flag">${esc(p.flag)}</div>` : ""}
+    <div class="foot">
+      <span>Updated ${esc(DATA.meta.lastUpdated)}</span>
+      <span class="navlinks">
+        <a href="index.html#${esc(p.id)}" target="_blank" rel="noopener">Full LAUNCH dashboard →</a>
+      </span>
+    </div>`;
+})();
+</script>
