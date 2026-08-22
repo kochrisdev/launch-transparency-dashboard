@@ -17,7 +17,9 @@ glance, **where each product stands and where it is stuck**.
 > traffic lights and a profile drawer). The pages link to each other in their
 > headers. One layout will be retained after review. A third, complementary
 > **[pipeline poster](https://kochrisdev.github.io/launch-transparency-dashboard/pipeline.html)**
-> shows the whole portfolio by development phase, MMV-poster style.
+> shows the whole portfolio by development phase, MMV-poster style. A
+> **[Unitaid-branded edition](https://kochrisdev.github.io/launch-transparency-dashboard/unitaid/)**
+> of all views (same data and features) is also live for brand review.
 
 ---
 

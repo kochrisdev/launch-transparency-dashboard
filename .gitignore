@@ -4,3 +4,4 @@ preview.html
 __pycache__/
 .venv/
 streamlit-app/*.log
+decks/

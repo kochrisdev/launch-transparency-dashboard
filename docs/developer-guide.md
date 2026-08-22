@@ -42,6 +42,9 @@ upgrade, or break.
 | `powerbi/` | Power BI kit: live Power Query (M) scripts against the Pages data URL, CSV exports + generator, LAUNCH report theme, DAX measures, page-by-page build guide. Self-documented in its own README. See §11. |
 | `scripts/make-brief.js` | Generates the quarterly "what changed" brief into `briefs/` (diffs stage statuses against the closest `history/` snapshot before the window). |
 | `briefs/` | Generated what-changed briefs; `latest.md` is the stable pointer. |
+| `unitaid/` | **Generated** Unitaid brand edition (journey board, matrix, poster, story) per brandpad.io/unitaid. Never hand-edit — rerun the builder. Reads the same `../data/` files, so data pushes update it automatically; only *structural* changes to the source pages need a rebuild. |
+| `scripts/build-unitaid-theme.js` | Rebuilds `unitaid/` from the current source pages: appends a brand-token override layer (pinned across all theme states), Source Sans 3, preview strip, path/link fixes. |
+| `decks/` (gitignored) | Local-only stakeholder briefing decks (.pptx) — deliberately kept out of the public repository. |
 | `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
 
@@ -283,7 +286,9 @@ in this order:
 3. **Static renderers that surface it**: `index.html`, and as applicable
    `option-b.html`, `pipeline.html`, `story.html`, `widget.html` (B reads
    stages/flag/detail; poster reads `phase`; story derives from `journey`,
-   `countries`, `flag`; widget reads stages/flag only).
+   `countries`, `flag`; widget reads stages/flag only). Then rerun
+   `node scripts/build-unitaid-theme.js` so the generated `unitaid/` edition
+   picks up the structural change.
 4. `streamlit-app/launch_data.py` (row builders / validator mirror) and
    `app.py` (the view that shows it).
 5. `powerbi/export-powerbi-data.js` **and** `powerbi/queries.m` (keep the two

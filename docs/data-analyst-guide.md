@@ -39,7 +39,7 @@ One data file drives three platforms. Know what each does with your push:
 
 | Platform | What it is | Effect of your push |
 | --- | --- | --- |
-| **Static site** (GitHub Pages) | The public flagship: journey board, comparison matrix, pipeline poster, data story, embeddable widget | Live within ~2 minutes, automatically. All five pages, the summary stats, the story's computed numbers and the RSS feed update themselves. |
+| **Static site** (GitHub Pages) | The public flagship: journey board, comparison matrix, pipeline poster, data story, embeddable widget — plus the **Unitaid brand edition** of all four views under `/unitaid/` | Live within ~2 minutes, automatically. All pages in both brand editions read the same data file, so one push updates everything — stats, the story's computed numbers, the RSS feed included. |
 | **Streamlit app** (`streamlit-app/`) | The analyst workbench — and your **pre-commit preview tool** | If deployed on Streamlit Cloud: redeploys automatically. Locally: rerun. |
 | **Power BI kit** (`powerbi/`) | Report for Microsoft-stack partners, built once from the kit | Refreshes from the live site on its own schedule (set in the Power BI Service). No action for data-value changes; **schema** changes need the developer (see the developer guide's schema-change checklist). |
 
