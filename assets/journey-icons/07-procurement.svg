@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Procurement</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#E0762F" stroke-width="12"/>
+  
+      <path d="M118 148 h36 l20 62" stroke="#E0762F" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M158 196 H 396 l-31 112 a19 19 0 0 1 -18 14 H 212 a19 19 0 0 1 -18 -14 Z" fill="#E0762F"/>
+      <rect x="264" y="212" width="24" height="72" rx="8" fill="#fff"/>
+      <rect x="240" y="236" width="72" height="24" rx="8" fill="#fff"/>
+      <circle cx="224" cy="358" r="23" fill="#E0762F"/>
+      <circle cx="338" cy="358" r="23" fill="#E0762F"/>
+</svg>

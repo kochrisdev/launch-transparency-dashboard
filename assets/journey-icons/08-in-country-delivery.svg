@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>In-country delivery</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#D69A1E" stroke-width="12"/>
+  
+      <rect x="118" y="192" width="182" height="122" rx="12" fill="#D69A1E"/>
+      <rect x="197" y="220" width="22" height="66" rx="7" fill="#fff"/>
+      <rect x="175" y="242" width="66" height="22" rx="7" fill="#fff"/>
+      <path d="M300 222 h54 a12 12 0 0 1 9 4 l33 38 a12 12 0 0 1 3 8 v30 a12 12 0 0 1 -12 12 h-87 Z" fill="#D69A1E"/>
+      <path d="M314 240 h32 l24 28 h-56 Z" fill="#fff"/>
+      <circle cx="180" cy="334" r="27" fill="#D69A1E"/><circle cx="180" cy="334" r="11" fill="#fff"/>
+      <circle cx="336" cy="334" r="27" fill="#D69A1E"/><circle cx="336" cy="334" r="11" fill="#fff"/>
+</svg>

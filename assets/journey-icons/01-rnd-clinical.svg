@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>R&amp;D &amp; clinical</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#0F7C8C" stroke-width="12"/>
+  
+      <g transform="rotate(24 256 210)">
+        <rect x="234" y="98" width="44" height="34" rx="8" fill="#0F7C8C"/>
+        <rect x="246" y="128" width="20" height="20" fill="#0F7C8C"/>
+        <rect x="226" y="144" width="60" height="96" rx="12" fill="#0F7C8C"/>
+        <rect x="238" y="238" width="36" height="26" rx="6" fill="#0F7C8C"/>
+      </g>
+      <path d="M318 372 C 348 312 340 252 300 214" stroke="#0F7C8C" stroke-width="30" fill="none" stroke-linecap="round"/>
+      <rect x="196" y="286" width="70" height="14" rx="7" fill="#CFE9ED"/>
+      <rect x="158" y="298" width="160" height="24" rx="12" fill="#0F7C8C"/>
+      <circle cx="238" cy="345" r="13" fill="#CFE9ED"/>
+      <rect x="140" y="366" width="200" height="32" rx="16" fill="#0F7C8C"/>
+</svg>

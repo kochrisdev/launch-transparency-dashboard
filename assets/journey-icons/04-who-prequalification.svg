@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>WHO prequalification</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#5B5FC7" stroke-width="12"/>
+  
+      <path d="M256 108 L 362 148 V 252 C 362 324 318 368 256 398 C 194 368 150 324 150 252 V 148 Z" fill="#5B5FC7"/>
+      <path d="M256 138 L 334 167 V 252 C 334 306 302 344 256 366 C 210 344 178 306 178 252 V 167 Z" fill="#E2E2F6"/>
+      <path d="M220 252 l28 28 l48 -56" stroke="#5B5FC7" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Regulatory approval (SRA)</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#2E9E5B" stroke-width="12"/>
+  
+      <path d="M168 108 h130 l46 46 v240 a14 14 0 0 1 -14 14 H168 a14 14 0 0 1 -14 -14 V122 a14 14 0 0 1 14 -14 Z" fill="#D8F0E1" stroke="#2E9E5B" stroke-width="12" stroke-linejoin="round"/>
+      <path d="M298 106 l48 48 h-48 Z" fill="#2E9E5B"/>
+      <rect x="186" y="192" width="140" height="16" rx="8" fill="#2E9E5B"/>
+      <rect x="186" y="228" width="140" height="16" rx="8" fill="#2E9E5B"/>
+      <rect x="186" y="264" width="90" height="16" rx="8" fill="#2E9E5B"/>
+      <path d="M296 378 l-16 42 17 -7 10 17 15 -40 Z" fill="#2E9E5B"/>
+      <path d="M344 378 l16 42 -17 -7 -10 17 -15 -40 Z" fill="#2E9E5B"/>
+      <circle cx="320" cy="330" r="56" fill="#2E9E5B"/>
+      <circle cx="320" cy="330" r="43" fill="none" stroke="#fff" stroke-width="6"/>
+      <path d="M300 330 l14 14 l28 -30" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

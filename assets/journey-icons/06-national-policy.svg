@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>National policy adoption</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#B94A96" stroke-width="12"/>
+  
+      <path d="M256 114 L 382 180 H 130 Z" fill="#B94A96"/>
+      <circle cx="256" cy="160" r="12" fill="#fff"/>
+      <rect x="148" y="190" width="216" height="14" rx="7" fill="#B94A96"/>
+      <rect x="166" y="216" width="26" height="122" rx="9" fill="#B94A96"/>
+      <rect x="222" y="216" width="26" height="122" rx="9" fill="#B94A96"/>
+      <rect x="278" y="216" width="26" height="122" rx="9" fill="#B94A96"/>
+      <rect x="334" y="216" width="26" height="122" rx="9" fill="#B94A96"/>
+      <rect x="148" y="348" width="216" height="16" rx="8" fill="#B94A96"/>
+      <rect x="130" y="376" width="252" height="18" rx="9" fill="#B94A96"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>WHO guidelines</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#3A78C9" stroke-width="12"/>
+  
+      <path d="M256 178 C 228 156 186 150 148 158 V 352 C 186 344 228 350 256 372 Z" fill="#DCE8F7" stroke="#3A78C9" stroke-width="12" stroke-linejoin="round"/>
+      <path d="M256 178 C 284 156 326 150 364 158 V 352 C 326 344 284 350 256 372 Z" fill="#DCE8F7" stroke="#3A78C9" stroke-width="12" stroke-linejoin="round"/>
+      <rect x="172" y="214" width="62" height="13" rx="6.5" fill="#3A78C9"/>
+      <rect x="172" y="242" width="62" height="13" rx="6.5" fill="#3A78C9"/>
+      <rect x="172" y="270" width="44" height="13" rx="6.5" fill="#3A78C9"/>
+      <rect x="292" y="214" width="22" height="68" rx="7" fill="#3A78C9"/>
+      <rect x="269" y="237" width="68" height="22" rx="7" fill="#3A78C9"/>
+</svg>

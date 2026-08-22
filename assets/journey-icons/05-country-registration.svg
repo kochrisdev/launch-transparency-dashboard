@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Country registration</title>
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#8A4FBF" stroke-width="12"/>
+  
+      <circle cx="256" cy="138" r="23" fill="#8A4FBF"/>
+      <rect x="242" y="150" width="28" height="54" fill="#8A4FBF"/>
+      <path d="M226 202 h60 c27 0 42 19 42 40 v14 H184 v-14 c0 -21 15 -40 42 -40 Z" fill="#8A4FBF"/>
+      <rect x="160" y="268" width="192" height="32" rx="10" fill="#8A4FBF"/>
+      <rect x="176" y="334" width="160" height="48" rx="12" fill="#EBDEF4"/>
+      <path d="M228 356 l16 16 l30 -32" stroke="#8A4FBF" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
