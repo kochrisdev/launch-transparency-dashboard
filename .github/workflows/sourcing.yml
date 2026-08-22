@@ -4,9 +4,10 @@ name: Scheduled source fetch
 # docs/data-sourcing-plan.md §4 and commits their outputs under sourcing/:
 #   - weekly  (Mon 06:00 UTC):  scripts/fetch-trials.js     (trial watch)
 #   - monthly (3rd 06:30 UTC):  scripts/fetch-globalfund.js (grants + disbursements)
-# When the trial watch detects changes, it opens an issue carrying the
-# what-changed report so an analyst reviews it — the fetchers never touch
-# data/products.js (the analyst + validator remain the only gate).
+#                               scripts/fetch-regulatory.js (WHO PQ + EMA EU-M4all)
+# When the trial or regulatory watch detects changes, it opens an issue
+# carrying the what-changed report so an analyst reviews it — the fetchers
+# never touch data/products.js (the analyst + validator remain the only gate).
 #
 # The bot commit touches only sourcing/, which publish.yml's path filter
 # ignores, so it cannot trigger a history snapshot or feed rebuild.
@@ -23,7 +24,7 @@ on:
       fetchers:
         description: "Which fetchers to run"
         type: choice
-        options: [all, trials, globalfund]
+        options: [all, trials, globalfund, regulatory]
         default: all
 
 permissions:
@@ -42,20 +43,22 @@ jobs:
       - name: Decide which fetchers this trigger runs
         id: plan
         run: |
-          RUN_TRIALS=false; RUN_GF=false
+          RUN_TRIALS=false; RUN_GF=false; RUN_REG=false
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             case "${{ inputs.fetchers }}" in
-              all)        RUN_TRIALS=true; RUN_GF=true ;;
+              all)        RUN_TRIALS=true; RUN_GF=true; RUN_REG=true ;;
               trials)     RUN_TRIALS=true ;;
               globalfund) RUN_GF=true ;;
+              regulatory) RUN_REG=true ;;
             esac
           elif [ "${{ github.event.schedule }}" = "0 6 * * 1" ]; then
             RUN_TRIALS=true
           else
-            RUN_GF=true
+            RUN_GF=true; RUN_REG=true
           fi
           echo "trials=$RUN_TRIALS" >> "$GITHUB_OUTPUT"
           echo "globalfund=$RUN_GF" >> "$GITHUB_OUTPUT"
+          echo "regulatory=$RUN_REG" >> "$GITHUB_OUTPUT"
 
       - name: Fetch trials (ClinicalTrials.gov)
         if: steps.plan.outputs.trials == 'true'
@@ -64,6 +67,10 @@ jobs:
       - name: Fetch Global Fund grants and disbursements
         if: steps.plan.outputs.globalfund == 'true'
         run: node scripts/fetch-globalfund.js
+
+      - name: Fetch regulatory lists (WHO PQ + EMA EU-M4all)
+        if: steps.plan.outputs.regulatory == 'true'
+        run: node scripts/fetch-regulatory.js
 
       - name: Commit sourcing outputs
         run: |
@@ -77,17 +84,18 @@ jobs:
             git push
           fi
 
-      - name: Open an issue if the trial watch found changes
-        if: steps.plan.outputs.trials == 'true'
+      - name: Open an issue if a watch report found changes
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           DATE=$(date -u +%F)
-          REPORT="sourcing/reports/trials-watch-$DATE.md"
-          if [ -f "$REPORT" ] && grep -q "Changes since" "$REPORT"; then
-            gh issue create --repo "$GITHUB_REPOSITORY" \
-              --title "Trial watch: changes detected — $DATE" \
-              --body-file "$REPORT"
-          else
-            echo "No trial changes — no issue."
-          fi
+          for KIND in trials regulatory; do
+            REPORT="sourcing/reports/$KIND-watch-$DATE.md"
+            if [ -f "$REPORT" ] && grep -q "Changes since" "$REPORT"; then
+              gh issue create --repo "$GITHUB_REPOSITORY" \
+                --title "$(echo "$KIND" | sed 's/^t/T/;s/^r/R/') watch: changes detected — $DATE" \
+                --body-file "$REPORT"
+            else
+              echo "No $KIND changes — no issue."
+            fi
+          done

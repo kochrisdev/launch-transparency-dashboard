@@ -21,6 +21,7 @@ provenance carried over.
 | --- | --- | --- | --- |
 | `node scripts/fetch-trials.js` | ClinicalTrials.gov API v2 (US public domain) | Weekly | `staging/trials.csv`, snapshot, and `reports/trials-watch-<date>.md` diffing status / completion-date / phase / results changes vs the previous snapshot — slipped dates are early bottleneck warnings. |
 | `node scripts/fetch-globalfund.js` | Global Fund Data Service OData v4.2 (no auth; Terms of Use, attribute) | Monthly | `staging/globalfund_grants.csv` (one row per malaria grant: country, status, signed/committed/disbursed, period) and `staging/globalfund_disbursements.csv` (grant × year totals). |
+| `node scripts/fetch-regulatory.js` | WHO PQ medicines + vector-control lists (CSV export; WHO terms) and EMA EU-M4all/Art. 58 opinions table (xlsx, regenerated nightly; attribute EMA) | Monthly | `staging/regulatory_events.csv` (malaria FPPs, all VC products, all EU-M4all opinions — portfolio products matched to `productId`) and `reports/regulatory-watch-<date>.md` diffing new listings, delistings and opinion changes. |
 
 ## Running manually
 
@@ -33,6 +34,10 @@ node scripts/fetch-trials.js
 
 ```bash
 node scripts/fetch-globalfund.js
+```
+
+```bash
+node scripts/fetch-regulatory.js
 ```
 
 Each run prints a summary and writes the outputs above. Runs are **safe to
@@ -54,8 +59,8 @@ history-snapshot bot):
 | When (UTC) | What runs |
 | --- | --- |
 | Mondays 06:00 | `fetch-trials.js` — and if the watch report contains changes, the workflow **opens a GitHub issue** carrying the report for analyst review. |
-| 3rd of each month 06:30 | `fetch-globalfund.js` |
-| On demand | *Actions tab → "Scheduled source fetch" → Run workflow* — choose `all`, `trials`, or `globalfund`. |
+| 3rd of each month 06:30 | `fetch-globalfund.js` and `fetch-regulatory.js` — the regulatory watch opens an issue on changes too (new PQ listings, delistings, EMA opinion changes). |
+| On demand | *Actions tab → "Scheduled source fetch" → Run workflow* — choose `all`, `trials`, `globalfund`, or `regulatory`. |
 
 Notes:
 
