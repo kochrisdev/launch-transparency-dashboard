@@ -52,6 +52,7 @@ controls the on-page banner.
 | [User guide](docs/user-guide.md) | Donors, ministries of health, implementing partners, pharma — how to read and use the dashboard. |
 | [Data analyst guide](docs/data-analyst-guide.md) | Whoever maintains the data — update loop, data dictionary, governance rules, confirmation register, cadence. |
 | [Data model & lineage](docs/data-model.md) | Analysts and developers extending the data — entities, keys and relationships, the lineage of every derived data product, and extension playbooks. |
+| [Data sourcing plan](docs/data-sourcing-plan.md) | Data categories mapped to the access pathway, the verified catalog of public sources feeding each one, target dataset designs, collection cadence, and the new data products they enable. |
 | [Developer guide](docs/developer-guide.md) | Whoever maintains or extends the code — architecture, rendering pipeline, validator, deployment, handover. |
 | [Domain primer](docs/domain-primer.md) | Developers new to the malaria-access domain — what the dataset means: the pathway, the actors, the four products, terminology, and schema-to-domain mapping. |
 | [Remaining-tasks checklist](docs/checklist.md) | Living checklist of open items from build stages 1–4, with who's needed for each. |
@@ -77,6 +78,9 @@ controls the on-page banner.
 | `history/` | Automatic dated snapshots of the data file (bot-committed on every data change) — the raw material for future trend charts and playback. |
 | `feed.xml` | RSS feed of dashboard updates, rebuilt automatically from the changelog. |
 | `scripts/validate-data.js` | Data validator — run after every data edit. |
+| `sourcing/` | Public-source data collection area (raw snapshots, staging CSVs, watch reports) per [docs/data-sourcing-plan.md](docs/data-sourcing-plan.md) — see [its README](sourcing/README.md). Feeds analyst decisions, never the dashboards directly. |
+| `scripts/fetch-trials.js` | Trial watch — ClinicalTrials.gov v2 pull for the portfolio, with a what-changed diff vs the previous snapshot. |
+| `scripts/fetch-globalfund.js` | Global Fund pull — malaria grants and disbursement transactions from the Data Service OData API. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
