@@ -63,7 +63,7 @@ controls the on-page banner.
 | `option-b.html` | Design option B (comparison matrix), live for client review. Reads the same data file. |
 | `pipeline.html` | Pipeline poster view (MMV-style phase columns). Reads the same data file. |
 | `story.html` | Scroll-driven data story ("The Waiting Years") for advocacy audiences. Reads the same data file. |
-| `unitaid/` | **Unitaid brand edition** of the dashboards (journey board, matrix, poster) per [brandpad.io/unitaid](https://brandpad.io/unitaid/) — generated from the originals by `scripts/build-unitaid-theme.js`; regenerate, don't hand-edit. Live at [/unitaid/](https://kochrisdev.github.io/launch-transparency-dashboard/unitaid/). |
+| `unitaid/` | **Unitaid brand edition** of the dashboards and data story (journey board, matrix, poster, story) per [brandpad.io/unitaid](https://brandpad.io/unitaid/) — generated from the originals by `scripts/build-unitaid-theme.js`; regenerate, don't hand-edit. Live at [/unitaid/](https://kochrisdev.github.io/launch-transparency-dashboard/unitaid/). |
 | `scripts/build-unitaid-theme.js` | Rebuilds `unitaid/` from the current originals (brand-token override layer, Source Sans 3, brand strip). |
 | `streamlit-app/` | Parallel Python/Streamlit platform: same views, flexible data input (bundled file / URL / upload) and runtime configuration. See [its README](streamlit-app/README.md). |
 | `powerbi/` | Power BI kit: live-refreshing Power Query scripts, CSV exports, LAUNCH theme, DAX measures and a page-by-page build guide. See [its README](powerbi/README.md). |

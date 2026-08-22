@@ -107,7 +107,7 @@ Nothing remaining. ✅
   computed 10-year approval-to-recommendation gap → the three-approvals
   pathway → today's bottlenecks → the access map → the incoming pipeline.
   All figures derived from the data file at render time.
-- **Unitaid brand edition (Aug 2026)** — `unitaid/`: the three dashboards
+- **Unitaid brand edition (Aug 2026)** — `unitaid/`: the dashboards and data story
   reskinned per brandpad.io/unitaid (navy/blue/red palette, Source Sans 3,
   brand status colours, preview strip), generated from the originals by
   `scripts/build-unitaid-theme.js` so the skin never drifts; same data,

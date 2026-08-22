@@ -74,6 +74,8 @@ const PAGES = [
     title: "LAUNCH Dashboard · Unitaid Brand (Option B)" },
   { src: "pipeline.html", out: "pipeline.html",
     title: "LAUNCH Pipeline Poster · Unitaid Brand" },
+  { src: "story.html", out: "story.html",
+    title: "The Waiting Years · Unitaid Brand" },
 ];
 
 for (const p of PAGES) {
@@ -83,8 +85,6 @@ for (const p of PAGES) {
   html = html.replace(/(<meta name="viewport"[^>]*>)/, `$1\n${FONTS}`);
   // data files live one level up
   html = html.replace(/src="data\//g, 'src="../data/');
-  // the data story stays single-edition at the repo root
-  html = html.replace(/href="story\.html"/g, 'href="../story.html"');
   // inside the themed folder, the brand-preview link becomes the way back
   html = html.replace(
     '<a href="unitaid/index.html" style="color:var(--accent)">Unitaid brand preview</a>',
