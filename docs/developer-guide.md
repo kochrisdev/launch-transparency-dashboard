@@ -58,8 +58,10 @@ must still be strict JSON — the validator extracts it with a line-anchored
 regex (`/^window\.LAUNCH_DATA\s*=\s*/m`) and `JSON.parse`s it, so JS-only
 syntax (comments, single quotes, trailing commas) inside the object fails CI.
 
-Schema reference: see the [data analyst guide](data-analyst-guide.md) §4. The
-renderer and validator must agree on the schema; change both together.
+Schema reference: see the [data analyst guide](data-analyst-guide.md) §4;
+entity relationships, keys and the lineage of every derived data product are
+in [data-model.md](data-model.md). The renderer and validator must agree on
+the schema; change both together.
 
 ## 4. Rendering pipeline (`index.html`, bottom `<script>`)
 

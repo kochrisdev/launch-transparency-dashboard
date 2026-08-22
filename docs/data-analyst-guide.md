@@ -81,7 +81,9 @@ where it can; where it can't, this rule is on you.
 
 *(What readers see built from these fields is described in the
 [user guide](user-guide.md); which platforms consume which field is the
-[developer guide](developer-guide.md)'s schema-change checklist.)*
+[developer guide](developer-guide.md)'s schema-change checklist; how the
+entities relate to each other and to every derived export is the
+[data model & lineage](data-model.md) doc.)*
 
 ### `meta`
 
