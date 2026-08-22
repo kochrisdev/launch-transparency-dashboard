@@ -107,6 +107,11 @@ Nothing remaining. ✅
   computed 10-year approval-to-recommendation gap → the three-approvals
   pathway → today's bottlenecks → the access map → the incoming pipeline.
   All figures derived from the data file at render time.
+- **Unitaid brand edition (Aug 2026)** — `unitaid/`: the three dashboards
+  reskinned per brandpad.io/unitaid (navy/blue/red palette, Source Sans 3,
+  brand status colours, preview strip), generated from the originals by
+  `scripts/build-unitaid-theme.js` so the skin never drifts; same data,
+  same features; linked from the journey-board header.
 - **Power BI kit (Aug 2026)** — `powerbi/`: live-refreshing Power Query (M)
   scripts against the Pages data URL, offline CSV exports + generator, LAUNCH
   report theme, DAX measures (incl. governance banner and map verification

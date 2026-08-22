@@ -1,0 +1,670 @@
+<title>LAUNCH Dashboard · Unitaid Brand (Option B)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Option B commits to a single light look with a deep-green identity —
+     a deliberate contrast to Option A's teal row-board. */
+  :root {
+    --ground: #F7F8F6;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1EC;
+    --ink: #17241F;
+    --ink-2: #4B5B53;
+    --ink-3: #78877F;
+    --line: #D9DFD9;
+    --accent: #0E6B4F;
+    --accent-soft: #E2F0EA;
+    --band: #12241D;
+    --band-ink: #F2F5F1;
+    --band-ink-2: #A9BCB1;
+    --good: #1E8A5A;
+    --good-soft: #E2F2EA;
+    --warn: #B87500;
+    --warn-soft: #FBF0DA;
+    --crit: #C0392B;
+    --crit-soft: #FAE7E4;
+    --idle: #9AA89F;
+    --idle-soft: #EEF1EC;
+    --map1: #BFDCCB;
+    --map2: #5FA083;
+    --map3: #0E6B4F;
+    --shadow: 0 1px 2px rgba(23,36,31,.06), 0 4px 16px rgba(23,36,31,.07);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font: 15px/1.5 -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 56px; }
+
+  /* ---------- header band ---------- */
+  .band { background: var(--band); color: var(--band-ink); }
+  .band-inner { max-width: 1180px; margin: 0 auto; padding: 30px 24px 26px; display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-end; }
+  .band h1 { margin: 0; font-family: Cambria, Georgia, "Times New Roman", serif; font-size: 30px; font-weight: 700; letter-spacing: .002em; }
+  .band h1 em { font-style: normal; color: #7FC8A9; }
+  .band .sub { margin: 6px 0 0; color: var(--band-ink-2); font-size: 14.5px; max-width: 62ch; }
+  .band .meta { margin-left: auto; text-align: right; font-size: 12.5px; color: var(--band-ink-2); line-height: 1.6; }
+  .band .meta b { color: var(--band-ink); font-weight: 600; }
+  .band a { color: #7FC8A9; }
+  .proto-badge {
+    display: inline-block; vertical-align: 5px; margin-left: 10px;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 11px; font-weight: 650; letter-spacing: .02em; line-height: 1.4;
+    padding: 3px 10px; border-radius: 999px;
+    background: rgba(224,166,60,.16); color: #E8B75B; border: 1px solid #A97F2E;
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) {
+    .proto-badge { display: block; width: fit-content; margin: 8px 0 0; white-space: normal; }
+    .band .meta { text-align: left; margin-left: 0; }
+    .wrap { padding: 0 14px 48px; }
+    .band-inner { padding: 22px 14px 20px; }
+    .updates li { flex-wrap: wrap; gap: 4px 12px; }
+    .stuck li { flex-wrap: wrap; }
+    .drawer { padding: 14px; }
+    .timing-axis { margin-left: 110px; }
+    .trow2 .tname { width: 110px; font-size: 12px; }
+    .ttotal { width: 78px; font-size: 11px; }
+    .timing-pending { margin-left: 0; }
+    .dl-btn { margin-left: 0; }
+  }
+
+  .banner {
+    margin: 20px 0; padding: 9px 14px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--ink-2); font-size: 13px; border: 1px solid var(--line);
+  }
+  .banner b { color: var(--ink); }
+  .banner.error { background: var(--crit-soft); color: var(--crit); }
+
+  /* ---------- legend / stats ---------- */
+  .strip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; margin-bottom: 20px; font-size: 12.5px; color: var(--ink-2); }
+  .stat { display: flex; align-items: baseline; gap: 7px; }
+  .stat .n { font-size: 21px; font-weight: 750; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat .n.crit-n { color: var(--crit); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-left: auto; }
+  .dl-btn {
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+  }
+  .dl-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .key { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; font-size: 11px; font-weight: 800; }
+  .dot.done { background: var(--good); color: #fff; }
+  .dot.prog { background: var(--warn); color: #fff; }
+  .dot.late { background: var(--crit); color: #fff; }
+  .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
+
+  /* ---------- comparison matrix ---------- */
+  .matrix-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+  .matrix { display: grid; min-width: 760px; }
+  .mhead { padding: 16px 12px 12px; border-bottom: 2px solid var(--line); }
+  .mhead.mlabel-head { display: flex; align-items: flex-end; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+  .pcard { background: none; border: 0; font: inherit; color: inherit; text-align: left; width: 100%; cursor: pointer; border-radius: 10px; padding: 8px; }
+  .pcard:hover { background: var(--surface-2); }
+  .pcard:focus-visible { outline: 2px solid var(--accent); }
+  .pcard.selected { background: var(--accent-soft); }
+  .pcard .pname { font-family: Cambria, Georgia, serif; font-size: 18px; font-weight: 700; }
+  .pcard .pinn { font-size: 12px; color: var(--ink-2); margin-top: 1px; line-height: 1.35; }
+  .pcard .pchip { display: inline-block; margin-top: 7px; font-size: 10.5px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+  .pcard .pchip.pipeline { background: var(--accent-soft); color: var(--accent); }
+  .pcard .pflag { margin-top: 8px; font-size: 11.5px; line-height: 1.4; color: var(--crit); }
+  .pcard .pflag::before { content: "▲ "; font-size: 8px; }
+  .pcard .pnext { margin-top: 8px; font-size: 11.5px; color: var(--ink-3); }
+  .pcard .popen { margin-top: 8px; font-size: 11.5px; font-weight: 650; color: var(--accent); }
+
+  .mrow-label { padding: 0 12px; font-size: 12px; line-height: 1.3; color: var(--ink-2); font-weight: 600; display: flex; align-items: center; border-bottom: 1px solid var(--line); min-height: 52px; }
+  .mcell { position: relative; display: flex; align-items: center; justify-content: center; min-height: 52px; border-bottom: 1px solid var(--line); }
+  .mcell::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--line); }
+  .mcell.first::before { top: 50%; }
+  .mcell.last::before { bottom: 50%; }
+  .mcell .dot { position: relative; z-index: 1; cursor: help; }
+  .mcell.cur .dot { box-shadow: 0 0 0 3px var(--accent-soft), 0 0 0 4.5px var(--accent); }
+  .mcell.late-cell { background: var(--crit-soft); }
+  .mrow-label.has-late { color: var(--crit); }
+  .mrow:last-child .mrow-label, .mrow:last-child .mcell { border-bottom: 0; }
+
+  /* ---------- bottleneck summary ---------- */
+  .stuck { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--crit); border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow); }
+  .stuck h2 { margin: 0 0 8px; font-family: Cambria, Georgia, serif; font-size: 18px; }
+  .stuck ul { margin: 0; padding-left: 0; list-style: none; }
+  .stuck li { display: flex; gap: 10px; padding: 5px 0; font-size: 13.5px; color: var(--ink-2); }
+  .stuck li b { flex: none; width: 84px; color: var(--ink); }
+
+  /* ---------- detail drawer ---------- */
+  .drawer { display: none; margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 20px; }
+  .drawer.open { display: block; }
+  .drawer h2 { margin: 0; font-family: Cambria, Georgia, serif; font-size: 22px; }
+  .drawer .dsub { color: var(--ink-2); font-size: 13px; margin: 2px 0 14px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .card { background: var(--surface-2); border-radius: 10px; padding: 13px 15px; }
+  .card h3 { margin: 0 0 7px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .card .big { font-size: 22px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .card .sub, .card p { font-size: 13px; color: var(--ink-2); margin: 2px 0 0; }
+  .card ul { margin: 0; padding-left: 17px; font-size: 13px; color: var(--ink-2); }
+  .card ul li { margin: 3px 0; }
+  .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 3.5px 0; border-bottom: 1px dashed var(--line); }
+  .kv:last-child { border-bottom: 0; }
+  .kv span:first-child { color: var(--ink-2); }
+  .kv span:last-child { font-weight: 600; text-align: right; }
+  .mtable-box { overflow-x: auto; margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; }
+  table.mtable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+  .mtable th { text-align: left; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; padding: 9px 13px; border-bottom: 1px solid var(--line); }
+  .mtable td { padding: 8px 13px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+  .mtable tr:last-child td { border-bottom: 0; }
+  .mtable td:first-child { color: var(--ink); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--good-soft); color: var(--good); }
+  .pill.prog { background: var(--warn-soft); color: var(--warn); }
+  .pill.late { background: var(--crit-soft); color: var(--crit); }
+  .pill.idle { background: var(--idle-soft); color: var(--ink-3); }
+  .drawer .close { float: right; background: none; border: 1px solid var(--line); border-radius: 8px; padding: 5px 12px; font: inherit; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
+
+  .coming { margin-top: 22px; font-size: 13px; color: var(--ink-3); background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 18px; }
+  .coming b { color: var(--ink-2); }
+
+  /* ---------- visualization sections (map, timing) ---------- */
+  .viz { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 18px 20px; }
+  .viz h2 { margin: 0; font-family: Cambria, Georgia, serif; font-size: 19px; }
+  .viz .viznote { margin: 3px 0 12px; font-size: 12.5px; color: var(--ink-3); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .tabbtn { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 13px; font-weight: 650; color: var(--ink-2); cursor: pointer; }
+  .tabbtn[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tabbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mapwrap { position: relative; overflow-x: auto; }
+  .mapwrap svg { display: block; width: 100%; min-width: 640px; height: auto; background: var(--surface-2); border-radius: 10px; }
+  .mapwrap path { fill: var(--surface); stroke: var(--line); stroke-width: .6; }
+  .mapwrap path.lvl-registered { fill: var(--map1); }
+  .mapwrap path.lvl-guidelines { fill: var(--map2); }
+  .mapwrap path.lvl-mft { fill: var(--map3); }
+  .mapwrap path.haslvl { cursor: help; }
+  .map-overlay { position: absolute; top: 10px; left: 10px; z-index: 2; max-width: 400px; background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 650; line-height: 1.4; }
+  .map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13.5px; color: var(--ink-3); text-align: center; padding: 20px; }
+  .map-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); }
+  .map-legend .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid var(--line); }
+  .timing-axis { position: relative; height: 18px; margin-left: 150px; }
+  .timing-axis span { position: absolute; transform: translateX(-50%); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .trow2 { display: flex; align-items: center; margin: 10px 0; }
+  .trow2 .tname { flex: none; width: 150px; font-size: 13px; font-weight: 650; padding-right: 10px; }
+  .trow2 .tbar { position: relative; flex: 1; height: 26px; }
+  .trow2 .tbase { position: absolute; top: 12px; left: 0; right: 0; height: 2px; background: var(--line); }
+  .tseg { position: absolute; top: 8px; height: 10px; border-radius: 5px; }
+  .tseg.g-good { background: var(--good); }
+  .tseg.g-warn { background: var(--warn); }
+  .tseg.g-crit { background: var(--crit); }
+  .tseg.g-tbc { background: repeating-linear-gradient(90deg, var(--idle) 0 6px, transparent 6px 12px); height: 4px; top: 11px; border-radius: 2px; }
+  .tgate { position: absolute; top: 6px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--surface); border: 3px solid var(--ink-2); cursor: help; z-index: 1; }
+  .tgate:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .ttotal { flex: none; width: 96px; padding-left: 10px; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .timing-pending { font-size: 12.5px; color: var(--ink-3); margin: 8px 0 0 150px; }
+  .timing-scroll { overflow-x: auto; }
+  .timing-inner { min-width: 640px; }
+
+  /* recent updates */
+  .updates { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 18px; }
+  .updates summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+  .updates ul { margin: 10px 0 4px; padding-left: 0; list-style: none; }
+  .updates li { display: flex; gap: 12px; font-size: 13px; color: var(--ink-2); padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .updates li:last-child { border-bottom: 0; }
+  .updates .ud { flex: none; width: 84px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .updates .up { flex: none; width: 84px; font-weight: 650; color: var(--ink); }
+
+  #tip {
+    position: fixed; z-index: 50; max-width: 280px; pointer-events: none;
+    background: var(--ink); color: var(--ground); padding: 10px 12px; border-radius: 8px;
+    font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow); display: none;
+  }
+  #tip b { display: block; margin-bottom: 2px; }
+  #tip .trow { display: flex; gap: 8px; justify-content: space-between; }
+  #tip .trow span:first-child { opacity: .7; }
+
+  footer { margin-top: 30px; font-size: 12.5px; color: var(--ink-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer b { color: var(--ink-2); }
+</style>
+<style id="unitaid-brand">
+  /* Unitaid brand skin — pins the palette in every theme state */
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+  --ground: #FFFFFF; --surface: #FFFFFF; --surface-2: #E6EAEE;
+  --ink: #212E92; --ink-2: #4A5578; --ink-3: #7A84AD; --line: #CBD4E6;
+  --accent: #0066FF; --accent-ink: #FFFFFF; --accent-soft: #E5F0FF;
+  --good: #00C77D; --good-soft: #DFFAF0;
+  --warn: #FF451A; --warn-soft: #FFE9E4;
+  --crit: #CC0033; --crit-soft: #FAE0E7;
+  --idle: #8A93B8; --idle-soft: #EEF1F7;
+  --map1: #75D8F7; --map2: #0066FF; --map3: #212E92;
+  --band: #212E92; --band-ink: #FFFFFF; --band-ink-2: #75D8F7;
+  --cat-newclass: #0066FF; --cat-tact: #212E92; --cat-market: #00C77D; --cat-prevention: #FF451A;
+  --shadow: 0 1px 2px rgba(33,46,146,.08), 0 4px 16px rgba(33,46,146,.08);
+  }
+  body, button, input, select, textarea {
+    font-family: "Source Sans 3", Arial, "Segoe UI", sans-serif;
+  }
+  /* brand strip so reviewers know which edition they are looking at */
+  body::before {
+    content: "UNITAID BRAND PREVIEW — same data and features as the main dashboards";
+    display: block; background: #212E92; color: #75D8F7; padding: 6px 24px;
+    font: 600 11px/1.5 "Source Sans 3", Arial, sans-serif; letter-spacing: .05em;
+  }
+  /* de-serif option B's display face; keep one brand voice */
+  .band h1, .pcard .pname, .stuck h2, .drawer h2, .viz h2 {
+    font-family: "Source Sans 3", Arial, "Segoe UI", sans-serif !important;
+  }
+  .band h1 em { color: #00F7B6; }
+  .band a { color: #75D8F7; }
+  /* pipeline poster hardcodes an alternate header colour — rebrand it */
+  .phase-head { background: #0066FF !important; }
+  .phase-head:nth-of-type(odd) { background: #212E92 !important; }
+  #tip { background: #212E92; color: #FFFFFF; }
+</style>
+
+<div class="band">
+  <div class="band-inner">
+    <div>
+      <h1><em>LAUNCH</em> Transparency Dashboard <span class="proto-badge">Prototype — data presented here may not be accurate</span></h1>
+      <p class="sub">Design option B — comparison matrix. Every medicine at every gate of the access pathway, side by side.</p>
+    </div>
+    <div class="meta">
+      <b>To be hosted by the RBM Partnership to End Malaria</b><br>
+      <span id="updated"></span><span id="meta-note"></span><br>
+      <a href="index.html">Journey board (A)</a> · <a href="pipeline.html">Pipeline poster</a> ·
+      <a href="../story.html">Data story</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="strip">
+    <div class="stat"><span class="n" id="stat-tracked">–</span><span>medicines tracked</span></div>
+    <div class="stat"><span class="n crit-n" id="stat-bottlenecks">–</span><span>active bottlenecks</span></div>
+    <div class="stat"><span class="n" id="stat-pipeline">–</span><span>expected to market ≤ 3 yrs</span></div>
+    <div class="legend">
+      <span class="key"><span class="dot done">✓</span> Complete</span>
+      <span class="key"><span class="dot prog">›</span> In progress</span>
+      <span class="key"><span class="dot late">!</span> Delayed</span>
+      <span class="key"><span class="dot idle"></span> Not started</span>
+    </div>
+    <button class="dl-btn" id="dl-csv" type="button">Download CSV</button>
+  </div>
+
+  <div class="matrix-box"><div class="matrix" id="matrix"></div></div>
+
+  <div class="stuck" id="stuck" hidden>
+    <h2>Where products are stuck right now</h2>
+    <ul id="stuck-list"></ul>
+  </div>
+
+  <div class="drawer" id="drawer" aria-live="polite"></div>
+
+  <section class="viz" id="mapsec" hidden>
+    <h2>Country access map</h2>
+    <p class="viznote">Where the selected medicine is registered, in national guidelines, and in MFT plans.</p>
+    <div class="tabs" id="maptabs" role="tablist" aria-label="Select medicine for map"></div>
+    <div class="mapwrap" id="mapwrap"></div>
+    <div class="map-legend">
+      <span class="key"><span class="sw" style="background:var(--map1)"></span> Registered</span>
+      <span class="key"><span class="sw" style="background:var(--map2)"></span> In national guidelines</span>
+      <span class="key"><span class="sw" style="background:var(--map3)"></span> In MFT plans</span>
+      <span class="key"><span class="sw" style="background:var(--surface)"></span> No data</span>
+    </div>
+  </section>
+
+  <section class="viz" id="timingsec" hidden>
+    <h2>Pathway timing across products</h2>
+    <p class="viznote">Actual years between access gates, from each product's first milestone. LAUNCH best-practice benchmark (draft): ≤ 2 years per gate — green ≤ 2, amber 3–5, red over 5. Dashes run to today where the next gate is still pending.</p>
+    <div class="timing-scroll"><div class="timing-inner" id="timing"></div></div>
+    <div class="timing-pending" id="timing-pending"></div>
+  </section>
+
+  <div class="coming" id="coming" hidden></div>
+
+  <details class="updates" id="updates" hidden>
+    <summary>Recent updates</summary>
+    <ul id="updates-list"></ul>
+  </details>
+
+  <footer>
+    <b>About the data.</b> The LAUNCH dashboard displays publicly available information only. Product-specific details
+    (including pricing) appear solely where the manufacturer has confirmed in writing that they may be shared.
+    Hover any status dot for detail; select a medicine's name to open its full profile.<br>
+    <b>Sources.</b> WHO Guidelines &amp; Prequalification updates · stringent regulatory authority registers ·
+    national regulatory authorities · Global Fund / PMI procurement data · manufacturer communications.
+    A LAUNCH initiative of Unitaid partners.
+  </footer>
+</div>
+
+<div id="tip" role="tooltip"></div>
+
+<script src="../data/products.js"></script>
+<script src="../data/world-map.js"></script>
+<script>
+(function () {
+  const banner = document.getElementById("banner");
+  if (!window.LAUNCH_DATA) {
+    banner.hidden = false;
+    banner.classList.add("error");
+    banner.innerHTML = "<b>Data failed to load.</b> data/products.js is missing or has a syntax error — run <code>node scripts/validate-data.js</code>.";
+    return;
+  }
+  const DATA = window.LAUNCH_DATA;
+  const STAGES = DATA.stages;
+  const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
+  const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+  const tracked = DATA.products.filter(p => !p.placeholder);
+  const placeholders = DATA.products.filter(p => p.placeholder);
+
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+
+  // meta
+  const dt = new Date(DATA.meta.lastUpdated + "T00:00:00");
+  document.getElementById("updated").textContent = "Last updated " +
+    dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const status = DATA.meta.dataStatus;
+  const BANNERS = {
+    illustrative: "<b>Design mockup.</b> All statuses, dates, prices and volumes below are illustrative placeholders for layout review — not real programme data.",
+    draft: "<b>Draft data.</b> Compiled from public sources and pending LAUNCH team verification and manufacturer written confirmation. Unverified values are shown as TBC, never estimated."
+  };
+  if (BANNERS[status]) { banner.hidden = false; banner.innerHTML = BANNERS[status]; }
+  document.getElementById("meta-note").textContent =
+    status === "live" ? " · Data confirmed by manufacturers for public release" : " · " + status + " data";
+
+  // stats
+  document.getElementById("stat-tracked").textContent = tracked.length;
+  document.getElementById("stat-bottlenecks").textContent = tracked.filter(p => p.stages.some(s => s.status === "late")).length;
+  document.getElementById("stat-pipeline").textContent = tracked.filter(p => p.class === "pipeline").length;
+
+  // ---- matrix ----
+  const matrix = document.getElementById("matrix");
+  matrix.style.gridTemplateColumns = "170px repeat(" + tracked.length + ", minmax(150px, 1fr))";
+
+  let html = '<div class="mhead mlabel-head">Stage</div>';
+  tracked.forEach(p => {
+    const nextMilestone = p.detail.milestones.find(m => m.status === "prog" || m.status === "idle");
+    html += `
+      <div class="mhead">
+        <button class="pcard" data-id="${esc(p.id)}" aria-expanded="false">
+          <div class="pname">${esc(p.name)}</div>
+          <div class="pinn">${esc(p.inn)}</div>
+          <span class="pchip ${p.class === "pipeline" ? "pipeline" : ""}">${esc(p.classLabel)}</span>
+          ${p.flag ? `<div class="pflag">${esc(p.flag)}</div>` : ""}
+          ${nextMilestone ? `<div class="pnext">Next: ${esc(nextMilestone.next !== "—" ? nextMilestone.next : nextMilestone.milestone)}${nextMilestone.anticipated && nextMilestone.anticipated !== "—" ? " · " + esc(nextMilestone.anticipated) : ""}</div>` : ""}
+          <div class="popen">Open profile ↓</div>
+        </button>
+      </div>`;
+  });
+
+  STAGES.forEach((stageName, si) => {
+    const anyLate = tracked.some(p => p.stages[si].status === "late");
+    html += `<div style="display:contents" class="mrow">`;
+    html += `<div class="mrow-label ${anyLate ? "has-late" : ""}">${esc(stageName)}</div>`;
+    tracked.forEach(p => {
+      const st = p.stages[si];
+      html += `
+        <div class="mcell ${si === 0 ? "first" : ""} ${si === STAGES.length - 1 ? "last" : ""} ${si === p.currentStage ? "cur" : ""} ${st.status === "late" ? "late-cell" : ""}">
+          <span class="dot ${st.status}" tabindex="0" role="img"
+            aria-label="${esc(p.name)} — ${esc(stageName)}: ${LABEL[st.status]}. ${esc(st.note)}"
+            data-title="${esc(p.name)} · ${esc(stageName)} — ${LABEL[st.status]}"
+            data-note="${esc(st.note)}" data-date="${esc(st.date)}"
+            data-next="${esc(st.next)}" data-nextdate="${esc(st.nextDate)}" data-asof="${esc(st.asOf)}">${ICON[st.status]}</span>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  matrix.innerHTML = html;
+
+  // ---- bottleneck summary ----
+  const flagged = tracked.filter(p => p.flag);
+  if (flagged.length) {
+    document.getElementById("stuck").hidden = false;
+    document.getElementById("stuck-list").innerHTML = flagged.map(p =>
+      `<li><b>${esc(p.name)}</b><span>${esc(p.flag)}</span></li>`).join("");
+  }
+
+  // ---- coming next ----
+  if (placeholders.length) {
+    const c = document.getElementById("coming");
+    c.hidden = false;
+    c.innerHTML = placeholders.map(p => `<b>Coming next: ${esc(p.name)} (${esc(p.manufacturer)})</b> — ${esc(p.note)}`).join("<br>");
+  }
+
+  // ---- drawer ----
+  const drawer = document.getElementById("drawer");
+  let selected = null;
+  function renderDrawer(p) {
+    const d = p.detail;
+    const priceProv = [
+      d.price.source ? "Source: " + d.price.source : "",
+      d.price.confirmedInWriting ? "Manufacturer-confirmed in writing" : "",
+      d.price.asOf ? "as of " + d.price.asOf : ""
+    ].filter(Boolean).join(" · ");
+    drawer.innerHTML = `
+      <button class="close" type="button">Close ×</button>
+      <h2>${esc(p.name)}</h2>
+      <div class="dsub">${esc(p.inn)} · ${esc(p.manufacturer)}</div>
+      <div class="cards">
+        <div class="card">
+          <h3>Indicative price per treatment</h3>
+          <div class="big">${esc(d.price.value)}</div>
+          <div class="sub">${esc(d.price.note)}</div>
+          ${priceProv ? `<div class="sub" style="margin-top:5px;font-size:11px">${esc(priceProv)}</div>` : ""}
+        </div>
+        <div class="card"><h3>Target use case</h3><p>${esc(d.useCase)}</p></div>
+        <div class="card"><h3>Access &amp; supply commitments</h3><ul>${d.access.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>
+        <div class="card"><h3>Adoption requirements</h3><ul>${d.adoption.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>
+        <div class="card">
+          <h3>Country access</h3>
+          <div class="kv"><span>Registered</span><span>${esc(d.country.registered)}</span></div>
+          <div class="kv"><span>In national guidelines</span><span>${esc(d.country.inGuidelines)}</span></div>
+          <div class="kv"><span>In MFT plans</span><span>${esc(d.country.inMft)}</span></div>
+          <div class="kv"><span>Forecast demand</span><span>${esc(d.country.forecastDemand)}</span></div>
+        </div>
+        <div class="card">
+          <h3>Operational research</h3>
+          <div class="kv"><span>Lead</span><span>${esc(d.research.lead)}</span></div>
+          <div class="kv"><span>Geographies</span><span>${esc(d.research.geographies)}</span></div>
+          <div class="kv"><span>Timeline</span><span>${esc(d.research.timeline)}</span></div>
+          <p style="margin-top:6px"><em>${esc(d.research.question)}</em></p>
+        </div>
+      </div>
+      <div class="mtable-box">
+        <table class="mtable">
+          <thead><tr><th>Milestone</th><th>Status</th><th>Date achieved / submitted</th><th>Next expected step</th><th>Anticipated</th></tr></thead>
+          <tbody>
+            ${d.milestones.map(m => `
+              <tr>
+                <td>${esc(m.milestone)}</td>
+                <td><span class="pill ${m.status}">${ICON[m.status] ? ICON[m.status] + " " : ""}${esc(m.label)}</span></td>
+                <td>${esc(m.date)}</td>
+                <td>${esc(m.next)}</td>
+                <td>${esc(m.anticipated)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>`;
+    drawer.querySelector(".close").addEventListener("click", () => select(null));
+  }
+  function select(id) {
+    selected = selected === id ? null : id;
+    document.querySelectorAll(".pcard").forEach(c => {
+      const on = c.dataset.id === selected;
+      c.classList.toggle("selected", on);
+      c.setAttribute("aria-expanded", on ? "true" : "false");
+    });
+    if (selected) {
+      renderDrawer(tracked.find(p => p.id === selected));
+      drawer.classList.add("open");
+      if (drawer.scrollIntoView) drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      drawer.classList.remove("open");
+      drawer.innerHTML = "";
+    }
+  }
+  document.querySelectorAll(".pcard").forEach(c => c.addEventListener("click", () => select(c.dataset.id)));
+
+  // ---- tooltip ----
+  const tip = document.getElementById("tip");
+  function showTipAt(el, html2) {
+    tip.innerHTML = html2;
+    tip.style.display = "block";
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = r.left + r.width / 2 - tw / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+    let y = r.top - th - 10;
+    if (y < 8) y = r.bottom + 10;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  function hideTip() { tip.style.display = "none"; }
+  document.querySelectorAll(".mcell .dot").forEach(dot => {
+    const show = () => {
+      const rows = [];
+      if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
+      if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
+      if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
+      if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
+      if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
+      showTipAt(dot, `<b>${dot.dataset.title}</b>${rows.join("")}`);
+    };
+    dot.addEventListener("mouseenter", show);
+    dot.addEventListener("focus", show);
+    dot.addEventListener("mouseleave", hideTip);
+    dot.addEventListener("blur", hideTip);
+  });
+
+  // ---- CSV download: stages and milestones for every tracked product ----
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  document.getElementById("dl-csv").addEventListener("click", () => {
+    const rows = [["Product", "Record", "Item", "Status", "Detail", "Date", "Next step", "Anticipated", "Source", "As of"]];
+    tracked.forEach(p => {
+      p.stages.forEach((s, i) =>
+        rows.push([p.name, "Stage", STAGES[i], LABEL[s.status], s.note, s.date, s.next, s.nextDate, s.source || "", s.asOf || ""]));
+      p.detail.milestones.forEach(m =>
+        rows.push([p.name, "Milestone", m.milestone, LABEL[m.status], m.label, m.date, m.next, m.anticipated, m.source || "", ""]));
+    });
+    const csv = rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob([String.fromCharCode(0xFEFF) + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "launch-dashboard-data-" + DATA.meta.lastUpdated + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // ---- recent updates ----
+  const updates = DATA.changelog || [];
+  if (updates.length) {
+    document.getElementById("updates").hidden = false;
+    document.getElementById("updates-list").innerHTML = updates.slice(0, 8).map(u =>
+      `<li><span class="ud">${esc(u.date)}</span><span class="up">${esc(u.product)}</span><span>${esc(u.change)}</span></li>`).join("");
+  }
+
+  // ---- country access map ----
+  const LEVEL_LABEL = { registered: "Registered", guidelines: "In national guidelines", mft: "In MFT plans" };
+  if (window.LAUNCH_MAP) {
+    document.getElementById("mapsec").hidden = false;
+    const wrap = document.getElementById("mapwrap");
+    const M = window.LAUNCH_MAP;
+    wrap.innerHTML = `<svg viewBox="0 0 ${M.w} ${M.h}" role="img" aria-label="World map of country access">` +
+      Object.entries(M.countries).map(([iso3, c]) =>
+        `<path data-iso3="${iso3}" data-name="${esc(c.n)}" d="${c.d}"></path>`).join("") +
+      `</svg><div class="map-overlay" id="map-overlay" hidden></div><div class="map-empty" id="map-empty" hidden></div>`;
+
+    const tabs = document.getElementById("maptabs");
+    tabs.innerHTML = tracked.map(p =>
+      `<button class="tabbtn" role="tab" data-id="${esc(p.id)}" aria-selected="false">${esc(p.name)}</button>`).join("");
+
+    function selectMap(id) {
+      const p = tracked.find(x => x.id === id);
+      tabs.querySelectorAll(".tabbtn").forEach(t => t.setAttribute("aria-selected", t.dataset.id === id ? "true" : "false"));
+      const byIso = {};
+      (p.detail.countries ? p.detail.countries.list : []).forEach(e => byIso[e.iso3] = e.level);
+      wrap.querySelectorAll("path").forEach(el => {
+        const lvl = byIso[el.dataset.iso3];
+        el.setAttribute("class", lvl ? "lvl-" + lvl + " haslvl" : "");
+        if (lvl) el.setAttribute("tabindex", "0"); else el.removeAttribute("tabindex");
+        el.dataset.lvl = lvl || "";
+      });
+      const overlay = document.getElementById("map-overlay");
+      const empty = document.getElementById("map-empty");
+      if (!p.detail.countries) {
+        overlay.hidden = true;
+        empty.hidden = false;
+        empty.textContent = p.class === "pipeline"
+          ? p.name + " is pre-launch — no country access yet."
+          : "No country-level data yet for " + p.name + ".";
+      } else {
+        empty.hidden = true;
+        const c = p.detail.countries;
+        overlay.hidden = c.status === "verified";
+        overlay.textContent = (c.status === "illustrative" ? "ILLUSTRATIVE — " : "DRAFT — ") + c.note;
+      }
+    }
+    tabs.querySelectorAll(".tabbtn").forEach(t => t.addEventListener("click", () => selectMap(t.dataset.id)));
+    selectMap((tracked.find(p => p.detail.countries) || tracked[0]).id);
+
+    wrap.querySelectorAll("path").forEach(el => {
+      const show = () => { if (el.dataset.lvl) showTipAt(el, `<b>${esc(el.dataset.name)}</b>${LEVEL_LABEL[el.dataset.lvl]}`); };
+      el.addEventListener("mouseenter", show);
+      el.addEventListener("focus", show);
+      el.addEventListener("mouseleave", hideTip);
+      el.addEventListener("blur", hideTip);
+    });
+  }
+
+  // ---- cross-product pathway timing ----
+  (function renderTiming() {
+    const nowYear = parseInt(DATA.meta.lastUpdated.slice(0, 4), 10);
+    const withJourney = tracked.filter(p => p.detail.journey && p.detail.journey.filter(g => Number.isInteger(g.year)).length >= 2);
+    const without = tracked.filter(p => !withJourney.includes(p));
+    if (!withJourney.length) return;
+    document.getElementById("timingsec").hidden = false;
+
+    let minY = Infinity, maxY = nowYear;
+    withJourney.forEach(p => p.detail.journey.forEach(g => { if (Number.isInteger(g.year)) minY = Math.min(minY, g.year); }));
+    const span = maxY - minY || 1;
+    const px = y => ((y - minY) / span * 100);
+
+    const rows = withJourney.map(p => {
+      const dated = p.detail.journey.filter(g => Number.isInteger(g.year));
+      const last = dated[dated.length - 1];
+      const hasPending = p.detail.journey.some(g => g.year === "TBC");
+      let segs = "";
+      for (let i = 1; i < dated.length; i++) {
+        const a = dated[i - 1].year, b = dated[i].year, gap = b - a;
+        if (gap === 0) continue;
+        const cls = gap <= 2 ? "g-good" : gap <= 5 ? "g-warn" : "g-crit";
+        segs += `<div class="tseg ${cls}" style="left:${px(a)}%;width:${px(b) - px(a)}%" title="+${gap} yr${gap === 1 ? "" : "s"}"></div>`;
+      }
+      if (hasPending && last.year < nowYear)
+        segs += `<div class="tseg g-tbc" style="left:${px(last.year)}%;width:${px(nowYear) - px(last.year)}%" title="Next gate still pending"></div>`;
+      const markers = dated.map(g =>
+        `<span class="tgate" tabindex="0" style="left:${px(g.year)}%" data-lbl="${esc(g.label)}" data-yr="${g.year}"></span>`).join("");
+      const totalYrs = (hasPending ? nowYear : last.year) - dated[0].year;
+      const total = hasPending ? totalYrs + " yrs, ongoing" : totalYrs + " yrs";
+      return `<div class="trow2"><div class="tname">${esc(p.name)}</div><div class="tbar"><div class="tbase"></div>${segs}${markers}</div><div class="ttotal">${total}</div></div>`;
+    }).join("");
+
+    const step = span > 12 ? 4 : 3;
+    let axis = "";
+    for (let y = minY; y <= maxY; y += step) axis += `<span style="left:${px(y)}%">${y}</span>`;
+    document.getElementById("timing").innerHTML =
+      `<div class="timing-axis" style="margin-right:96px">${axis}</div>${rows}`;
+    if (without.length)
+      document.getElementById("timing-pending").textContent =
+        "Not yet plotted (pathway starting): " + without.map(p => p.name).join(", ") + ".";
+
+    document.querySelectorAll(".tgate").forEach(g => {
+      const show = () => showTipAt(g, `<b>${g.dataset.yr}</b>${g.dataset.lbl}`);
+      g.addEventListener("mouseenter", show);
+      g.addEventListener("focus", show);
+      g.addEventListener("mouseleave", hideTip);
+      g.addEventListener("blur", hideTip);
+    });
+  })();
+})();
+</script>
