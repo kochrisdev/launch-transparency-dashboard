@@ -61,6 +61,7 @@ controls the on-page banner.
 | [User guide](docs/user-guide.md) | Donors, ministries of health, implementing partners, pharma — how to read and use the dashboard. |
 | [Data analyst guide](docs/data-analyst-guide.md) | Whoever maintains the data — update loop, data dictionary, governance rules, confirmation register, cadence. |
 | [Data model & lineage](docs/data-model.md) | Analysts and developers extending the data — entities, keys and relationships, the lineage of every derived data product, and extension playbooks. |
+| [Ontology & linked data](docs/ontology.md) | Integrators and semantic-web consumers — the formal OWL/SKOS ontology of the domain, external alignments (schema.org, WHO ATC, ISO 3166), and the dataset as JSON-LD linked data. |
 | [Data sourcing plan](docs/data-sourcing-plan.md) | Data categories mapped to the access pathway, the verified catalog of public sources feeding each one, target dataset designs, collection cadence, and the new data products they enable. |
 | [Developer guide](docs/developer-guide.md) | Whoever maintains or extends the code — architecture, rendering pipeline, validator, deployment, handover. |
 | [Domain primer](docs/domain-primer.md) | Developers new to the malaria-access domain — what the dataset means: the pathway, the actors, the four products, terminology, and schema-to-domain mapping. |
@@ -97,6 +98,8 @@ controls the on-page banner.
 | `scripts/normalize-pqr.js` | Normalizes a manually downloaded Global Fund PQR crosstab into the procurement staging dataset (the download itself must stay manual — scripted export is WAF-blocked). |
 | `scripts/fetch-nafdac.js` | NAFDAC Greenbook pull — Nigeria's public register queried for portfolio products, with a new/lapsed-registrations watch report. First NRA register; the template for other countries. |
 | `scripts/fetch-tmda.js` | TMDA register pull — Tanzania's IMIS2 public register queried the same way (second NRA register). |
+| `ontology/` | Semantic layer: `launch.ttl` (hand-authored OWL/SKOS ontology), `context.jsonld` (JSON-LD context), `launch-data.jsonld` (**generated** linked-data projection of the dataset). See [docs/ontology.md](docs/ontology.md). |
+| `scripts/build-ontology.js` | Regenerates `ontology/launch-data.jsonld` from `data/products.js` — rerun after any data change. |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |

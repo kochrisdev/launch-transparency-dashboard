@@ -1,8 +1,8 @@
 name: Snapshot history and rebuild feed
 
 # Runs only when the data file changes on main. The bot commit it produces
-# touches history/ and feed.xml, which do NOT match this path filter, so it
-# cannot retrigger itself.
+# touches history/, feed.xml and ontology/launch-data.jsonld, which do NOT
+# match this path filter, so it cannot retrigger itself.
 on:
   push:
     branches: [main]
@@ -47,14 +47,16 @@ jobs:
           echo "Snapshot: $TARGET"
       - name: Rebuild RSS feed
         run: node scripts/make-feed.js
-      - name: Commit snapshot and feed
+      - name: Rebuild linked-data export
+        run: node scripts/build-ontology.js
+      - name: Commit snapshot, feed and linked-data export
         run: |
           git config user.name "launch-dashboard-bot"
           git config user.email "actions@github.com"
-          git add history feed.xml
+          git add history feed.xml ontology/launch-data.jsonld
           if git diff --cached --quiet; then
             echo "Nothing new to commit."
           else
-            git commit -m "chore: history snapshot + feed rebuild [bot]"
+            git commit -m "chore: history snapshot + feed + linked-data rebuild [bot]"
             git push
           fi

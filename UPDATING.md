@@ -10,4 +10,5 @@ Quick version:
 2. Run `node scripts/validate-data.js` and fix every error.
 3. Add a `changelog` entry and bump `meta.lastUpdated`.
 4. Commit and push — the live site updates automatically, and CI snapshots the
-   change into `history/` and rebuilds the `feed.xml` RSS feed for you.
+   change into `history/`, rebuilds the `feed.xml` RSS feed and regenerates
+   the `ontology/launch-data.jsonld` linked-data export for you.

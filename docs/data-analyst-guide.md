@@ -28,11 +28,12 @@ pages at once.
 4. Bump `meta.lastUpdated`.
 5. Commit and push. The live site updates automatically within ~2 minutes.
 
-Two things happen automatically after your push — no action needed: a dated
+Three things happen automatically after your push — no action needed: a dated
 snapshot of the data file is committed to `history/` (fuel for future trend
-charts), and `feed.xml` (the public RSS feed of updates) is rebuilt from your
-changelog entries. A GitHub issue also opens on the 1st of each month with the
-milestone-scan checklist; close it when the scan is done.
+charts), `feed.xml` (the public RSS feed of updates) is rebuilt from your
+changelog entries, and `ontology/launch-data.jsonld` (the machine-readable
+linked-data export) is regenerated. A GitHub issue also opens on the 1st of
+each month with the milestone-scan checklist; close it when the scan is done.
 
 **Incoming evidence arrives on its own schedule too**: the scheduled source
 fetch ([sourcing/README.md](../sourcing/README.md)) pulls ClinicalTrials.gov
@@ -61,6 +62,7 @@ One data file drives three platforms. Know what each does with your push:
 | **Streamlit app** (`streamlit-app/`) | The analyst workbench — and your **pre-commit preview tool** | If deployed on Streamlit Cloud: redeploys automatically. Locally: rerun. |
 | **Power BI kit** (`powerbi/`) | Report for Microsoft-stack partners, built once from the kit | Refreshes from the live site on its own schedule (set in the Power BI Service). No action for data-value changes; **schema** changes need the developer (see the developer guide's schema-change checklist). |
 | **v2 preview** (`v2/`, temporary) | All views on `data/products.v2.js` — the proposed collected-data updates awaiting LAUNCH sign-off | **Not fed by your push** — it has its own data file. Edit `data/products.v2.js` + rerun `node scripts/build-v2-edition.js` to change it. Once approved, merge its values into `data/products.js` through this loop and delete the edition. |
+| **Linked-data export** (`ontology/`) | The dataset as machine-readable linked data (JSON-LD) for semantic-web and integration consumers — see the [ontology guide](ontology.md) | Regenerated automatically by CI in the same bot commit as the history snapshot. Nothing to do for data-value changes; **schema** changes need the developer. |
 
 **Previewing a draft before you commit** (recommended for big updates): run the
 Streamlit app (`cd streamlit-app && streamlit run app.py`), choose **Upload

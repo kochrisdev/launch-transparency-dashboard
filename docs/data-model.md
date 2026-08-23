@@ -12,6 +12,7 @@ Read this alongside its siblings — they deliberately don't repeat each other:
 | [Data analyst guide](data-analyst-guide.md) §4 | Field-by-field dictionary: types, allowed values, editing rules. |
 | [Developer guide](developer-guide.md) §11 | The schema-change checklist: every consumer to touch, in order. |
 | [Domain primer](domain-primer.md) | What the data *means* — the pathway, the actors, the terminology. |
+| [Ontology & linked data](ontology.md) | The same model as a formal OWL/SKOS ontology, plus the JSON-LD projection of the dataset. |
 
 ---
 
@@ -199,6 +200,11 @@ flowchart LR
     end
     REAL --> L
     SYN -. "via path/URL/upload" .-> L
+
+    subgraph sem [Semantic layer]
+        O["build-ontology.js<br/>→ ontology/launch-data.jsonld"]
+    end
+    REAL --> O
 ```
 
 Rules the lineage encodes:
@@ -214,8 +220,10 @@ Rules the lineage encodes:
   see §7).
 - **Generated outputs are committed but never hand-edited**: `unitaid/`,
   `synthetic/`, `v2/`, `powerbi/data/*.csv`, `history/`, `feed.xml`,
-  `briefs/`, `data/world-map.js`. Each has exactly one generator script;
-  regenerate, don't patch.
+  `briefs/`, `data/world-map.js`, `ontology/launch-data.jsonld`. Each has
+  exactly one generator script; regenerate, don't patch. (The other two
+  `ontology/` files — `launch.ttl` and `context.jsonld` — are hand-authored
+  source, like the validator.)
 - **Only `data/products.js` triggers automation.** `publish.yml` is
   path-filtered to that one file — edits to the synthetic dataset deploy with
   the push but produce no history snapshot, no feed rebuild, no brief input.

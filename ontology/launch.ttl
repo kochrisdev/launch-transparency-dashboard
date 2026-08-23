@@ -1,0 +1,528 @@
+@prefix launch:  <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema:  <https://schema.org/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+
+# ============================================================================
+# LAUNCH Transparency Dashboard — domain ontology
+#
+# Formalizes the data contract documented in docs/data-model.md and
+# docs/domain-primer.md: the access pathway of new antimalarial tools from
+# R&D to in-country delivery, and the governance semantics (provenance,
+# TBC-honesty, red-flag rules) that travel with every value.
+#
+# Hand-authored source of truth for the semantic layer — edit here, not in
+# the generated instance file. Instances are projected from data/products.js
+# by scripts/build-ontology.js into ontology/launch-data.jsonld.
+#
+# Convention carried over from the data contract: any literal value may be
+# the string "TBC", meaning honestly unknown — never estimated, never
+# coerced to 0 or null.
+# ============================================================================
+
+<https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl>
+    a owl:Ontology ;
+    dcterms:title "LAUNCH Transparency Dashboard Ontology" ;
+    dcterms:description "Domain ontology for the LAUNCH (Launch Transparency Initiative) dashboard tracking new antimalarial medicines from regulatory approval to in-country access. Covers products, the 8-stage access pathway, per-stage status, milestones, country access levels, procurement volumes and the provenance/governance fields every value carries." ;
+    dcterms:creator "LAUNCH Transparency Dashboard project" ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:seeAlso <https://kochrisdev.github.io/launch-transparency-dashboard/> .
+
+# ----------------------------------------------------------------------------
+# Classes
+# ----------------------------------------------------------------------------
+
+launch:Dataset a owl:Class ;
+    rdfs:label "Dataset" ;
+    rdfs:comment "One release of the LAUNCH data contract (window.LAUNCH_DATA): meta, stage definitions, glossary, changelog and products. Carries the dataset-level trust signals (dataStatus, synthetic)." .
+
+launch:Product a owl:Class ;
+    rdfs:label "Product" ;
+    rdfs:comment "A malaria tool tracked (or planned for tracking) on the dashboard. Identity is the permanent lowercase slug in launch:productId — it never changes even when the display name does." .
+
+launch:Medicine a owl:Class ;
+    rdfs:subClassOf launch:Product, schema:Drug ;
+    rdfs:label "Medicine" ;
+    rdfs:comment "An antimalarial treatment (class pipeline or market): full shape — exactly 8 stage entries, a current stage, optional bottleneck flag, and detail." .
+
+launch:VectorControlTool a owl:Class ;
+    rdfs:subClassOf launch:Product ;
+    rdfs:label "Vector-control tool" ;
+    rdfs:comment "A prevention product (e.g. spatial emanators). Goes through a different WHO track (PQ Vector Control, different guideline group)." .
+
+launch:PlaceholderProduct a owl:Class ;
+    rdfs:subClassOf launch:Product ;
+    rdfs:label "Placeholder product" ;
+    rdfs:comment "Identity and note only (placeholder: true in the contract). Renders greyed and is excluded from every statistic, export and chart." .
+
+launch:StageEntry a owl:Class ;
+    rdfs:label "Stage entry" ;
+    rdfs:comment "The reified status of one product at one pathway stage (the product × stage grain). In the contract this is positional: products[].stages[i] is the entry for stages[i]." .
+
+launch:Milestone a owl:Class ;
+    rdfs:label "Milestone" ;
+    rdfs:comment "One fine-grained gate event for a product, with its next expected step — the accountability ledger. Each row carries its own source." .
+
+launch:CountryAccessStatus a owl:Class ;
+    rdfs:label "Country access status" ;
+    rdfs:comment "One product's access level in one country (product × iso3 grain). Highest level wins on the map; unverified coverage must be flagged via the country map's coverage status." .
+
+launch:JourneyGate a owl:Class ;
+    rdfs:label "Journey gate" ;
+    rdfs:comment "A dated gate in a product's historical journey (e.g. 'EMA Article 58 positive opinion, 2012'). Consecutive integer-year gates feed the pathway timing chart; a 'TBC' year marks the gate still being waited on." .
+
+launch:Price a owl:Class ;
+    rdfs:label "Price" ;
+    rdfs:comment "Indicative price per treatment course. Governance: a displayed value requires confirmedInWriting = true or a public source; otherwise it must be 'TBC'." .
+
+launch:ProcurementVolume a owl:Class ;
+    rdfs:label "Procurement volume" ;
+    rdfs:comment "Procured treatment courses (one course = one full treatment for one patient) with a split by channel. Split percentages sum to 100." .
+
+launch:VolumeSplit a owl:Class ;
+    rdfs:label "Volume split" ;
+    rdfs:comment "One procurement channel's share of a product's volume (product × channel grain)." .
+
+launch:OperationalResearch a owl:Class ;
+    rdfs:label "Operational research" ;
+    rdfs:comment "Real-world implementation research on a product (distinct from clinical trials): lead, geographies, timeline and the open question." .
+
+launch:ChangelogEntry a owl:Class ;
+    rdfs:label "Changelog entry" ;
+    rdfs:comment "One logged change to the dataset (append-only; historical statements are never rewritten). References its product by the display name it had at the time — a soft reference, not a key." .
+
+launch:CountryMap a owl:Class ;
+    rdfs:label "Country map" ;
+    rdfs:comment "A product's per-country access listing plus the coverage trust level of the whole listing (illustrative / draft / verified). The map renders a warning overlay unless verified." .
+
+# ----------------------------------------------------------------------------
+# Object properties
+# ----------------------------------------------------------------------------
+
+launch:hasStageEntry a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:StageEntry ;
+    rdfs:label "has stage entry" ;
+    rdfs:comment "Exactly 8 per tracked medicine, one per pathway stage." .
+
+launch:atStage a owl:ObjectProperty ;
+    rdfs:domain launch:StageEntry ; rdfs:range skos:Concept ;
+    rdfs:label "at stage" ;
+    rdfs:comment "The pathway stage this entry reports on (a concept in launch:PathwayStageScheme)." .
+
+launch:hasStatus a owl:ObjectProperty ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has status" ;
+    rdfs:comment "Traffic-light status of a stage entry or milestone (a concept in launch:StageStatusScheme). Governance: status 'late' requires a substantive note and a top-level bottleneck flag on the product." .
+
+launch:currentStage a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range skos:Concept ;
+    rdfs:label "current stage" ;
+    rdfs:comment "The gate the product is actively working through (must agree with the stage entries)." .
+
+launch:productClass a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range skos:Concept ;
+    rdfs:label "product class" ;
+    rdfs:comment "pipeline or market (a concept in launch:ProductClassScheme)." .
+
+launch:developmentPhase a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range skos:Concept ;
+    rdfs:label "development phase" ;
+    rdfs:comment "Placement on the pipeline poster (a concept in launch:DevelopmentPhaseScheme)." .
+
+launch:hasMilestone a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:Milestone ;
+    rdfs:label "has milestone" .
+
+launch:hasCountryMap a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:CountryMap ;
+    rdfs:label "has country map" .
+
+launch:hasCountryStatus a owl:ObjectProperty ;
+    rdfs:domain launch:CountryMap ; rdfs:range launch:CountryAccessStatus ;
+    rdfs:label "has country status" .
+
+launch:country a owl:ObjectProperty ;
+    rdfs:domain launch:CountryAccessStatus ; rdfs:range schema:Country ;
+    rdfs:label "country" ;
+    rdfs:comment "The country, identified by ISO-3166 alpha-3 code — the only cross-file join in the system (to the map geometry)." .
+
+launch:accessLevel a owl:ObjectProperty ;
+    rdfs:domain launch:CountryAccessStatus ; rdfs:range skos:Concept ;
+    rdfs:label "access level" ;
+    rdfs:comment "Ordinal level: registered < guidelines < mft (a concept in launch:CountryAccessLevelScheme)." .
+
+launch:coverageStatus a owl:ObjectProperty ;
+    rdfs:domain launch:CountryMap ; rdfs:range skos:Concept ;
+    rdfs:label "coverage status" ;
+    rdfs:comment "Trust level of the whole country listing (a concept in launch:CoverageStatusScheme). Anything below 'verified' must carry an explanatory note." .
+
+launch:hasJourneyGate a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:JourneyGate ;
+    rdfs:label "has journey gate" .
+
+launch:hasPrice a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:Price ;
+    rdfs:label "has price" .
+
+launch:hasVolume a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:ProcurementVolume ;
+    rdfs:label "has volume" .
+
+launch:hasSplit a owl:ObjectProperty ;
+    rdfs:domain launch:ProcurementVolume ; rdfs:range launch:VolumeSplit ;
+    rdfs:label "has split" .
+
+launch:hasResearch a owl:ObjectProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range launch:OperationalResearch ;
+    rdfs:label "has research" .
+
+launch:dataStatus a owl:ObjectProperty ;
+    rdfs:domain launch:Dataset ; rdfs:range skos:Concept ;
+    rdfs:label "data status" ;
+    rdfs:comment "How much to trust the whole dataset (a concept in launch:DataStatusScheme). Controls the on-page banner." .
+
+launch:tracksProduct a owl:ObjectProperty ;
+    rdfs:domain launch:Dataset ; rdfs:range launch:Product ;
+    rdfs:label "tracks product" .
+
+# ----------------------------------------------------------------------------
+# Data properties
+# (Any of these may carry the literal "TBC" — honestly unknown, never
+#  estimated. Consumers must render it verbatim, never coerce to 0/null.)
+# ----------------------------------------------------------------------------
+
+launch:productId a owl:DatatypeProperty ;
+    rdfs:domain launch:Product ; rdfs:range xsd:string ;
+    rdfs:label "product id" ;
+    rdfs:comment "Permanent lowercase slug — the primary key of everything (HTML anchor, widget parameter, foreign key in every flat export). Never renamed." .
+
+launch:inn a owl:DatatypeProperty ;
+    rdfs:subPropertyOf schema:nonProprietaryName ;
+    rdfs:domain launch:Product ; rdfs:range xsd:string ;
+    rdfs:label "INN / composition" ;
+    rdfs:comment "International non-proprietary name(s) of the combination, with trade or code names in parentheses." .
+
+launch:manufacturerLabel a owl:DatatypeProperty ;
+    rdfs:domain launch:Product ; rdfs:range xsd:string ;
+    rdfs:label "manufacturer label" ;
+    rdfs:comment "Display string naming the manufacturer(s) and development partners (e.g. 'Novartis · MMV'). Deliberately a literal, not an organization entity — the contract stores a display string; normalizing to organization individuals is a future extension." .
+
+launch:classLabel a owl:DatatypeProperty ;
+    rdfs:domain launch:Product ; rdfs:range xsd:string ;
+    rdfs:label "class label" .
+
+launch:bottleneckFlag a owl:DatatypeProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range xsd:string ;
+    rdfs:label "bottleneck flag" ;
+    rdfs:comment "The one-line bottleneck sentence — the initiative's core editorial output. Governance: required whenever any stage entry is 'late'; a red light must always carry a written reason." .
+
+launch:note a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "note" .
+
+launch:stageIndex a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "stage index" ;
+    rdfs:comment "0–7 position in the pathway. Order is meaning — stage relationships in the contract are positional, not named." .
+
+launch:statusRank a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "status rank" ;
+    rdfs:comment "Sort/color rank shipped alongside the status label: idle 0, late 1, prog 2, done 3." .
+
+launch:levelRank a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "level rank" ;
+    rdfs:comment "Ordinal rank of a country access level: registered 1, guidelines 2, mft 3." .
+
+launch:source a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:source ;
+    rdfs:range xsd:string ;
+    rdfs:label "source" ;
+    rdfs:comment "Public, citable origin of the value. Provenance field carried by stage entries, milestones, prices." .
+
+launch:asOf a owl:DatatypeProperty ;
+    rdfs:range xsd:date ;
+    rdfs:label "as of" ;
+    rdfs:comment "Date the value was last verified (YYYY-MM-DD)." .
+
+launch:confirmedInWriting a owl:DatatypeProperty ;
+    rdfs:domain launch:Price ; rdfs:range xsd:boolean ;
+    rdfs:label "confirmed in writing" ;
+    rdfs:comment "Manufacturer confirmed release of this figure in writing. Governance: a displayed price requires this or a public source." .
+
+launch:dateLabel a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "date label" ;
+    rdfs:comment "Human-readable date or date range as recorded ('2012–2016', 'Announced 12 Nov 2025'). Kept verbatim — not normalized to xsd:date." .
+
+launch:nextStep a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "next step" .
+
+launch:nextDate a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "next date" ;
+    rdfs:comment "Anticipated date of the next step — free-form ('~2027', 'TBC')." .
+
+launch:gateYear a owl:DatatypeProperty ;
+    rdfs:domain launch:JourneyGate ;
+    rdfs:label "gate year" ;
+    rdfs:comment "Integer year of a journey gate, or the string 'TBC' for the gate still pending." .
+
+launch:priceValue a owl:DatatypeProperty ;
+    rdfs:domain launch:Price ; rdfs:range xsd:string ;
+    rdfs:label "price value" .
+
+launch:iso3 a owl:DatatypeProperty ;
+    rdfs:domain schema:Country ; rdfs:range xsd:string ;
+    rdfs:label "ISO 3166-1 alpha-3 code" .
+
+launch:registeredCount a owl:DatatypeProperty ;
+    rdfs:label "registered count" ;
+    rdfs:comment "Count of national marketing authorisations (number or 'TBC')." .
+
+launch:inGuidelinesCount a owl:DatatypeProperty ;
+    rdfs:label "in-guidelines count" ;
+    rdfs:comment "Count of national treatment guidelines including the product (number or 'TBC')." .
+
+launch:inMftCount a owl:DatatypeProperty ;
+    rdfs:label "in-MFT count" ;
+    rdfs:comment "Countries planning/running multiple first-line therapies including the product (number or 'TBC')." .
+
+launch:forecastDemand a owl:DatatypeProperty ;
+    rdfs:label "forecast demand" .
+
+launch:useCase a owl:DatatypeProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range xsd:string ;
+    rdfs:label "use case" .
+
+launch:accessCommitment a owl:DatatypeProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range xsd:string ;
+    rdfs:label "access commitment" .
+
+launch:adoptionRequirement a owl:DatatypeProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range xsd:string ;
+    rdfs:label "adoption requirement" ;
+    rdfs:comment "What a country must do before use (training, pharmacovigilance...)." .
+
+launch:researchLead a owl:DatatypeProperty ;
+    rdfs:domain launch:OperationalResearch ; rdfs:label "research lead" .
+launch:researchGeographies a owl:DatatypeProperty ;
+    rdfs:domain launch:OperationalResearch ; rdfs:label "research geographies" .
+launch:researchTimeline a owl:DatatypeProperty ;
+    rdfs:domain launch:OperationalResearch ; rdfs:label "research timeline" .
+launch:researchQuestion a owl:DatatypeProperty ;
+    rdfs:domain launch:OperationalResearch ; rdfs:label "research question" .
+
+launch:channel a owl:DatatypeProperty ;
+    rdfs:domain launch:VolumeSplit ; rdfs:range xsd:string ;
+    rdfs:label "procurement channel" .
+
+launch:splitPct a owl:DatatypeProperty ;
+    rdfs:domain launch:VolumeSplit ; rdfs:range xsd:decimal ;
+    rdfs:label "split percentage" ;
+    rdfs:comment "Percentage of the product's procured volume through this channel. All splits of one volume sum to 100." .
+
+launch:treatments a owl:DatatypeProperty ;
+    rdfs:domain launch:ProcurementVolume ;
+    rdfs:label "treatments" ;
+    rdfs:comment "Procured treatment courses (one course = one patient's full treatment; counts courses, not tablets or packs)." .
+
+launch:volumeNote a owl:DatatypeProperty ;
+    rdfs:domain launch:Medicine ; rdfs:range xsd:string ;
+    rdfs:label "volume note" ;
+    rdfs:comment "Shown when no volume object exists yet." .
+
+launch:synthetic a owl:DatatypeProperty ;
+    rdfs:domain launch:Dataset ; rdfs:range xsd:boolean ;
+    rdfs:label "synthetic" ;
+    rdfs:comment "True means the whole dataset is fictional. Check before treating any loaded dataset as real." .
+
+launch:lastUpdated a owl:DatatypeProperty ;
+    rdfs:domain launch:Dataset ; rdfs:range xsd:date ;
+    rdfs:label "last updated" .
+
+launch:host a owl:DatatypeProperty ;
+    rdfs:domain launch:Dataset ; rdfs:range xsd:string ;
+    rdfs:label "host" .
+
+launch:changeDate a owl:DatatypeProperty ;
+    rdfs:domain launch:ChangelogEntry ; rdfs:range xsd:date ;
+    rdfs:label "change date" .
+
+launch:changeText a owl:DatatypeProperty ;
+    rdfs:domain launch:ChangelogEntry ; rdfs:range xsd:string ;
+    rdfs:label "change text" .
+
+launch:productDisplayName a owl:DatatypeProperty ;
+    rdfs:domain launch:ChangelogEntry ; rdfs:range xsd:string ;
+    rdfs:label "product display name" ;
+    rdfs:comment "Soft reference by the display name the product had at the time (or 'All'). Historical statements are never rewritten, so this does not track renames." .
+
+launch:milestoneName a owl:DatatypeProperty ;
+    rdfs:domain launch:Milestone ; rdfs:label "milestone name" .
+launch:statusLabel a owl:DatatypeProperty ;
+    rdfs:label "status label" ;
+    rdfs:comment "Human-readable label accompanying a milestone status ('Complete', '25+ countries')." .
+launch:anticipated a owl:DatatypeProperty ;
+    rdfs:domain launch:Milestone ; rdfs:label "anticipated" .
+
+launch:gateLabel a owl:DatatypeProperty ;
+    rdfs:domain launch:JourneyGate ; rdfs:label "gate label" .
+
+launch:placeholderNote a owl:DatatypeProperty ;
+    rdfs:domain launch:PlaceholderProduct ; rdfs:range xsd:string ;
+    rdfs:label "placeholder note" .
+
+# ----------------------------------------------------------------------------
+# Controlled vocabularies (SKOS)
+#
+# Fixed enumerations (validator constants) are defined here. The 8 pathway
+# stage concepts and the glossary concepts are generated into
+# launch-data.jsonld from the data file itself, so they can never drift
+# from the contract; their schemes are declared here.
+# ----------------------------------------------------------------------------
+
+launch:PathwayStageScheme a skos:ConceptScheme ;
+    skos:prefLabel "Access pathway stages" ;
+    skos:definition "The 8 ordered gates of a malaria product's journey from R&D to in-country delivery — three different kinds of approval (SRA regulatory, WHO guideline recommendation, WHO prequalification) plus registration, policy adoption and the delivery chain. Recommendation ≠ prequalification ≠ registration: three independent approvals run by different institutions. Concepts are generated from the data file's stages[] array with their positional index." .
+
+launch:GlossaryScheme a skos:ConceptScheme ;
+    skos:prefLabel "LAUNCH glossary" ;
+    skos:definition "Domain terms and their definitions as shown in dashboard tooltips. Concepts are generated from the data file's glossary object." .
+
+# --- Stage / milestone status (traffic light) --------------------------------
+
+launch:StageStatusScheme a skos:ConceptScheme ;
+    skos:prefLabel "Stage status" ;
+    skos:definition "Traffic-light status of a product at a gate. Ranks match the flat projection: idle 0, late 1, prog 2, done 3." .
+
+launch:status-idle a skos:Concept ;
+    skos:inScheme launch:StageStatusScheme ;
+    skos:notation "idle" ; skos:prefLabel "Not started" ;
+    launch:statusRank 0 .
+
+launch:status-late a skos:Concept ;
+    skos:inScheme launch:StageStatusScheme ;
+    skos:notation "late" ; skos:prefLabel "Delayed" ;
+    skos:definition "The red light. Governance: must carry a substantive note, and the product must carry a top-level bottleneck flag — 'delayed' is an accusation in this domain and is never shown without a written reason." ;
+    launch:statusRank 1 .
+
+launch:status-prog a skos:Concept ;
+    skos:inScheme launch:StageStatusScheme ;
+    skos:notation "prog" ; skos:prefLabel "In progress" ;
+    launch:statusRank 2 .
+
+launch:status-done a skos:Concept ;
+    skos:inScheme launch:StageStatusScheme ;
+    skos:notation "done" ; skos:prefLabel "Complete" ;
+    launch:statusRank 3 .
+
+# --- Country access level -----------------------------------------------------
+
+launch:CountryAccessLevelScheme a skos:ConceptScheme ;
+    skos:prefLabel "Country access level" ;
+    skos:definition "Ordinal access level of a product in a country; the highest applicable level wins on the map." .
+
+launch:level-registered a skos:Concept ;
+    skos:inScheme launch:CountryAccessLevelScheme ;
+    skos:notation "registered" ; skos:prefLabel "Registered" ;
+    skos:definition "The national regulatory authority has licensed the product." ;
+    launch:levelRank 1 .
+
+launch:level-guidelines a skos:Concept ;
+    skos:inScheme launch:CountryAccessLevelScheme ;
+    skos:notation "guidelines" ; skos:prefLabel "In national guidelines" ;
+    skos:definition "Written into the national treatment guidelines — what health workers actually prescribe and the public sector buys." ;
+    skos:broader launch:level-registered ;
+    launch:levelRank 2 .
+
+launch:level-mft a skos:Concept ;
+    skos:inScheme launch:CountryAccessLevelScheme ;
+    skos:notation "mft" ; skos:prefLabel "In MFT strategy" ;
+    skos:definition "Included in the country's multiple first-line therapies deployment." ;
+    skos:broader launch:level-guidelines ;
+    launch:levelRank 3 .
+
+# --- Product class --------------------------------------------------------------
+
+launch:ProductClassScheme a skos:ConceptScheme ;
+    skos:prefLabel "Product class" ;
+    skos:definition "The two halves of the LAUNCH portfolio design: pipeline products stress the regulatory half of the pathway, marketed-but-underutilized products stress the adoption half." .
+
+launch:class-pipeline a skos:Concept ;
+    skos:inScheme launch:ProductClassScheme ;
+    skos:notation "pipeline" ; skos:prefLabel "Pipeline" ;
+    skos:definition "Pre-market — working through trials and approvals." .
+
+launch:class-market a skos:Concept ;
+    skos:inScheme launch:ProductClassScheme ;
+    skos:notation "market" ; skos:prefLabel "Marketed" ;
+    skos:definition "Fully approved but underutilized — the adoption story." .
+
+# --- Development phase (pipeline poster) ---------------------------------------
+
+launch:DevelopmentPhaseScheme a skos:ConceptScheme ;
+    skos:prefLabel "Development phase" ;
+    skos:definition "Poster-column placement, MMV-pipeline style: Preclinical → Approved · scaling up." .
+
+launch:phase-preclinical a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "preclinical" ; skos:prefLabel "Preclinical" .
+launch:phase-phase1 a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "phase1" ; skos:prefLabel "Phase I" .
+launch:phase-phase2 a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "phase2" ; skos:prefLabel "Phase II" .
+launch:phase-phase3 a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "phase3" ; skos:prefLabel "Phase III" .
+launch:phase-regulatory a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "regulatory" ; skos:prefLabel "Regulatory review" .
+launch:phase-access a skos:Concept ;
+    skos:inScheme launch:DevelopmentPhaseScheme ;
+    skos:notation "access" ; skos:prefLabel "Approved · scaling up" .
+
+# --- Dataset trust level ---------------------------------------------------------
+
+launch:DataStatusScheme a skos:ConceptScheme ;
+    skos:prefLabel "Dataset status" ;
+    skos:definition "How much to trust the whole dataset. Controls the on-page banner in every consumer." .
+
+launch:datastatus-illustrative a skos:Concept ;
+    skos:inScheme launch:DataStatusScheme ;
+    skos:notation "illustrative" ; skos:prefLabel "Illustrative" ;
+    skos:definition "Design placeholders or fictional data — not real figures." .
+launch:datastatus-draft a skos:Concept ;
+    skos:inScheme launch:DataStatusScheme ;
+    skos:notation "draft" ; skos:prefLabel "Draft" ;
+    skos:definition "Compiled from public sources, pending LAUNCH team verification and manufacturer written confirmation." .
+launch:datastatus-live a skos:Concept ;
+    skos:inScheme launch:DataStatusScheme ;
+    skos:notation "live" ; skos:prefLabel "Live" ;
+    skos:definition "Verified and maintained." .
+
+# --- Country-map coverage trust level --------------------------------------------
+
+launch:CoverageStatusScheme a skos:ConceptScheme ;
+    skos:prefLabel "Country-map coverage status" ;
+    skos:definition "Trust level of a product's country listing. A colored country reads as a fact, so the map warns unless verified." .
+
+launch:coverage-illustrative a skos:Concept ;
+    skos:inScheme launch:CoverageStatusScheme ;
+    skos:notation "illustrative" ; skos:prefLabel "Illustrative" .
+launch:coverage-draft a skos:Concept ;
+    skos:inScheme launch:CoverageStatusScheme ;
+    skos:notation "draft" ; skos:prefLabel "Draft" .
+launch:coverage-verified a skos:Concept ;
+    skos:inScheme launch:CoverageStatusScheme ;
+    skos:notation "verified" ; skos:prefLabel "Verified" .

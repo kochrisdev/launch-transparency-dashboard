@@ -1,0 +1,1362 @@
+{
+  "@context": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/context.jsonld",
+  "@graph": [
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#dataset",
+      "@type": "Dataset",
+      "lastUpdated": "2026-08-23",
+      "dataStatus": "launch:datastatus-draft",
+      "tracksProduct": [
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-emanators"
+      ],
+      "host": "RBM Partnership to End Malaria"
+    },
+    {
+      "@id": "launch:stage-0",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "0",
+      "prefLabel": "R&D & clinical",
+      "stageIndex": 0
+    },
+    {
+      "@id": "launch:stage-1",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "1",
+      "prefLabel": "Regulatory approval (SRA)",
+      "stageIndex": 1
+    },
+    {
+      "@id": "launch:stage-2",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "2",
+      "prefLabel": "WHO guidelines",
+      "stageIndex": 2
+    },
+    {
+      "@id": "launch:stage-3",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "3",
+      "prefLabel": "WHO prequalification",
+      "stageIndex": 3
+    },
+    {
+      "@id": "launch:stage-4",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "4",
+      "prefLabel": "Country registration",
+      "stageIndex": 4
+    },
+    {
+      "@id": "launch:stage-5",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "5",
+      "prefLabel": "National policy adoption",
+      "stageIndex": 5
+    },
+    {
+      "@id": "launch:stage-6",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "6",
+      "prefLabel": "Procurement",
+      "stageIndex": 6
+    },
+    {
+      "@id": "launch:stage-7",
+      "@type": "Concept",
+      "inScheme": "launch:PathwayStageScheme",
+      "notation": "7",
+      "prefLabel": "In-country delivery",
+      "stageIndex": 7
+    },
+    {
+      "@id": "launch:term-ACT",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "ACT",
+      "definition": "Artemisinin-based combination therapy — the standard class of malaria treatments pairing an artemisinin derivative with a longer-acting partner drug."
+    },
+    {
+      "@id": "launch:term-SRA",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "SRA",
+      "definition": "Stringent Regulatory Authority — an advanced regulator (e.g. EMA, US FDA) whose review anchors WHO prequalification and country registrations."
+    },
+    {
+      "@id": "launch:term-WLA",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "WLA",
+      "definition": "WHO-Listed Authority — a regulator assessed by WHO as operating at an advanced level."
+    },
+    {
+      "@id": "launch:term-Article-58",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "Article 58",
+      "definition": "EMA procedure giving a scientific opinion on high-priority medicines intended for markets outside the EU."
+    },
+    {
+      "@id": "launch:term-GDG",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "GDG",
+      "definition": "Guidelines Development Group — the WHO expert group that reviews evidence and formulates treatment recommendations."
+    },
+    {
+      "@id": "launch:term-PQ",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "PQ",
+      "definition": "WHO prequalification — quality, safety and efficacy assessment that makes a product eligible for procurement by UN agencies and major donors."
+    },
+    {
+      "@id": "launch:term-MFT",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "MFT",
+      "definition": "Multiple first-line therapies — deploying several first-line treatments in parallel to reduce drug pressure and slow resistance."
+    },
+    {
+      "@id": "launch:term-EOI",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "EOI",
+      "definition": "Expression of Interest — the WHO prequalification invitation list; a product must be on it before a PQ dossier can be assessed."
+    },
+    {
+      "@id": "launch:term-AMA",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "AMA",
+      "definition": "African Medicines Agency — continental body coordinating regulatory review across African Union member states."
+    },
+    {
+      "@id": "launch:term-PMI",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "PMI",
+      "definition": "U.S. President's Malaria Initiative — a major bilateral funder and procurer of malaria commodities."
+    },
+    {
+      "@id": "launch:term-MMV",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "MMV",
+      "definition": "Medicines for Malaria Venture — product development partnership behind several antimalarials."
+    },
+    {
+      "@id": "launch:term-PQR",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "PQR",
+      "definition": "Price & Quality Reporting — the Global Fund database of procurement transactions (volumes and prices)."
+    },
+    {
+      "@id": "launch:term-GMP",
+      "@type": "Concept",
+      "inScheme": "launch:GlossaryScheme",
+      "prefLabel": "GMP",
+      "definition": "Good Manufacturing Practice — quality standard verified by inspection of manufacturing sites."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-BFA",
+      "@type": "Country",
+      "iso3": "BFA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CHN",
+      "@type": "Country",
+      "iso3": "CHN"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CIV",
+      "@type": "Country",
+      "iso3": "CIV"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CMR",
+      "@type": "Country",
+      "iso3": "CMR"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-COD",
+      "@type": "Country",
+      "iso3": "COD"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-GHA",
+      "@type": "Country",
+      "iso3": "GHA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IDN",
+      "@type": "Country",
+      "iso3": "IDN"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IND",
+      "@type": "Country",
+      "iso3": "IND"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KEN",
+      "@type": "Country",
+      "iso3": "KEN"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KHM",
+      "@type": "Country",
+      "iso3": "KHM"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-LAO",
+      "@type": "Country",
+      "iso3": "LAO"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MLI",
+      "@type": "Country",
+      "iso3": "MLI"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MMR",
+      "@type": "Country",
+      "iso3": "MMR"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MOZ",
+      "@type": "Country",
+      "iso3": "MOZ"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-NGA",
+      "@type": "Country",
+      "iso3": "NGA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-RWA",
+      "@type": "Country",
+      "iso3": "RWA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-SEN",
+      "@type": "Country",
+      "iso3": "SEN"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-THA",
+      "@type": "Country",
+      "iso3": "THA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-TZA",
+      "@type": "Country",
+      "iso3": "TZA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-UGA",
+      "@type": "Country",
+      "iso3": "UGA"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-VNM",
+      "@type": "Country",
+      "iso3": "VNM"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-ZMB",
+      "@type": "Country",
+      "iso3": "ZMB"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "@type": "Medicine",
+      "name": "GanLum",
+      "productId": "ganlum",
+      "inn": "Ganaplacide–lumefantrine (KLU156)",
+      "manufacturerLabel": "Novartis · MMV",
+      "classLabel": "Pipeline · new chemical class",
+      "productClass": "launch:class-pipeline",
+      "currentStage": "launch:stage-1",
+      "developmentPhase": "launch:phase-regulatory",
+      "hasStageEntry": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-0",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-0",
+          "hasStatus": "launch:status-done",
+          "note": "Phase III (KALUMA) met primary endpoint: 97.4% PCR-corrected cure rate; 1,688 adults and children, 34 sites in 12 African countries",
+          "dateLabel": "Announced 12 Nov 2025",
+          "source": "Novartis / MMV press releases, 12 Nov 2025",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-1",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-1",
+          "hasStatus": "launch:status-prog",
+          "note": "Regulatory submissions in preparation following Phase III success",
+          "nextStep": "Dossier submission (SRA pathway)",
+          "nextDate": "TBC",
+          "source": "Novartis announcement, Nov 2025",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-2",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-2",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started",
+          "nextStep": "GDG engagement expected alongside regulatory review"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-3",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-3",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-4",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-4",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-5",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-5",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-6",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-6",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-7",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-7",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        }
+      ],
+      "useCase": "Non-artemisinin combination — the first major innovation in malaria treatment since ACTs were introduced over 25 years ago (Novartis) — candidate for artemisinin partial-resistance settings and MFT strategies; kills resistant parasites and blocks transmission.",
+      "accessCommitment": [
+        "Co-developed with MMV under access-oriented partnership",
+        "Access and affordability provisions under discussion",
+        "Once-daily, 3-day granule sachet — no separate paediatric development needed"
+      ],
+      "adoptionRequirement": [
+        "New chemical class — pharmacovigilance planning required",
+        "Health-worker training on new regimen"
+      ],
+      "hasPrice": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-price",
+        "@type": "Price",
+        "priceValue": "TBC",
+        "note": "Pricing not yet public — will be shown once confirmed by manufacturer",
+        "confirmedInWriting": false,
+        "asOf": "2026-08-14"
+      },
+      "hasResearch": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-research",
+        "@type": "OperationalResearch",
+        "researchLead": "Novartis / MMV",
+        "researchGeographies": "12 African countries (KALUMA trial sites)",
+        "researchTimeline": "Phase III complete Nov 2025",
+        "researchQuestion": "Efficacy against resistant parasites and transmission blocking"
+      },
+      "registeredCount": 0,
+      "inGuidelinesCount": 0,
+      "inMftCount": 0,
+      "forecastDemand": "—",
+      "volumeNote": "Pre-launch — no procurement yet",
+      "hasMilestone": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-milestone-0",
+          "@type": "Milestone",
+          "milestoneName": "Phase III (KALUMA)",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "12 Nov 2025",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "Novartis / MMV press releases"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-milestone-1",
+          "@type": "Milestone",
+          "milestoneName": "SRA dossier submission",
+          "hasStatus": "launch:status-prog",
+          "statusLabel": "In preparation",
+          "dateLabel": "—",
+          "nextStep": "Submission",
+          "anticipated": "TBC",
+          "source": "Novartis announcement, Nov 2025"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-milestone-2",
+          "@type": "Milestone",
+          "milestoneName": "WHO GDG engagement",
+          "hasStatus": "launch:status-idle",
+          "statusLabel": "Not started",
+          "dateLabel": "—",
+          "nextStep": "Pre-submission dialogue",
+          "anticipated": "TBC"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-milestone-3",
+          "@type": "Milestone",
+          "milestoneName": "WHO prequalification",
+          "hasStatus": "launch:status-idle",
+          "statusLabel": "Not started",
+          "dateLabel": "—",
+          "nextStep": "—",
+          "anticipated": "TBC"
+        }
+      ]
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "@type": "Medicine",
+      "name": "ALAQ",
+      "productId": "alaq",
+      "inn": "Artemether–lumefantrine–amodiaquine (triple ACT)",
+      "manufacturerLabel": "Fosun Pharma · MORU / DeTACT partnership",
+      "classLabel": "Pipeline · triple ACT",
+      "productClass": "launch:class-pipeline",
+      "currentStage": "launch:stage-0",
+      "developmentPhase": "launch:phase-phase3",
+      "hasStageEntry": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-0",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-0",
+          "hasStatus": "launch:status-prog",
+          "note": "Co-formulated fixed-dose triple ACT in pivotal Phase III (FD-TACT, successor to the DeTACT programme; first patient Sep 2025); dose-optimization published 2025; child-friendly dispersible formulation",
+          "dateLabel": "Phase III targeted completion 2025–26",
+          "nextStep": "Phase III results, then dossier preparation",
+          "nextDate": "TBC",
+          "source": "MORU / FD-TACT; Clin Pharmacol Ther 2025; WHO PADO malaria, Jun 2025",
+          "asOf": "2026-08-23"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-1",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-1",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started",
+          "nextStep": "SRA/WLA submission — partnership targets approval by ~2027",
+          "nextDate": "~2027",
+          "source": "DeTACT partnership statements"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-2",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-2",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-3",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-3",
+          "hasStatus": "launch:status-idle",
+          "note": "Not yet included in WHO PQ Expression of Interest list",
+          "nextStep": "PQ targeted by ~2027 per partnership",
+          "nextDate": "~2027",
+          "source": "WHO PADO malaria, Jun 2025"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-4",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-4",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-5",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-5",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-6",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-6",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-7",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-7",
+          "hasStatus": "launch:status-idle",
+          "note": "Not started"
+        }
+      ],
+      "useCase": "Triple ACT to protect artemisinin partner drugs — MFT component and first-line option where artemisinin partial resistance is confirmed.",
+      "accessCommitment": [
+        "Developed through MORU-led DeTACT partnership with Fosun Pharma",
+        "Designed for affordability in endemic-country public sectors",
+        "Child-friendly dispersible formulation"
+      ],
+      "adoptionRequirement": [
+        "Updated treatment guidelines and job aids",
+        "Health-worker training (3-drug regimen)"
+      ],
+      "hasPrice": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-price",
+        "@type": "Price",
+        "priceValue": "TBC",
+        "note": "Pricing not yet public — will be shown once confirmed by manufacturer",
+        "confirmedInWriting": false,
+        "asOf": "2026-08-14"
+      },
+      "hasResearch": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-research",
+        "@type": "OperationalResearch",
+        "researchLead": "MORU / DeTACT consortium",
+        "researchGeographies": "Multi-site, Africa and Asia (DeTACT / FD-TACT trials)",
+        "researchTimeline": "Phase III → 2025–26",
+        "researchQuestion": "Safety, efficacy and adherence of co-formulated ALAQ at scale"
+      },
+      "registeredCount": 0,
+      "inGuidelinesCount": 0,
+      "inMftCount": 0,
+      "forecastDemand": "—",
+      "volumeNote": "Pre-launch — no procurement yet",
+      "hasMilestone": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-milestone-0",
+          "@type": "Milestone",
+          "milestoneName": "Dose-optimization of co-formulation",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "Published 2025",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "Clin Pharmacol Ther (2025)"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-milestone-1",
+          "@type": "Milestone",
+          "milestoneName": "Pivotal Phase III (FD-TACT)",
+          "hasStatus": "launch:status-prog",
+          "statusLabel": "In progress",
+          "dateLabel": "First patient Sep 2025",
+          "nextStep": "Results",
+          "anticipated": "2026",
+          "source": "MORU / FD-TACT"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-milestone-2",
+          "@type": "Milestone",
+          "milestoneName": "SRA/WLA submission",
+          "hasStatus": "launch:status-idle",
+          "statusLabel": "Not started",
+          "dateLabel": "—",
+          "nextStep": "Dossier preparation",
+          "anticipated": "~2027"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-milestone-3",
+          "@type": "Milestone",
+          "milestoneName": "WHO prequalification",
+          "hasStatus": "launch:status-idle",
+          "statusLabel": "Not started",
+          "dateLabel": "—",
+          "nextStep": "EOI listing, then dossier",
+          "anticipated": "~2027",
+          "source": "WHO PADO malaria, Jun 2025"
+        }
+      ]
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "@type": "Medicine",
+      "name": "ASPY",
+      "productId": "pyramax",
+      "inn": "Pyronaridine–artesunate (Pyramax)",
+      "manufacturerLabel": "Shin Poong Pharmaceutical · MMV",
+      "classLabel": "Recommended · underutilized",
+      "productClass": "launch:class-market",
+      "currentStage": "launch:stage-5",
+      "developmentPhase": "launch:phase-access",
+      "bottleneckFlag": "Adoption is the bottleneck — strongly recommended by WHO since 2022 and registered in 25+ countries, but national guideline inclusion remains limited",
+      "atcCode": {
+        "@type": "schema:MedicalCode",
+        "codeValue": "P01BF06",
+        "codingSystem": "ATC"
+      },
+      "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF06",
+      "hasStageEntry": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-0",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-0",
+          "hasStatus": "launch:status-done",
+          "note": "Development complete (Shin Poong / MMV co-development)",
+          "source": "MMV",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-1",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-1",
+          "hasStatus": "launch:status-done",
+          "note": "EMA positive scientific opinion (Article 58); label updated Jul 2025 to include treatment of pregnant women",
+          "dateLabel": "2012 (label update 2025)",
+          "source": "EMA; MMV, 31 Jul 2025",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-2",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-2",
+          "hasStatus": "launch:status-done",
+          "note": "Strong recommendation in revised WHO Guidelines for malaria",
+          "dateLabel": "2022",
+          "source": "WHO Guidelines for malaria; MMV",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-3",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-3",
+          "hasStatus": "launch:status-done",
+          "note": "WHO prequalified — tablets and paediatric granules",
+          "dateLabel": "2012–2016",
+          "source": "WHO PQ list of prequalified medicines",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-4",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-4",
+          "hasStatus": "launch:status-prog",
+          "note": "Registered in 25+ endemic countries since 2014; further submissions in Asia (Vietnam, Myanmar, Cambodia, Thailand)",
+          "dateLabel": "Rolling",
+          "nextStep": "Pending registrations",
+          "nextDate": "TBC",
+          "source": "MMV",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-5",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-5",
+          "hasStatus": "launch:status-late",
+          "note": "National guideline inclusion lags WHO's 2022 strong recommendation — the core adoption gap LAUNCH is tracking; verified country count pending",
+          "nextStep": "Country guideline committee reviews",
+          "nextDate": "TBC",
+          "source": "LAUNCH assessment (draft)",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-6",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-6",
+          "hasStatus": "launch:status-prog",
+          "note": "Eligible for Global Fund / PMI procurement; volumes remain modest relative to artemether-lumefantrine",
+          "source": "LAUNCH assessment (draft)",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-7",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-7",
+          "hasStatus": "launch:status-idle",
+          "note": "Routine delivery limited; concentrated in pilot and study settings"
+        }
+      ],
+      "useCase": "First-line diversification / MFT component; paediatric granules available; label includes pregnant women (2025 update).",
+      "accessCommitment": [
+        "WHO PQ held for tablets and paediatric granules",
+        "Registration footprint: 25+ countries and expanding",
+        "Co-developed with MMV under access-oriented partnership"
+      ],
+      "adoptionRequirement": [
+        "Guideline inclusion and case-management training",
+        "No cold chain or special administration needs"
+      ],
+      "hasPrice": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-price",
+        "@type": "Price",
+        "priceValue": "TBC",
+        "note": "Global Fund reference pricing to be displayed once confirmed for release",
+        "confirmedInWriting": false,
+        "asOf": "2026-08-14"
+      },
+      "hasResearch": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-research",
+        "@type": "OperationalResearch",
+        "researchLead": "MMV and partners",
+        "researchGeographies": "Ghana, Vietnam, Burkina Faso and others (efficacy studies)",
+        "researchTimeline": "Ongoing",
+        "researchQuestion": "MFT deployment models with pyronaridine–artesunate"
+      },
+      "registeredCount": 25,
+      "inGuidelinesCount": "TBC",
+      "inMftCount": "TBC",
+      "forecastDemand": "TBC",
+      "hasCountryMap": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-countrymap",
+        "@type": "CountryMap",
+        "coverageStatus": "launch:coverage-illustrative",
+        "note": "Illustrative subset for design review — not actual country status. Replace with the verified country survey.",
+        "hasCountryStatus": [
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-GHA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-GHA",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-BFA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-BFA",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-KEN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KEN",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-KHM",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KHM",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-VNM",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-VNM",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-CIV",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CIV",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-RWA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-RWA",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-UGA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-UGA",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-NGA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-NGA",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-COD",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-COD",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-TZA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-TZA",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-MOZ",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MOZ",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-SEN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-SEN",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-CMR",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CMR",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-MLI",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MLI",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-country-MMR",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MMR",
+            "accessLevel": "launch:level-registered"
+          }
+        ]
+      },
+      "hasJourneyGate": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-gate-0",
+          "@type": "JourneyGate",
+          "gateLabel": "EMA Article 58 positive opinion",
+          "gateYear": 2012
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-gate-1",
+          "@type": "JourneyGate",
+          "gateLabel": "WHO prequalification (tablets)",
+          "gateYear": 2012
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-gate-2",
+          "@type": "JourneyGate",
+          "gateLabel": "Paediatric granules prequalified",
+          "gateYear": 2016
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-gate-3",
+          "@type": "JourneyGate",
+          "gateLabel": "WHO strong recommendation",
+          "gateYear": 2022
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-gate-4",
+          "@type": "JourneyGate",
+          "gateLabel": "Broad national guideline inclusion",
+          "gateYear": "TBC"
+        }
+      ],
+      "volumeNote": "Procurement volumes being compiled from Global Fund PQR and PMI records",
+      "hasMilestone": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-0",
+          "@type": "Milestone",
+          "milestoneName": "SRA approval (EMA Art. 58)",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "2012",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "EMA register"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-1",
+          "@type": "Milestone",
+          "milestoneName": "WHO prequalification",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "2012–2016",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "WHO PQ list"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-2",
+          "@type": "Milestone",
+          "milestoneName": "WHO guideline strong recommendation",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "2022",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "WHO Guidelines for malaria"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-3",
+          "@type": "Milestone",
+          "milestoneName": "Label update — pregnancy",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "31 Jul 2025",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "EMA / MMV"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-4",
+          "@type": "Milestone",
+          "milestoneName": "Country registrations",
+          "hasStatus": "launch:status-prog",
+          "statusLabel": "25+ countries",
+          "dateLabel": "Rolling",
+          "nextStep": "Asia submissions",
+          "anticipated": "TBC",
+          "source": "MMV"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-5",
+          "@type": "Milestone",
+          "milestoneName": "National guideline inclusion",
+          "hasStatus": "launch:status-late",
+          "statusLabel": "Limited — TBC",
+          "dateLabel": "—",
+          "nextStep": "Committee reviews",
+          "anticipated": "TBC",
+          "source": "LAUNCH assessment (draft)"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-milestone-6",
+          "@type": "Milestone",
+          "milestoneName": "Procurement scale-up",
+          "hasStatus": "launch:status-prog",
+          "statusLabel": "Volumes TBC",
+          "dateLabel": "—",
+          "nextStep": "Global Fund / PMI data pull",
+          "anticipated": "2026"
+        }
+      ]
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "@type": "Medicine",
+      "name": "DHA–PPQ",
+      "productId": "dhappq",
+      "inn": "Dihydroartemisinin–piperaquine",
+      "manufacturerLabel": "Alfasigma (Eurartesim) · Guilin and other PQ'd suppliers",
+      "classLabel": "Recommended · underutilized",
+      "productClass": "launch:class-market",
+      "currentStage": "launch:stage-6",
+      "developmentPhase": "launch:phase-access",
+      "bottleneckFlag": "Procurement is the bottleneck — WHO-recommended since 2010 and prequalified for a decade, yet a small share of global ACT volumes",
+      "atcCode": {
+        "@type": "schema:MedicalCode",
+        "codeValue": "P01BF05",
+        "codingSystem": "ATC"
+      },
+      "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF05",
+      "hasStageEntry": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-0",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-0",
+          "hasStatus": "launch:status-done",
+          "note": "Development complete",
+          "source": "MMV",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-1",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-1",
+          "hasStatus": "launch:status-done",
+          "note": "EMA approval (Eurartesim)",
+          "dateLabel": "2011",
+          "source": "EMA register",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-2",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-2",
+          "hasStatus": "launch:status-done",
+          "note": "WHO-recommended ACT for uncomplicated malaria — added as the fifth recommended ACT in the 2010 second-edition treatment guidelines; reaffirmed 2015",
+          "dateLabel": "2010 guidelines (2nd ed.)",
+          "source": "WHO Guidelines for the treatment of malaria, 2nd ed. (2010); WHO news, 10 Dec 2010",
+          "asOf": "2026-08-23"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-3",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-3",
+          "hasStatus": "launch:status-done",
+          "note": "Eurartesim prequalified 2015, requalified Jan 2025; additional suppliers also prequalified",
+          "dateLabel": "2015; requal. 20 Jan 2025",
+          "source": "WHO PQ list",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-4",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-4",
+          "hasStatus": "launch:status-done",
+          "note": "Registered widely; adopted as first-line in several Southeast Asian countries",
+          "dateLabel": "Rolling",
+          "source": "MMV / WHO",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-5",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-5",
+          "hasStatus": "launch:status-prog",
+          "note": "First-line in several SE Asian countries; consideration in African MFT strategies growing; verified country counts pending",
+          "nextStep": "MFT strategy decisions",
+          "nextDate": "TBC",
+          "source": "LAUNCH assessment (draft)",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-6",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-6",
+          "hasStatus": "launch:status-late",
+          "note": "Small share of global ACT procurement despite decade-old recommendation and multiple PQ'd suppliers — chronic underuse; verified volume data pending",
+          "nextStep": "Global Fund PQR data pull",
+          "nextDate": "2026",
+          "source": "LAUNCH assessment (draft)",
+          "asOf": "2026-08-14"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-7",
+          "@type": "StageEntry",
+          "atStage": "launch:stage-7",
+          "hasStatus": "launch:status-prog",
+          "note": "Routine use concentrated in Southeast Asia and chemoprevention niches",
+          "source": "LAUNCH assessment (draft)",
+          "asOf": "2026-08-14"
+        }
+      ],
+      "useCase": "MFT rotation partner; mass drug administration and chemoprevention niches; once-daily dosing.",
+      "accessCommitment": [
+        "Multiple PQ'd suppliers — supply security via diversity",
+        "No single-source dependency",
+        "Established API supply chains"
+      ],
+      "adoptionRequirement": [
+        "ECG guidance for specific risk groups in some guidelines",
+        "Otherwise standard ACT case-management training"
+      ],
+      "hasPrice": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-price",
+        "@type": "Price",
+        "priceValue": "TBC",
+        "note": "Pooled procurement reference pricing to be displayed once confirmed for release",
+        "confirmedInWriting": false,
+        "asOf": "2026-08-14"
+      },
+      "hasResearch": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-research",
+        "@type": "OperationalResearch",
+        "researchLead": "Multiple academic consortia",
+        "researchGeographies": "Ghana, Mozambique, SE Asia (efficacy and MFT studies)",
+        "researchTimeline": "Ongoing",
+        "researchQuestion": "MFT rotation sequencing and resistance impact"
+      },
+      "registeredCount": "TBC",
+      "inGuidelinesCount": "TBC",
+      "inMftCount": "TBC",
+      "forecastDemand": "TBC",
+      "hasCountryMap": {
+        "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-countrymap",
+        "@type": "CountryMap",
+        "coverageStatus": "launch:coverage-illustrative",
+        "note": "Illustrative subset for design review — not actual country status. Replace with the verified country survey.",
+        "hasCountryStatus": [
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-KHM",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KHM",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-VNM",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-VNM",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-MOZ",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MOZ",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-TZA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-TZA",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-SEN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-SEN",
+            "accessLevel": "launch:level-mft"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-THA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-THA",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-MMR",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MMR",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-LAO",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-LAO",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-IDN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IDN",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-GHA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-GHA",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-ZMB",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-ZMB",
+            "accessLevel": "launch:level-guidelines"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-CHN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CHN",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-IND",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IND",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-NGA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-NGA",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-BFA",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-BFA",
+            "accessLevel": "launch:level-registered"
+          },
+          {
+            "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-country-KEN",
+            "@type": "CountryAccessStatus",
+            "country": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KEN",
+            "accessLevel": "launch:level-registered"
+          }
+        ]
+      },
+      "hasJourneyGate": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-gate-0",
+          "@type": "JourneyGate",
+          "gateLabel": "WHO guideline recommendation",
+          "gateYear": 2010
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-gate-1",
+          "@type": "JourneyGate",
+          "gateLabel": "EMA approval (Eurartesim)",
+          "gateYear": 2011
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-gate-2",
+          "@type": "JourneyGate",
+          "gateLabel": "WHO prequalification",
+          "gateYear": 2015
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-gate-3",
+          "@type": "JourneyGate",
+          "gateLabel": "Broad procurement uptake",
+          "gateYear": "TBC"
+        }
+      ],
+      "volumeNote": "Procurement volumes being compiled from Global Fund PQR and national records",
+      "hasMilestone": [
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-0",
+          "@type": "Milestone",
+          "milestoneName": "WHO guideline recommendation",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "2010 (2nd ed.; reaffirmed 2015)",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "WHO Guidelines for the treatment of malaria, 2nd ed. (2010)"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-1",
+          "@type": "Milestone",
+          "milestoneName": "SRA approval (EMA, Eurartesim)",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "2011",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "EMA register"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-2",
+          "@type": "Milestone",
+          "milestoneName": "WHO prequalification (Eurartesim)",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "9 Oct 2015",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "WHO PQ list"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-3",
+          "@type": "Milestone",
+          "milestoneName": "WHO PQ requalification",
+          "hasStatus": "launch:status-done",
+          "statusLabel": "Complete",
+          "dateLabel": "20 Jan 2025",
+          "nextStep": "—",
+          "anticipated": "—",
+          "source": "WHO PQ list"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-4",
+          "@type": "Milestone",
+          "milestoneName": "National guideline inclusion",
+          "hasStatus": "launch:status-prog",
+          "statusLabel": "Counts TBC",
+          "dateLabel": "—",
+          "nextStep": "MFT strategy decisions",
+          "anticipated": "TBC",
+          "source": "LAUNCH assessment (draft)"
+        },
+        {
+          "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-milestone-5",
+          "@type": "Milestone",
+          "milestoneName": "Procurement scale-up",
+          "hasStatus": "launch:status-late",
+          "statusLabel": "Volumes TBC",
+          "dateLabel": "—",
+          "nextStep": "Global Fund PQR data pull",
+          "anticipated": "2026",
+          "source": "LAUNCH assessment (draft)"
+        }
+      ]
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-emanators",
+      "@type": "PlaceholderProduct",
+      "name": "Spatial emanators",
+      "productId": "emanators",
+      "inn": "Vector-control prevention tool",
+      "manufacturerLabel": "SC Johnson",
+      "classLabel": "Prevention · WHO-recommended · rollout funded",
+      "placeholderNote": "Planned addition to LAUNCH tracking. WHO issued a policy recommendation for spatial repellents on 13 Aug 2025 and has prequalified two SC Johnson emanators (Guardian, Mosquito Shield); a Global Fund–US partnership announced 13 May 2026 targets rollout to 60 million people by 2028. The same pipeline view will apply, with WHO PQ/Vector Control and guideline stages adapted for prevention products."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-0",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-23",
+      "productDisplayName": "DHA–PPQ",
+      "changeText": "WHO guideline recommendation year corrected to 2010 (second-edition treatment guidelines; reaffirmed 2015) — previously shown as 2015."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-1",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-23",
+      "productDisplayName": "ALAQ",
+      "changeText": "Co-formulated pivotal Phase III renamed to FD-TACT (successor to the DeTACT programme); unverified 'taste-masked' wording replaced with the sourced 'child-friendly dispersible'."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-2",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-23",
+      "productDisplayName": "Spatial emanators",
+      "changeText": "Status refreshed: WHO policy recommendation for spatial repellents (13 Aug 2025), WHO PQ of Guardian and Mosquito Shield, and the Global Fund–US rollout partnership (13 May 2026) recorded — no longer pending funder approval."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-3",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-23",
+      "productDisplayName": "GanLum",
+      "changeText": "Use-case wording aligned with the sourced Novartis claim (first major innovation in malaria treatment since ACTs were introduced 25+ years ago)."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-4",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-15",
+      "productDisplayName": "All",
+      "changeText": "Added MMV-style pipeline poster view (pipeline.html) placing each product in its development phase."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-5",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-15",
+      "productDisplayName": "All",
+      "changeText": "Added country access map (illustrative until verified), cross-product pathway timing chart, embeddable product widget, RSS update feed and automatic data-history snapshots."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-6",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "ASPY",
+      "changeText": "Renamed from Pyramax to ASPY (pyronaridine–artesunate); trade name retained in the subtitle."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-7",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "All",
+      "changeText": "Added glossary tooltips, CSV download, print view and pathway timing (time between gates) for marketed products."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-8",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "GanLum",
+      "changeText": "Phase III (KALUMA) marked complete — primary endpoint met, announced 12 Nov 2025; regulatory submission preparation now in progress."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-9",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "ASPY",
+      "changeText": "EMA Article 58 date corrected to 2012; July 2025 pregnancy label update added to milestones."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-10",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "DHA–PPQ",
+      "changeText": "Eurartesim WHO PQ requalification (Jan 2025) recorded; unknown counts set to TBC pending verification."
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-11",
+      "@type": "ChangelogEntry",
+      "changeDate": "2026-08-14",
+      "productDisplayName": "All",
+      "changeText": "Dashboard moved from illustrative placeholders to draft public-source data. Prices and volumes shown as TBC until confirmed."
+    }
+  ]
+}
