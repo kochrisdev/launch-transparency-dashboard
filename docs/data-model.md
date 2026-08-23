@@ -197,6 +197,12 @@ flowchart LR
 
 Rules the lineage encodes:
 
+- **Upstream of this diagram sits `sourcing/`** — public-source raw snapshots
+  and staging CSVs collected on a schedule (see the
+  [data sourcing plan](data-sourcing-plan.md) and
+  [`sourcing/README.md`](../sourcing/README.md)). It feeds *analyst
+  decisions*, never the datasets directly: collected evidence enters
+  `data/products.js` only through a normal analyst edit.
 - **The validator is the only gate.** Every path starts at a dataset that
   passed it; no downstream product re-invents governance (they *display* it —
   see §7).

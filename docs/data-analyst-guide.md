@@ -33,6 +33,15 @@ charts), and `feed.xml` (the public RSS feed of updates) is rebuilt from your
 changelog entries. A GitHub issue also opens on the 1st of each month with the
 milestone-scan checklist; close it when the scan is done.
 
+**Incoming evidence arrives on its own schedule too**: the scheduled source
+fetch ([sourcing/README.md](../sourcing/README.md)) pulls ClinicalTrials.gov
+weekly and the Global Fund + WHO PQ/EMA lists monthly into `sourcing/staging/`,
+and opens a **"Trial watch" / "Regulatory watch" issue** whenever something
+changed. Treat those issues as inputs to this loop: verify the change against
+the cited source, make the corresponding `data/products.js` edit (or decide no
+change is needed), and close the issue. The staging CSVs never feed the
+dashboards directly — your edit, gated by the validator, is the only path in.
+
 ## 1b. The platforms your edit feeds
 
 One data file drives three platforms. Know what each does with your push:
@@ -169,6 +178,14 @@ Prefer, in order:
    Poong press releases. Fine for milestones; not sufficient alone for prices.
 6. **LAUNCH's own surveys/assessments** — label the source
    `"LAUNCH assessment (draft)"` until verified.
+
+Several of these are already collected for you on a schedule — WHO PQ lists,
+EMA EU-M4all opinions, ClinicalTrials.gov records, Global Fund grants and
+disbursements land in `sourcing/staging/*.csv` with per-row source URLs and
+retrieval dates (see [sourcing/README.md](../sourcing/README.md)). Start
+there; the full catalog of public sources per data category — including the
+ones that still need manual pulls — is in
+[data-sourcing-plan.md §3](data-sourcing-plan.md#3-public-source-catalog).
 
 ## 6. Data status transitions
 

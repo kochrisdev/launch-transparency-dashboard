@@ -37,6 +37,11 @@ upgrade, or break.
 | `.github/workflows/validate.yml` | CI: validator + preview build on every push/PR. |
 | `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
 | `.github/workflows/reminder.yml` | Monthly cron: opens the milestone-scan checklist issue. Also runnable manually (workflow_dispatch). |
+| `.github/workflows/sourcing.yml` | Scheduled source fetch: weekly trial watch (Mon), monthly Global Fund + regulatory pulls (3rd); bot-commits outputs under `sourcing/` only and opens watch issues on changes. Manually runnable with a fetcher picker. |
+| `sourcing/` | Public-source data collection area: append-only raw snapshots, regenerated staging CSVs, generated watch reports. Upstream of analyst edits — **never feeds the pages directly**. Self-documented in its own README; design in [docs/data-sourcing-plan.md](data-sourcing-plan.md). |
+| `scripts/fetch-trials.js` | ClinicalTrials.gov v2 fetcher: portfolio trial snapshots + staging CSV + what-changed report (status, phase, completion-date, results diffs). |
+| `scripts/fetch-globalfund.js` | Global Fund Data Service (OData v4.2) fetcher: malaria grants + disbursement transactions → grant and grant-year staging CSVs. |
+| `scripts/fetch-regulatory.js` | WHO PQ (medicines + vector control, CSV export) and EMA EU-M4all (nightly xlsx, zero-dep ZIP/xlsx reader) fetcher → `regulatory_events` staging CSV + listings watch report. |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
 | `streamlit-app/` | Parallel Python platform (analyst workbench): same data contract, flexible sources (file/URL/upload), runtime config, Plotly charts. Self-documented in its own README; `launch_data.py` is the pure-Python data layer, `app.py` the UI. Not part of the static deploy. See §11. |
 | `powerbi/` | Power BI kit: live Power Query (M) scripts against the Pages data URL, CSV exports + generator, LAUNCH report theme, DAX measures, page-by-page build guide. Self-documented in its own README. See §11. |

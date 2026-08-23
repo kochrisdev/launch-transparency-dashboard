@@ -1,8 +1,8 @@
-# Remaining tasks — stages 1–4
+# Remaining tasks
 
-Living checklist of what's left from the four build stages. Tick items off as
-they land (edit this file in the same commit as the work). Done work is listed
-at the bottom for context.
+Living checklist of what's left from the four build stages, plus the data
+sourcing workstream. Tick items off as they land (edit this file in the same
+commit as the work). Done work is listed at the bottom for context.
 
 **Legend:** 🧑‍💻 needs a developer · 📊 needs the data/analyst team · 🤝 needs an
 external party (RBM, manufacturer, funder)
@@ -27,9 +27,15 @@ Nothing remaining. ✅
   figures) and replace the corresponding TBCs.
 - [ ] 📊 **Verify country-level counts** — registrations, national guideline
   inclusion, MFT plans for ASPY and DHA–PPQ (currently TBC). *Also unblocks
-  the country map (stage 3).*
-- [ ] 📊 **Procurement volumes data pull** — Global Fund PQR and PMI records for
-  ASPY and DHA–PPQ; fill the `volume` blocks.
+  the country map (stage 3).* Starting evidence: PQ/EMA rows are already
+  staged in `sourcing/staging/regulatory_events.csv`; national registrations
+  still need the NRA registers (see the data sourcing section below).
+- [ ] 📊 **Procurement volumes data pull** — fill the `volume` blocks for ASPY
+  and DHA–PPQ. Global Fund grant/disbursement data now arrives automatically
+  (`sourcing/staging/globalfund_*.csv`); still needed: the **PQR Tableau
+  crosstab export** for product-level prices/volumes, and note that PMI data
+  is archive-only post-2025 (disclose the gap — see
+  [data-sourcing-plan.md](data-sourcing-plan.md) Category E).
 - [ ] 📊🤝 **Flip `dataStatus` to `"live"`** after sign-off (checklist in
   [data-analyst-guide.md §6](data-analyst-guide.md#6-data-status-transitions))
   and decide whether the prototype badge comes off in the same commit.
@@ -52,6 +58,11 @@ Nothing remaining. ✅
   ([data-analyst-guide.md §4](data-analyst-guide.md#4-data-dictionary)) and
   decide prevention-specific stage names
   ([developer-guide.md §9](developer-guide.md#9-extension-notes)).
+  *Evidence check (2026-08-22, regulatory watch): two SC Johnson spatial
+  emanators — Guardian and Mosquito Shield — were WHO PQ-listed on
+  2025-08-13 (`sourcing/staging/regulatory_events.csv`), so a real pathway
+  gate has already been passed; worth raising the activation decision with
+  the funder/LAUNCH team.*
 
 ## Stage 4 — Hosting and handover
 
@@ -70,6 +81,27 @@ Nothing remaining. ✅
   draft data and the bottleneck framing.
 - [ ] 📊 **Update the header note** — change "To be hosted by…" back to
   "Hosted by…" when RBM hosting goes live.
+
+## Data sourcing — next steps
+
+Collection infrastructure per [data-sourcing-plan.md](data-sourcing-plan.md);
+three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.md)).
+
+- [ ] 📊 **First PQR Tableau crosstab export** — download the Transaction
+  Summary crosstab from the public PQR workbook, add a small normalizer to
+  `sourcing/staging/procurement_transactions.csv`. Closes the stage-2
+  procurement item's remaining gap.
+- [ ] 🧑‍💻 **NAFDAC Greenbook scraper (Nigeria-first)** — country-registration
+  rows for the four products; proves the NRA pattern before widening to other
+  portfolio countries (plan §3 Category C).
+- [ ] 🧑‍💻 **MAGICapp version poll** — one GET against the guidelines API,
+  compare `publishDate`, alert on change; cheap add to `sourcing.yml`.
+- [ ] 📊 **WMR annex ingest (due December)** — policy 4A/4B, commodities 4G,
+  funding 4F, burden 4H–4L when the World Malaria Report 2026 lands.
+- [ ] 📊 **Act on watch issues** — "Trial watch" / "Regulatory watch" issues
+  are inputs to the stage-2 verification work; the first regulatory snapshot
+  already carries fresher dates than parts of the draft data (e.g. Pyramax's
+  EMA outcome update 2025-06-05, DHA–PPQ's nine PQ'd presentations).
 
 ---
 
@@ -117,6 +149,13 @@ Nothing remaining. ✅
   report theme, DAX measures (incl. governance banner and map verification
   warning), and a page-by-page build guide mirroring the five web views.
   Assembly in Power BI Desktop is manual by design (~1 hour; guide included).
+- **Data sourcing layer (Aug 2026)** — `docs/data-sourcing-plan.md` (8 data
+  categories mapped to the pathway, verified public-source catalog, dataset
+  designs, cadence, licensing); `sourcing/` collection area; three fetchers
+  (`fetch-trials.js`, `fetch-globalfund.js`, `fetch-regulatory.js`) with
+  first snapshots staged (250 trials; 382 grants / 37k disbursement
+  transactions; 215 regulatory events); `sourcing.yml` schedules them
+  (weekly/monthly) and opens watch issues on changes.
 - **Streamlit platform (Aug 2026)** — `streamlit-app/`: parallel Python
   implementation (journey board, matrix heatmap, choropleth map, timing
   timeline, pipeline poster, exports) with flexible data input (bundled
