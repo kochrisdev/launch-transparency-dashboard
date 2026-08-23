@@ -176,7 +176,7 @@ per-product stage names as a future need.
   them ends the dashboard's credibility; an honest gap doesn't.
 - **A red light must carry a dated reason** because "delayed" is an accusation
   in this domain — WHO committees, regulators and companies will read it. The
-  validator makes an unsubstantiated accusation structurally impossible.
+  validator refuses a red light that lacks one.
 - **The map's verified-only rule** exists because a colored country reads as a
   fact ("registered in Nigeria") in a way a TBC count never does.
 

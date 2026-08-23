@@ -109,6 +109,10 @@ Below the board:
 - **Print / save as PDF** — all profiles open automatically for a complete printout.
 - **Subscribe to updates** — an RSS feed of every change:
   https://kochrisdev.github.io/launch-transparency-dashboard/feed.xml
+- **Machine-readable data** — for technical integrators, the full dataset is
+  also published as linked data (JSON-LD) at
+  https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld,
+  with the formal vocabulary documented in the repository's ontology guide.
 - **Embed a product tracker** on your own site — a one-row live widget per
   medicine; ask the LAUNCH team for the snippet (or see the repository README).
 
@@ -120,7 +124,7 @@ Three signals, in order:
    *Draft data* = compiled from public sources, pending verification. No banner =
    verified, live data.
 2. **TBC** means the LAUNCH team does not yet have a verifiable figure. The
-   dashboard never estimates: an honest gap beats an invented number.
+   dashboard never estimates: an honest gap is better than an invented number.
 3. **Provenance lines** under figures name the public source, whether the
    manufacturer confirmed release in writing, and the date last verified.
 

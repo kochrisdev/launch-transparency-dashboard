@@ -28,7 +28,7 @@ goes one level deeper; read to your depth and stop when you have what you need.
 medicine is stuck — so LAUNCH built a public dashboard that shows every medicine,
 every gate it must pass, and every bottleneck, with a dated reason on each delay.
 
-### The problem: approval is not access
+### The problem: approval does not mean access
 
 Malaria still kills on the order of half a million people a year, and progress has
 stalled since 2015. New medicines exist, or are close — yet historically it has
@@ -38,15 +38,15 @@ project's own documentation: pyrethroid-PBO bednets took **eight years** just to
 move from an interim to a full WHO recommendation — eight years inside a single
 gate, after the science was settled.
 
-The clock now matters more than ever. **Artemisinin partial resistance** — malaria
+Timing now matters more than ever. **Artemisinin partial resistance** — malaria
 parasites responding more slowly to the core drug class behind nearly all modern
 treatment — has emerged in Southeast Asia and is confirmed in parts of East Africa.
 Medicines that work against resistant parasites are in the pipeline, but a
 decade-long adoption lag could arrive too late.
 
-### The diagnosis: a coordination failure
+### Where it breaks down: coordination
 
-The delay is largely a *visibility* problem, not a science problem. A medicine's
+Much of the delay comes down to visibility rather than science. A medicine's
 journey runs through many independent institutions — WHO, regulators, funders,
 manufacturers, health ministries — each waiting on signals from the others. Nobody
 can see the whole board, so delays are discovered years after they begin.
@@ -58,7 +58,7 @@ written reason on each delay — partners can act on delays instead of discoveri
 them later. The dashboard is that board. It will be hosted by the **RBM Partnership
 to End Malaria**, with technical oversight from the LAUNCH AMDR Core Advisory Group.
 
-### Three ideas that carry everything else
+### Three ideas to keep in mind
 
 1. **"Approved" is not one fact — it is at least three.** WHO *recommends* a
    medicine, WHO separately *prequalifies* its quality, and each country
@@ -66,12 +66,12 @@ to End Malaria**, with technical oversight from the LAUNCH AMDR Core Advisory Gr
    different calendars. Then a ministry must write it into national guidelines, a
    funder must buy it, and a supply chain must deliver it. Any gate can stall for
    years while all the others show green.
-2. **The dashboard is read by the institutions it measures.** WHO committees,
+2. **The dashboard's readers are the institutions it measures.** WHO committees,
    funders, and manufacturers all see their own gates on the board. Every
    governance decision follows from that: a red light is an accusation in this
-   domain, so the system makes an unsubstantiated accusation structurally
-   impossible.
-3. **Credibility comes from refusing to guess.** Where a figure is unverified, the
+   domain, so the system refuses to show one without written evidence behind
+   it.
+3. **Credibility depends on not guessing.** Where a figure is unverified, the
    dashboard shows `TBC` ("to be confirmed") rather than an estimate. Every
    displayed number carries its public source and the date it was last verified.
    One invented number, discovered by the institutions being measured, would end
@@ -125,7 +125,7 @@ product can pass all of them and still reach no one if a ministry never adopts i
 | --- | --- |
 | 🟢 ✓ Complete | This gate has been passed (with a cited source). |
 | 🟡 › In progress | Actively moving at a normal pace. |
-| 🔴 ! Delayed | Stuck or slipped — a one-sentence, dated reason under the row says why. A red light can **never** appear without a written reason; the data validator makes that structurally impossible. |
+| 🔴 ! Delayed | Stuck or slipped — a one-sentence, dated reason under the row says why. A red light can **never** appear without a written reason; the data validator enforces that. |
 | ⚪ Not started | Not yet reached (dashed outline). |
 
 A halo ring marks the medicine's **current position**. Elapsed time between gates
@@ -209,7 +209,7 @@ Two rules worth knowing the reasoning behind:
 | Ministries of health | Country access status, adoption requirements, peer-country status on the map. |
 | Implementing partners | Operational research and the delivery stage. |
 | Manufacturers | Their product's position; confirm or correct the price field. |
-| Republishers | Everything shown is public — export CSV and cite; or embed the per-medicine widget. |
+| Republishers | Everything shown is public — export CSV and cite; embed the per-medicine widget; or consume the machine-readable linked-data export (`ontology/launch-data.jsonld`). |
 
 **Cadence:** milestones monthly (and within days of major events); procurement and
 country data quarterly. Errors → LAUNCH team (via RBM once hosted) or a GitHub
@@ -221,8 +221,8 @@ issue; corrections are logged in Recent updates.
 
 **In one sentence:** robots collect evidence from public sources into a staging
 area, a human analyst decides what becomes dashboard data, and an automated
-validator — the only gate — makes it structurally impossible for the board to show
-an unsourced price, an unexplained delay, or a silently lying traffic light.
+validator — the only gate — stops the board from ever showing an unsourced price,
+an unexplained delay, or a silently lying traffic light.
 
 ```mermaid
 flowchart LR
@@ -234,13 +234,13 @@ flowchart LR
   AN -->|"the only writes are human"| DATA["data/products.js"]
   DATA -->|"must pass"| VAL{{"validate-data.js<br/>the only gate"}}
   VAL --> SITE["GitHub Pages site<br/>+ 3 editions"]
-  VAL --> HIST["history/ + feed.xml<br/>(bot on data change)"]
+  VAL --> HIST["history/ + feed.xml +<br/>linked-data export<br/>(bot on data change)"]
   VAL --> BRIEF["quarterly briefs"]
   VAL --> ST["Streamlit app"]
   VAL --> PBI["Power BI kit"]
 ```
 
-Bots collect and propose. Humans decide. The validator guards. Everything
+Bots collect and propose, an analyst decides, and the validator checks. Everything
 downstream just displays.
 
 ### One file, one gate
@@ -262,11 +262,11 @@ silently."*
 
 | Rule | Plain meaning |
 | --- | --- |
-| Red needs a reason | A delayed stage must carry a substantive written note **and** the product a top-level bottleneck sentence. |
-| Prices are earned | A displayed price requires written confirmation **or** a public source; otherwise `TBC`. |
+| Red flags need a reason | A delayed stage must carry a substantive written note **and** the product a top-level bottleneck sentence. |
+| Prices need confirmation | A displayed price requires written confirmation **or** a public source; otherwise `TBC`. |
 | No invented counts | Country counts are real non-negative integers or `TBC` — "an invented number is worse than an admitted gap." |
 | Volumes must add up | Channel splits sum to 100%; a missing volume needs a written explanation. |
-| Structure is sacred | Exactly 8 stage entries per product, valid statuses and dates, unique permanent IDs, chronological journey gates, one map entry per country. |
+| Structure is fixed | Exactly 8 stage entries per product, valid statuses and dates, unique permanent IDs, chronological journey gates, one map entry per country. |
 | Definitions are real | Glossary definitions are actual sentences; completed milestones should cite a source. |
 
 Summary stats (medicines tracked, active bottlenecks) are **computed from the data
@@ -278,7 +278,7 @@ at render time** — they can never disagree with the board.
 2. Run `node scripts/validate-data.js` — not optional.
 3. Add a changelog entry; bump `meta.lastUpdated`.
 4. Commit and push — live in ~2 minutes.
-5. Automation does the rest: a dated snapshot lands in `history/`, and `feed.xml` is rebuilt.
+5. Automation does the rest: a dated snapshot lands in `history/`, `feed.xml` is rebuilt, and the linked-data export (`ontology/launch-data.jsonld`) is regenerated.
 
 A quarterly script (`scripts/make-brief.js`) generates a **"what changed" brief** —
 stage movements vs history, logged updates, bottlenecks, and every remaining `TBC`
@@ -296,7 +296,7 @@ the milestone-scan checklist.
 
 Three rules keep this layer honest: raw snapshots are dated and append-only;
 staging files are regenerated by script, never hand-edited; every staging row
-carries its source URL and retrieval date. And the cardinal rule: **nothing in
+carries its source URL and retrieval date. And the one hard rule: **nothing in
 `sourcing/` feeds the dashboards directly** — an analyst's sourced edit, checked by
 the validator, is the only path in.
 
@@ -312,8 +312,8 @@ draft until verified.
 
 ## Part 5 · How it is built
 
-**In one sentence:** a deliberately static, zero-build, zero-backend site — plain
-HTML pages rendering one strict-JSON data file with vanilla JavaScript, deployed by
+**In one sentence:** a static site with no build step and no backend, on purpose —
+plain HTML pages rendering one strict-JSON data file with vanilla JavaScript, deployed by
 GitHub Pages on every push, with all automation living in four GitHub Actions
 workflows.
 
@@ -353,8 +353,8 @@ build output — editions, map geometry, history, feeds, briefs, CSV exports:
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
 | `validate.yml` | Every push and PR | Validates all three datasets and builds the single-file preview as a smoke test. The quality gate. |
-| `publish.yml` | Push to main touching `data/products.js` only | Validates, appends a dated `history/` snapshot (append-only — refuses to overwrite same-day with different content), rebuilds `feed.xml`, bot-commits. Its own commit can't retrigger it. |
-| `reminder.yml` | 1st of each month | Opens the milestone-scan checklist issue. Deliberately a reminder, not a scraper — most watched sources are CMS pages where hash-watching would cry wolf. |
+| `publish.yml` | Push to main touching `data/products.js` only | Validates, appends a dated `history/` snapshot (append-only — refuses to overwrite same-day with different content), rebuilds `feed.xml` and the `ontology/launch-data.jsonld` linked-data export, bot-commits. Its own commit can't retrigger it. |
+| `reminder.yml` | 1st of each month | Opens the milestone-scan checklist issue. Kept as a reminder rather than a scraper — most watched sources are CMS pages where hash-watching would cry wolf. |
 | `sourcing.yml` | Mondays (trials); 3rd of month (Global Fund + regulatory); on demand | Runs the fetchers, commits only under `sourcing/` (ignored by `publish.yml`'s path filter, so a fetch can never trigger a dashboard change), opens watch issues on changes. |
 
 GitHub Pages deploys the repo root on every push to main — live in 1–2 minutes.
@@ -365,14 +365,17 @@ signal.
 
 - **Streamlit app** (`streamlit-app/`) — a Python twin of all views, used as the analyst workbench: accepts the bundled file, a URL, or a dragged-in draft, and shows live governance-check results — preview and validate a data update *before* committing. Adds runtime configuration the static site can't: product filters, adjustable timing thresholds, a hide-unverified-map toggle.
 - **Power BI kit** (`powerbi/`) — a kit, not a binary: Power Query scripts loading eight relational tables live from the published site, offline CSVs of the same shape, a theme, DAX measures (the data-status banner and unverified-map warning travel into Power BI too), and a page-by-page build guide.
+- **Semantic layer** (`ontology/`) — the project's data model expressed as a formal OWL/SKOS ontology, and the dataset published as linked data (JSON-LD) with alignments to schema.org, WHO ATC drug codes and ISO country codes — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, TBC) travel into the graph as first-class properties. Regenerated automatically by CI on every data change; see the [ontology guide](ontology.md).
 
 ### Handover
 
 Three options for RBM, all cheap because the site is static files: copy the file
 set to any path on their site; keep the Pages deployment (or a fork under an RBM
 org) and embed via iframe; or transfer the repository — history and CI move, only
-the URL changes (update the `SITE` constant in `scripts/make-feed.js`, `DataUrl`
-in `powerbi/queries.m`, and partner embed snippets).
+the URL changes (update the `SITE` constants in `scripts/make-feed.js` and
+`scripts/build-ontology.js`, the ontology namespace prefixes in
+`ontology/launch.ttl` and `ontology/context.jsonld`, `DataUrl` in
+`powerbi/queries.m`, and partner embed snippets).
 
 ---
 
@@ -415,6 +418,7 @@ in `powerbi/queries.m`, and partner embed snippets).
 
 *Synthesized from the project's own documentation ([user guide](user-guide.md),
 [domain primer](domain-primer.md), [data-analyst guide](data-analyst-guide.md),
-[data model & lineage](data-model.md), [data sourcing plan](data-sourcing-plan.md),
+[data model & lineage](data-model.md), [ontology & linked data](ontology.md),
+[data sourcing plan](data-sourcing-plan.md),
 [developer guide](developer-guide.md), [checklist](checklist.md)). Compiled
 2026-08-23; data status at compile time: draft.*

@@ -206,19 +206,19 @@
     <p>New malaria medicines take 10–15 years to travel from "approved" to actually reaching patients, largely because no one can see where each medicine is stuck — so LAUNCH built a public dashboard that shows every medicine, every gate it must pass, and every bottleneck, with a dated reason on each delay.</p>
   </div>
 
-  <h3>The problem: approval is not access</h3>
+  <h3>The problem: approval does not mean access</h3>
   <p>Malaria still kills on the order of half a million people a year, and progress has stalled since 2015. New medicines exist, or are close — yet historically it has taken <strong>10 to 15 years or more</strong> for a malaria product to move from regulatory approval to routine use in the countries that need it. One worked example from this project's own documentation: pyrethroid-PBO bednets took <strong>eight years</strong> just to move from an interim to a full WHO recommendation — eight years spent inside a single gate, after the science was settled.</p>
-  <p>The clock now matters more than ever. <strong>Artemisinin partial resistance</strong> — malaria parasites responding more slowly to the core drug class behind nearly all modern treatment — has emerged in Southeast Asia and is confirmed in parts of East Africa. Medicines that work against resistant parasites are in the pipeline, but a decade-long lag in adoption could arrive too late.</p>
+  <p>Timing now matters more than ever. <strong>Artemisinin partial resistance</strong> — malaria parasites responding more slowly to the core drug class behind nearly all modern treatment — has emerged in Southeast Asia and is confirmed in parts of East Africa. Medicines that work against resistant parasites are in the pipeline, but a decade-long lag in adoption could arrive too late.</p>
 
-  <h3>The diagnosis: a coordination failure</h3>
-  <p>The delay is largely a <em>visibility</em> problem, not a science problem. A medicine's journey to patients runs through many independent institutions — the WHO, regulators, funders, manufacturers, and health ministries — each waiting on signals from the others. Nobody can see the whole board, so delays are discovered years after they begin.</p>
+  <h3>Where it breaks down: coordination</h3>
+  <p>Much of the delay comes down to visibility rather than science. A medicine's journey to patients runs through many independent institutions — the WHO, regulators, funders, manufacturers, and health ministries — each waiting on signals from the others. Nobody can see the whole board, so delays are discovered years after they begin.</p>
   <p><strong>LAUNCH</strong> (the Launch Transparency Initiative for new malaria tools, funded by Unitaid) is a bet that making the whole board visible changes behavior: if every actor can see every product, every gate, and every bottleneck — with a dated, written reason on each delay — partners can act on delays instead of discovering them later. The dashboard is that board. It will be hosted by the <strong>RBM Partnership to End Malaria</strong>, the global coordination platform for malaria, with technical oversight from the LAUNCH AMDR Core Advisory Group.</p>
 
-  <h3>Three ideas that carry everything else</h3>
+  <h3>Three ideas to keep in mind</h3>
   <ol>
     <li><strong>"Approved" is not one fact — it is at least three.</strong> The WHO <em>recommends</em> a medicine, the WHO separately <em>prequalifies</em> its quality, and each country <em>registers</em> it — three independent decisions by three different bodies on three different calendars. Then a ministry must write it into national guidelines, a funder must buy it, and a supply chain must deliver it. Any of these gates can stall for years while all the others show green.</li>
-    <li><strong>The dashboard is read by the institutions it measures.</strong> WHO committees, funders, and manufacturers all see their own gates on the board. Every design and governance decision follows from that: a red light is an accusation in this domain, so the system makes an unsubstantiated accusation structurally impossible.</li>
-    <li><strong>Credibility comes from refusing to guess.</strong> Where a figure is unverified, the dashboard shows <code>TBC</code> ("to be confirmed") rather than an estimate. Every displayed number carries its public source and the date it was last verified. One invented number, discovered by the institutions being measured, would end the dashboard's credibility; an honest gap does not.</li>
+    <li><strong>The dashboard's readers are the institutions it measures.</strong> WHO committees, funders, and manufacturers all see their own gates on the board. Every design and governance decision follows from that: a red light is an accusation in this domain, so the system refuses to show one without written evidence behind it.</li>
+    <li><strong>Credibility depends on not guessing.</strong> Where a figure is unverified, the dashboard shows <code>TBC</code> ("to be confirmed") rather than an estimate. Every displayed number carries its public source and the date it was last verified. One invented number, discovered by the institutions being measured, would end the dashboard's credibility; an honest gap does not.</li>
   </ol>
 
   <div class="keyfacts">
@@ -376,7 +376,7 @@
     <tbody>
       <tr><td><span class="chip good"><span class="dot"></span>✓ Complete</span></td><td>This gate has been passed (with a cited source).</td></tr>
       <tr><td><span class="chip warn"><span class="dot"></span>› In progress</span></td><td>Actively moving at a normal pace.</td></tr>
-      <tr><td><span class="chip crit"><span class="dot"></span>! Delayed</span></td><td>Stuck or slipped — a one-sentence, dated reason under the row says why. A red light can <em>never</em> appear without a written reason; the data validator makes that structurally impossible.</td></tr>
+      <tr><td><span class="chip crit"><span class="dot"></span>! Delayed</span></td><td>Stuck or slipped — a one-sentence, dated reason under the row says why. A red light can <em>never</em> appear without a written reason; the data validator enforces that.</td></tr>
       <tr><td><span class="chip idle"><span class="dot"></span>Not started</span></td><td>Not yet reached (dashed outline).</td></tr>
     </tbody>
   </table></div>
@@ -461,7 +461,7 @@
   <h3>The three trust signals</h3>
   <ol>
     <li><strong>The banner under the title.</strong> <em>Design mockup</em> = placeholder layout data. <em>Draft data</em> = compiled from public sources, pending verification. <em>No banner</em> = verified, live data. (The whole board is currently in <em>draft</em>.)</li>
-    <li><strong><code>TBC</code>.</strong> The LAUNCH team does not yet have a verifiable figure. The dashboard never estimates: an honest gap beats an invented number. Most visible on price.</li>
+    <li><strong><code>TBC</code>.</strong> The LAUNCH team does not yet have a verifiable figure. The dashboard never estimates: an honest gap is better than an invented number. Most visible on price.</li>
     <li><strong>Provenance lines under figures</strong> — the public source, whether the manufacturer confirmed release in writing, and the date last verified.</li>
   </ol>
   <p>Two rules worth knowing the reasoning behind:</p>
@@ -490,7 +490,7 @@
   <p class="depth">For analysts and anyone who needs to trust (or maintain) the data.</p>
 
   <div class="tldr"><span class="k">In one sentence</span>
-    <p>Robots collect evidence from public sources into a staging area, a human analyst decides what becomes dashboard data, and an automated validator — the only gate — makes it structurally impossible for the board to show an unsourced price, an unexplained delay, or a silently lying traffic light.</p>
+    <p>Robots collect evidence from public sources into a staging area, a human analyst decides what becomes dashboard data, and an automated validator — the only gate — stops the board from ever showing an unsourced price, an unexplained delay, or a silently lying traffic light.</p>
   </div>
 
   <h3>One file, one gate</h3>
@@ -508,11 +508,11 @@
   <div class="tablewrap"><table>
     <thead><tr><th>Rule</th><th>Plain meaning</th></tr></thead>
     <tbody>
-      <tr><td>Red needs a reason</td><td>A delayed stage must carry a substantive written note, <em>and</em> the product must carry a top-level bottleneck sentence. An unsubstantiated accusation is structurally impossible.</td></tr>
-      <tr><td>Prices are earned</td><td>A displayed price requires written manufacturer confirmation <em>or</em> a public source. Otherwise it must read <code>TBC</code>.</td></tr>
+      <tr><td>Red flags need a reason</td><td>A delayed stage must carry a substantive written note, <em>and</em> the product must carry a top-level bottleneck sentence. An unsupported accusation cannot get through.</td></tr>
+      <tr><td>Prices need confirmation</td><td>A displayed price requires written manufacturer confirmation <em>or</em> a public source. Otherwise it must read <code>TBC</code>.</td></tr>
       <tr><td>No invented counts</td><td>Country counts must be real non-negative integers or <code>TBC</code> — "an invented number is worse than an admitted gap."</td></tr>
       <tr><td>Volumes must add up</td><td>Procurement channel splits must sum to 100%; a missing volume needs a written explanation of why.</td></tr>
-      <tr><td>Structure is sacred</td><td>Exactly 8 stage entries per product, valid status values, valid dates, unique permanent product IDs, chronological journey gates, one map entry per country.</td></tr>
+      <tr><td>Structure is fixed</td><td>Exactly 8 stage entries per product, valid status values, valid dates, unique permanent product IDs, chronological journey gates, one map entry per country.</td></tr>
       <tr><td>Definitions are real</td><td>Glossary definitions must be actual sentences; milestone completions should cite a source (warned if not).</td></tr>
     </tbody>
   </table></div>
@@ -524,12 +524,12 @@
     <li>Run the validator — not optional.</li>
     <li>Add a changelog entry and bump the "last updated" date.</li>
     <li>Commit and push — the live site updates within about two minutes.</li>
-    <li>Automation does the rest: a dated snapshot of the data file is committed to <span class="pathfile">history/</span> (the raw material for future trend charts), and the RSS feed is rebuilt.</li>
+    <li>Automation does the rest: a dated snapshot of the data file is committed to <span class="pathfile">history/</span> (the raw material for future trend charts), the RSS feed is rebuilt, and the machine-readable linked-data export (<span class="pathfile">ontology/launch-data.jsonld</span>) is regenerated.</li>
   </ol>
   <p>A quarterly script also generates a <strong>"what changed" brief</strong> — stage movements versus the history snapshots, logged updates, active bottlenecks, and every remaining <code>TBC</code> gap as the verification to-do list. A GitHub issue opens automatically on the 1st of each month with the milestone-scan checklist.</p>
 
   <figure>
-    <svg role="img" viewBox="0 0 980 520" aria-label="Data flow: public sources feed automated fetchers and one manual download into the sourcing staging area; watch reports open review issues; a human analyst makes the only writes to the data file; the validator is the only gate; from the data file flow the website, editions, history snapshots, RSS feed, briefs, Streamlit app and Power BI kit.">
+    <svg role="img" viewBox="0 0 980 520" aria-label="Data flow: public sources feed automated fetchers and one manual download into the sourcing staging area; watch reports open review issues; a human analyst makes the only writes to the data file; the validator is the only gate; from the data file flow the website, editions, history snapshots, RSS feed, linked-data export, briefs, Streamlit app and Power BI kit.">
       <defs>
         <marker id="arr2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
           <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
@@ -638,6 +638,9 @@
           <rect x="750" y="312" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
           <text x="850" y="331" text-anchor="middle" font-weight="600">Power BI kit</text>
           <text x="850" y="346" text-anchor="middle" opacity="0.7">refreshes from the live site</text>
+          <rect x="750" y="374" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="850" y="393" text-anchor="middle" font-weight="600">Linked-data export</text>
+          <text x="850" y="408" text-anchor="middle" opacity="0.7">ontology/ · JSON-LD, bot-rebuilt</text>
         </g>
         <g stroke="currentColor" stroke-width="1.3" fill="none">
           <line x1="650" y1="245" x2="748" y2="90"  marker-end="url(#arr2)"/>
@@ -645,10 +648,11 @@
           <line x1="650" y1="265" x2="748" y2="211" marker-end="url(#arr2)"/>
           <line x1="650" y1="275" x2="748" y2="273" marker-end="url(#arr2)"/>
           <line x1="650" y1="285" x2="748" y2="330" marker-end="url(#arr2)"/>
+          <line x1="650" y1="295" x2="748" y2="392" marker-end="url(#arr2)"/>
         </g>
         <text x="662" y="238" font-size="10" fill="currentColor" opacity="0.75">push → live in ~2 min</text>
         <!-- footnote inside diagram -->
-        <text x="20" y="420" font-size="11" fill="currentColor" opacity="0.75">Bots collect and propose. Humans decide. The validator guards. Everything downstream just displays.</text>
+        <text x="20" y="420" font-size="11" fill="currentColor" opacity="0.75">Bots collect and propose, an analyst decides, and the validator checks. Everything downstream just displays.</text>
         <g font-size="10.5" fill="currentColor" opacity="0.75">
           <text x="20" y="450">Cadence:  trials — weekly (Mon) · Global Fund + WHO PQ/EMA — monthly (3rd) · PQR crosstab — quarterly, manual ·</text>
           <text x="20" y="466">monthly reminder issue for everything a bot can't watch reliably</text>
@@ -681,7 +685,7 @@
   <p class="depth">For developers and technical reviewers.</p>
 
   <div class="tldr"><span class="k">In one sentence</span>
-    <p>A deliberately static, zero-build, zero-backend site — plain HTML pages rendering one strict-JSON data file with vanilla JavaScript, deployed by GitHub Pages on every push, with all automation (validation, snapshots, feeds, scheduled fetches) living in four GitHub Actions workflows.</p>
+    <p>A static site with no build step and no backend, on purpose — plain HTML pages rendering one strict-JSON data file with vanilla JavaScript, deployed by GitHub Pages on every push, with all automation (validation, snapshots, feeds, scheduled fetches) living in four GitHub Actions workflows.</p>
   </div>
 
   <h3>Why so deliberately simple</h3>
@@ -699,8 +703,8 @@
     <thead><tr><th>Workflow</th><th>Trigger</th><th>What it does</th></tr></thead>
     <tbody>
       <tr><td>Validate</td><td>Every push and pull request</td><td>Runs the validator against all three datasets (real, v2, synthetic) and builds the single-file preview as a smoke test. The quality gate.</td></tr>
-      <tr><td>Snapshot &amp; feed</td><td>Push to main touching <span class="pathfile">data/products.js</span> only</td><td>Validates, copies the data file to a dated <span class="pathfile">history/</span> snapshot (append-only — refuses to overwrite a same-day snapshot with different content), rebuilds <span class="pathfile">feed.xml</span>, and bot-commits. Its own commit can't retrigger it.</td></tr>
-      <tr><td>Monthly reminder</td><td>1st of each month</td><td>Opens a GitHub issue with the milestone-scan checklist. Deliberately a reminder, not a scraper — most watched sources are CMS pages that change cosmetically, and hash-watching them would cry wolf; only stable-API sources are automated.</td></tr>
+      <tr><td>Snapshot &amp; feed</td><td>Push to main touching <span class="pathfile">data/products.js</span> only</td><td>Validates, copies the data file to a dated <span class="pathfile">history/</span> snapshot (append-only — refuses to overwrite a same-day snapshot with different content), rebuilds <span class="pathfile">feed.xml</span> and the <span class="pathfile">ontology/launch-data.jsonld</span> linked-data export, and bot-commits. Its own commit can't retrigger it.</td></tr>
+      <tr><td>Monthly reminder</td><td>1st of each month</td><td>Opens a GitHub issue with the milestone-scan checklist. Kept as a reminder rather than a scraper — most watched sources are CMS pages that change cosmetically, and hash-watching them would cry wolf; only stable-API sources are automated.</td></tr>
       <tr><td>Scheduled source fetch</td><td>Mondays (trials); 3rd of month (Global Fund + regulatory); on demand</td><td>Runs the fetchers, commits only under <span class="pathfile">sourcing/</span> (which the snapshot workflow ignores, so a fetch can never trigger a dashboard change), and opens a watch issue when a report contains changes.</td></tr>
     </tbody>
   </table></div>
@@ -710,6 +714,7 @@
   <ul>
     <li><strong>Streamlit app</strong> (<span class="pathfile">streamlit-app/</span>) — a Python twin of all views, used as the analyst workbench: it accepts the bundled file, a URL, or a dragged-in draft data file, and shows live governance-check results — so an analyst can preview and validate a data update <em>before</em> committing it. Also offers runtime configuration the static site can't: product filters, adjustable timing thresholds, and a "hide unverified map" toggle.</li>
     <li><strong>Power BI kit</strong> (<span class="pathfile">powerbi/</span>) — not a binary report but a kit: Power Query scripts that load eight relational tables live from the published site (so reports refresh with the data), offline CSV exports of the same shape, a theme, DAX measures (including ones that carry the governance rules — the data-status banner and the unverified-map warning travel into Power BI too), and a page-by-page build guide.</li>
+    <li><strong>Semantic layer</strong> (<span class="pathfile">ontology/</span>) — the project's data model expressed as a formal ontology (OWL/SKOS), and the dataset published as linked data (JSON-LD) aligned to schema.org, WHO ATC drug codes and ISO country codes — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, <code>TBC</code>) travel into the graph as first-class properties, and CI regenerates the export on every data change.</li>
   </ul>
 
   <h3>Handover</h3>
@@ -762,7 +767,7 @@
 
 <footer class="colophon">
   <div class="wrap">
-    <p><strong>About this document.</strong> Synthesized from the project's own documentation (user guide, domain primer, data-analyst guide, data model &amp; lineage, data-sourcing plan, developer guide, remaining-tasks checklist) and repository at <span class="pathfile">github.com/kochrisdev/launch-transparency-dashboard</span> · live site: <span class="pathfile">kochrisdev.github.io/launch-transparency-dashboard</span>.</p>
+    <p><strong>About this document.</strong> Synthesized from the project's own documentation (user guide, domain primer, data-analyst guide, data model &amp; lineage, ontology &amp; linked data, data-sourcing plan, developer guide, remaining-tasks checklist) and repository at <span class="pathfile">github.com/kochrisdev/launch-transparency-dashboard</span> · live site: <span class="pathfile">kochrisdev.github.io/launch-transparency-dashboard</span>.</p>
     <p>Where this document and the data file disagree, the data file wins. Compiled 2026-08-23. Data status at compile time: <strong>draft</strong>.</p>
   </div>
 </footer>

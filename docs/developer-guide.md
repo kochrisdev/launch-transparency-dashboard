@@ -9,10 +9,10 @@
 
 ## 1. Architecture in one paragraph
 
-A deliberately **static, zero-build, zero-backend** site: one HTML file renders
+A **static** site with no build step and no backend, on purpose: one HTML file renders
 one data file in the browser. There is no framework, no bundler, no package.json
 — the repo root is served as-is (GitHub Pages today; any static host later).
-This is a feature, not an omission: the dataset is tiny (a handful of products ×
+That is deliberate: the dataset is tiny (a handful of products ×
 ~10 metrics), the maintainers are analysts rather than developers, and the
 18-month initiative will be handed over — so there is nothing to install,
 upgrade, or break.
@@ -33,9 +33,11 @@ upgrade, or break.
 | `scripts/validate-data.js` | Node validator: strict-JSON extraction + governance rules. Exit 1 on error. |
 | `scripts/make-preview.js` | Inlines the data **and map** files into `preview.html` (single-file build of option A for email/artifact sharing). Optional; never required to deploy. |
 | `scripts/make-feed.js` | Regenerates `feed.xml` from the changelog. Run by CI; safe by hand. |
+| `ontology/` | Semantic layer: `launch.ttl` (hand-authored OWL/SKOS ontology) and `context.jsonld` (JSON-LD context) are source; `launch-data.jsonld` is the **generated** linked-data projection of the dataset, bot-rebuilt by `publish.yml`. See [docs/ontology.md](ontology.md). |
+| `scripts/build-ontology.js` | Regenerates `ontology/launch-data.jsonld` from the data contract. Run by CI on data changes; run by hand after schema-layer edits. |
 | `scripts/build-map.js` | One-off map-geometry generator (dev-only deps documented in its header). |
 | `.github/workflows/validate.yml` | CI: validator + preview build on every push/PR. |
-| `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
+| `.github/workflows/publish.yml` | On `data/products.js` changes: validates, snapshots to `history/`, rebuilds `feed.xml` and `ontology/launch-data.jsonld`, bot-commits. Path-filtered so its own commit cannot retrigger it. |
 | `.github/workflows/reminder.yml` | Monthly cron: opens the milestone-scan checklist issue. Also runnable manually (workflow_dispatch). |
 | `.github/workflows/sourcing.yml` | Scheduled source fetch: weekly trial watch (Mon), monthly Global Fund + regulatory pulls (3rd); bot-commits outputs under `sourcing/` only and opens watch issues on changes. Manually runnable with a fetcher picker. |
 | `sourcing/` | Public-source data collection area: append-only raw snapshots, regenerated staging CSVs, generated watch reports. Upstream of analyst edits — **never feeds the pages directly**. Self-documented in its own README; design in [docs/data-sourcing-plan.md](data-sourcing-plan.md). |
@@ -311,8 +313,13 @@ in this order:
    `app.py` (the view that shows it).
 5. `powerbi/export-powerbi-data.js` **and** `powerbi/queries.m` (keep the two
    table shapes identical), plus `measures.dax`/README if visualized.
-6. `scripts/make-brief.js` if the brief should report it.
-7. `docs/data-analyst-guide.md` §4 (dictionary) — and a changelog entry in the
+6. The semantic layer, if the field should appear in the linked-data export:
+   term in `ontology/launch.ttl`, mapping in `ontology/context.jsonld`,
+   emission in `scripts/build-ontology.js` — then
+   `node scripts/build-ontology.js` to regenerate
+   `ontology/launch-data.jsonld` (see [docs/ontology.md](ontology.md) §9).
+7. `scripts/make-brief.js` if the brief should report it.
+8. `docs/data-analyst-guide.md` §4 (dictionary) — and a changelog entry in the
    data file.
 
 Skipping a consumer fails silently (the platforms ignore unknown fields), so
