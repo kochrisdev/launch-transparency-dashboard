@@ -98,9 +98,16 @@ three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.m
   `scripts/fetch-nafdac.js` (DataTables JSON endpoint, monthly in
   `sourcing.yml`) staged 48 portfolio registrations — DHA–PPQ 47
   presentations (26 Active / 22 **Inactive**, i.e. lapsed) and Pyramax 1
-  (granules, approved 2024). Next: replicate the pattern for other
-  portfolio-country registers (plan §3 Category C — Tanzania IMIS2 next
-  most feasible).
+  (granules, approved 2024).
+- [x] 🧑‍💻 **TMDA register (Tanzania)** — done 2026-08-23:
+  `scripts/fetch-tmda.js` (IMIS2 JSON backend, monthly in `sourcing.yml`)
+  staged 12 portfolio registrations, all Registered/Compliant — DHA–PPQ 10
+  presentations across four manufacturers (Guilin D-ARTEPP incl. paediatric
+  dispersible, KBN-Zhejiang Duo-Cotecxin, Ajanta Ridmal) and Pyramax 2
+  (Shin Poong, issued 2022). Two Guilin dispersible registrations expire
+  2026-10-01 — the watch will flag a lapse. Next registers when needed:
+  Ghana FDA (TLS broken at check), Kenya PPB (PDF-only) — plan §3
+  Category C.
 - [ ] 🧑‍💻 **MAGICapp version poll** — one GET against the guidelines API,
   compare `publishDate`, alert on change; cheap add to `sourcing.yml`.
 - [ ] 📊 **WMR annex ingest (due December)** — policy 4A/4B, commodities 4G,

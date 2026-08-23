@@ -6,7 +6,8 @@ name: Scheduled source fetch
 #   - monthly (3rd 06:30 UTC):  scripts/fetch-globalfund.js (grants + disbursements)
 #                               scripts/fetch-regulatory.js (WHO PQ + EMA EU-M4all)
 #                               scripts/fetch-nafdac.js     (Nigeria registrations)
-# When the trial, regulatory or NAFDAC watch detects changes, it opens an issue
+#                               scripts/fetch-tmda.js       (Tanzania registrations)
+# When the trial, regulatory or NRA-register watch detects changes, it opens an issue
 # carrying the what-changed report so an analyst reviews it — the fetchers
 # never touch data/products.js (the analyst + validator remain the only gate).
 #
@@ -25,7 +26,7 @@ on:
       fetchers:
         description: "Which fetchers to run"
         type: choice
-        options: [all, trials, globalfund, regulatory, nafdac]
+        options: [all, trials, globalfund, regulatory, nafdac, tmda]
         default: all
 
 permissions:
@@ -50,24 +51,26 @@ jobs:
       - name: Decide which fetchers this trigger runs
         id: plan
         run: |
-          RUN_TRIALS=false; RUN_GF=false; RUN_REG=false; RUN_NAFDAC=false
+          RUN_TRIALS=false; RUN_GF=false; RUN_REG=false; RUN_NAFDAC=false; RUN_TMDA=false
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             case "${{ inputs.fetchers }}" in
-              all)        RUN_TRIALS=true; RUN_GF=true; RUN_REG=true; RUN_NAFDAC=true ;;
+              all)        RUN_TRIALS=true; RUN_GF=true; RUN_REG=true; RUN_NAFDAC=true; RUN_TMDA=true ;;
               trials)     RUN_TRIALS=true ;;
               globalfund) RUN_GF=true ;;
               regulatory) RUN_REG=true ;;
               nafdac)     RUN_NAFDAC=true ;;
+              tmda)       RUN_TMDA=true ;;
             esac
           elif [ "${{ github.event.schedule }}" = "0 6 * * 1" ]; then
             RUN_TRIALS=true
           else
-            RUN_GF=true; RUN_REG=true; RUN_NAFDAC=true
+            RUN_GF=true; RUN_REG=true; RUN_NAFDAC=true; RUN_TMDA=true
           fi
           echo "trials=$RUN_TRIALS" >> "$GITHUB_OUTPUT"
           echo "globalfund=$RUN_GF" >> "$GITHUB_OUTPUT"
           echo "regulatory=$RUN_REG" >> "$GITHUB_OUTPUT"
           echo "nafdac=$RUN_NAFDAC" >> "$GITHUB_OUTPUT"
+          echo "tmda=$RUN_TMDA" >> "$GITHUB_OUTPUT"
 
       - name: Fetch trials (ClinicalTrials.gov)
         if: steps.plan.outputs.trials == 'true'
@@ -85,6 +88,10 @@ jobs:
         if: steps.plan.outputs.nafdac == 'true'
         run: node scripts/fetch-nafdac.js
 
+      - name: Fetch TMDA register (Tanzania registrations)
+        if: steps.plan.outputs.tmda == 'true'
+        run: node scripts/fetch-tmda.js
+
       - name: Commit sourcing outputs
         # always(): if one fetcher fails, the outputs of the ones that
         # succeeded are still committed (the job stays red for triage).
@@ -94,7 +101,7 @@ jobs:
           git config user.email "actions@github.com"
           # Record which watch reports THIS run produced/changed, for the issue
           # step — done before committing, while they still show as dirty.
-          git status --porcelain sourcing/reports 2>/dev/null | grep -oE 'sourcing/reports/(trials|regulatory|nafdac)-watch-[0-9-]+\.md' > /tmp/new-reports.txt || true
+          git status --porcelain sourcing/reports 2>/dev/null | grep -oE 'sourcing/reports/(trials|regulatory|nafdac|tmda)-watch-[0-9-]+\.md' > /tmp/new-reports.txt || true
           git add sourcing
           if git diff --cached --quiet; then
             echo "Nothing new to commit."
@@ -120,6 +127,7 @@ jobs:
                 trials)     TITLE="Trial watch" ;;
                 regulatory) TITLE="Regulatory watch" ;;
                 nafdac)     TITLE="NAFDAC watch" ;;
+                tmda)       TITLE="TMDA watch" ;;
               esac
               gh issue create --repo "$GITHUB_REPOSITORY" \
                 --title "$TITLE: changes detected — $DATE" \
