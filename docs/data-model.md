@@ -110,7 +110,7 @@ Two flavors of `PRODUCT` share the array:
 - **Stage relationships are positional, not named.** `products[].stages[3]`
   *is* the product's status for `stages[3]` ("WHO prequalification"). The
   validator enforces the count (8); nothing can enforce that you didn't swap
-  two entries — keep the order sacred when editing.
+  two entries — take care to keep the order intact when editing.
 - **`changelog[].product` is a soft reference by display name** (or `"All"`),
   not by id. It survives product renames only if you keep old entries' wording
   (they're historical statements — never rewrite them). Filtering a product's
