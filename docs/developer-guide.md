@@ -49,6 +49,9 @@ upgrade, or break.
 | `briefs/` | Generated what-changed briefs; `latest.md` is the stable pointer. |
 | `unitaid/` | **Generated** Unitaid brand edition (journey board, matrix, poster, story) per brandpad.io/unitaid. Never hand-edit — rerun the builder. Reads the same `../data/` files, so data pushes update it automatically; only *structural* changes to the source pages need a rebuild. |
 | `scripts/build-unitaid-theme.js` | Rebuilds `unitaid/` from the current source pages: appends a brand-token override layer (pinned across all theme states), Source Sans 3, preview strip, path/link fixes. |
+| `v2/` | **Generated** version-2 preview edition (all views + widget) reading `data/products.v2.js` — v1 plus proposed collected-data updates, pending sign-off. Root pages stay on v1. Never hand-edit — rerun the builder. |
+| `data/products.v2.js` | The v2 proposal dataset (same contract; validate with the file argument). Merged into `data/products.js` and retired on approval — then delete `v2/` and its builder too. |
+| `scripts/build-v2-edition.js` | Rebuilds `v2/` from the current source pages (data script rewrite + preview strip; same pattern as the synthetic builder). |
 | `decks/` (gitignored) | Local-only stakeholder briefing decks (.pptx) — deliberately kept out of the public repository. |
 | `docs/` | This documentation set, including the remaining-tasks checklist. |
 | `UPDATING.md` | Pointer to the data-analyst guide (kept for old links). |
@@ -288,14 +291,19 @@ When you add, rename, or restructure a field in `data/products.js`, touch —
 in this order:
 
 1. `data/products.js` — the field itself, with provenance where applicable.
+   Mirror it in the other datasets implementing the contract:
+   `data/products.synthetic.js` (populated value so the feature is testable)
+   and, while it exists, `data/products.v2.js`.
 2. `scripts/validate-data.js` — a rule (error for governance, warning for
    provenance debt) + the analyst guide's troubleshooting table.
 3. **Static renderers that surface it**: `index.html`, and as applicable
    `option-b.html`, `pipeline.html`, `story.html`, `widget.html` (B reads
    stages/flag/detail; poster reads `phase`; story derives from `journey`,
-   `countries`, `flag`; widget reads stages/flag only). Then rerun
-   `node scripts/build-unitaid-theme.js` so the generated `unitaid/` edition
-   picks up the structural change.
+   `countries`, `flag`; widget reads stages/flag only). Then rerun the
+   edition builders so the generated copies pick up the structural change:
+   `node scripts/build-unitaid-theme.js`,
+   `node scripts/build-synthetic-edition.js` and (while it exists)
+   `node scripts/build-v2-edition.js`.
 4. `streamlit-app/launch_data.py` (row builders / validator mirror) and
    `app.py` (the view that shows it).
 5. `powerbi/export-powerbi-data.js` **and** `powerbi/queries.m` (keep the two

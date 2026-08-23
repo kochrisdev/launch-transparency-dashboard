@@ -30,6 +30,14 @@ There is also a third, complementary view (not part of the A/B decision):
   map → the incoming pipeline. Every number is computed from the data file, so
   the story updates itself as the data changes.
 
+A **version 2 preview** of all views is live at
+[/v2/](https://kochrisdev.github.io/launch-transparency-dashboard/v2/) —
+the same dashboards on `data/products.v2.js`, which adds the first
+collected-data updates (Global Fund PQR volumes, WHO PQ listings, EMA dates,
+trial-registry records) for LAUNCH review. The root pages stay on v1 until
+sign-off; approved values then merge into `data/products.js` and the preview
+is retired.
+
 Design mockup for the LAUNCH (Launch Transparency Initiative) dashboard tracking
 new antimalarial medicines from approval to access, to be hosted by the
 RBM Partnership to End Malaria.

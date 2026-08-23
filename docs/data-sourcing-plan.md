@@ -353,7 +353,9 @@ Three collection modes, matched to how each source publishes:
    never hand-edited — same rule as `unitaid/` and `synthetic/`.
 4. The dashboard contract is fed *from* staging by an analyst decision, not by
    automation: collected values become proposals (a generated diff/brief), and
-   the validator remains the only gate.
+   the validator remains the only gate. *First cycle completed Aug 2026: the
+   staged evidence was packaged as the v2 preview (`data/products.v2.js` +
+   the `/v2/` edition) for LAUNCH review.*
 
 ## 5. Licensing & attribution constraints
 

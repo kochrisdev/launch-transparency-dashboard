@@ -98,3 +98,7 @@ Notes:
   still come from the PQR Tableau crosstab export (plan §3, Category E).
 - Every staging row carries `retrievedDate`; trials rows also carry a per-row
   `sourceUrl` suitable for the dashboard's `source` field.
+- **First application:** the staged evidence has been cross-checked against
+  the dashboard data and packaged as the **v2 preview**
+  (`data/products.v2.js` + the `v2/` edition) awaiting LAUNCH sign-off —
+  see the checklist's "Review & merge the v2 preview" item.

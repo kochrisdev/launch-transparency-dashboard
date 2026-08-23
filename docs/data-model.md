@@ -148,27 +148,32 @@ implementations, listed in the developer guide's checklist.
 ```mermaid
 flowchart LR
     subgraph sources [Datasets]
-        REAL["data/products.js<br/>(real, draft)"]
+        REAL["data/products.js<br/>(real, draft — v1)"]
+        V2D["data/products.v2.js<br/>(v2 proposal, temporary)"]
         SYN["data/products.synthetic.js<br/>(fictional)"]
         MAP["data/world-map.js<br/>(generated geometry)"]
     end
 
     V["scripts/validate-data.js<br/>(gate: CI blocks bad data)"]
     REAL --> V
+    V2D --> V
     SYN --> V
 
     subgraph static [Static site — GitHub Pages]
         A["index.html + option-b.html<br/>pipeline.html + story.html + widget.html"]
         U["unitaid/ (brand edition,<br/>generated)"]
         S["synthetic/ (dev edition,<br/>generated)"]
+        V2E["v2/ (preview edition,<br/>generated, temporary)"]
         CSVDL["CSV download<br/>(built in-browser)"]
     end
     REAL --> A
     REAL --> U
     SYN --> S
+    V2D --> V2E
     MAP --> A
     MAP --> U
     MAP --> S
+    MAP --> V2E
     A --> CSVDL
 
     subgraph ci [CI on data change — publish.yml]
