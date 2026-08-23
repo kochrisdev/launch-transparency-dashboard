@@ -57,7 +57,7 @@ controls the on-page banner.
 
 | Guide | Audience |
 | --- | --- |
-| [Project explainer](docs/project-explainer.md) | **All stakeholders, expert and non-expert** — the whole project in plain language: the problem, the domain, how to read the dashboard, where the numbers come from, and how it is built. Start here. |
+| [Project explainer](docs/project-explainer.md) | **All stakeholders, expert and non-expert** — the whole project in plain language: the problem, the domain, how to read the dashboard, where the numbers come from, and how it is built. Start here. Also available as a designed web page: [explainer.html](https://kochrisdev.github.io/launch-transparency-dashboard/explainer.html). |
 | [User guide](docs/user-guide.md) | Donors, ministries of health, implementing partners, pharma — how to read and use the dashboard. |
 | [Data analyst guide](docs/data-analyst-guide.md) | Whoever maintains the data — update loop, data dictionary, governance rules, confirmation register, cadence. |
 | [Data model & lineage](docs/data-model.md) | Analysts and developers extending the data — entities, keys and relationships, the lineage of every derived data product, and extension playbooks. |

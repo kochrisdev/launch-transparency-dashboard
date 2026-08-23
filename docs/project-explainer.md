@@ -16,8 +16,8 @@ goes one level deeper; read to your depth and stop when you have what you need.
 | [7 · Status & open items](#part-7--current-status--open-items) | Everyone | How finished is this? |
 
 > Where this document and `data/products.js` disagree, the data file wins.
-> A designed, shareable web version of this guide exists as a Claude artifact
-> (ask the LAUNCH team for the link).
+> A designed, shareable web version of this guide is live at
+> [explainer.html](https://kochrisdev.github.io/launch-transparency-dashboard/explainer.html).
 
 ---
 

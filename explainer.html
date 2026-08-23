@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside the LAUNCH Dashboard</title>
+<meta name="description" content="A complete plain-language guide to the LAUNCH Transparency Dashboard - the problem, the domain, how to read it, where its numbers come from, and how it is built.">
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f5f7f6; --surface:#ffffff; --surface2:#eef2f1;
+    --ink:#1d2b2c; --muted:#546666; --faint:#7d8e8d;
+    --line:#d8e0de; --line-soft:#e6ebea;
+    --accent:#0d6b63; --accent-ink:#0a544e; --accent-soft:#e2efed;
+    --good:#1a7f37; --good-soft:#e2f0e6;
+    --warn:#996a00; --warn-soft:#f6ecd8;
+    --crit:#bb3a2e; --crit-soft:#f7e5e2;
+    --idle:#87968f; --idle-soft:#eceeed;
+    --code-bg:#eef2f1;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Public Sans",-apple-system,"Segoe UI",Arial,sans-serif;
+    --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#101715; --surface:#17201e; --surface2:#1d2926;
+      --ink:#e4ecea; --muted:#a2b3b0; --faint:#7e908d;
+      --line:#2b3a37; --line-soft:#233029;
+      --accent:#57c2b3; --accent-ink:#7fd4c8; --accent-soft:#16302c;
+      --good:#5cc274; --good-soft:#15291b;
+      --warn:#d9a94a; --warn-soft:#2e2612;
+      --crit:#e2705f; --crit-soft:#331b17;
+      --idle:#71827c; --idle-soft:#1e2724;
+      --code-bg:#1d2926;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101715; --surface:#17201e; --surface2:#1d2926;
+    --ink:#e4ecea; --muted:#a2b3b0; --faint:#7e908d;
+    --line:#2b3a37; --line-soft:#233029;
+    --accent:#57c2b3; --accent-ink:#7fd4c8; --accent-soft:#16302c;
+    --good:#5cc274; --good-soft:#15291b;
+    --warn:#d9a94a; --warn-soft:#2e2612;
+    --crit:#e2705f; --crit-soft:#331b17;
+    --idle:#71827c; --idle-soft:#1e2724;
+    --code-bg:#1d2926;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.65;
+    margin:0; padding:0;
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px}
+  a{color:var(--accent-ink); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:2px}
+  a:hover{text-decoration-thickness:2px}
+  code{font-family:var(--mono); font-size:.85em; background:var(--code-bg); border-radius:4px; padding:.1em .35em}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* ---------- header ---------- */
+  header.masthead{border-bottom:1px solid var(--line); background:var(--surface); padding:56px 0 40px}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); font-weight:600; margin:0 0 14px}
+  h1{font-family:var(--serif); font-weight:700; font-size:clamp(34px,5vw,52px); line-height:1.12; margin:0 0 16px; text-wrap:balance}
+  .standfirst{font-size:19px; color:var(--muted); max-width:46em; margin:0 0 28px; text-wrap:pretty}
+  .standfirst strong{color:var(--ink)}
+  .router{display:flex; flex-wrap:wrap; gap:10px}
+  .router a{
+    display:inline-flex; align-items:center; gap:8px;
+    border:1px solid var(--line); border-radius:999px; background:var(--bg);
+    padding:7px 15px; font-size:13.5px; font-weight:600; color:var(--ink); text-decoration:none;
+  }
+  .router a:hover{border-color:var(--accent); color:var(--accent-ink)}
+  .router .who{color:var(--faint); font-weight:500}
+
+  /* ---------- layout with rail ---------- */
+  .page{display:grid; grid-template-columns:200px minmax(0,1fr); gap:48px; padding:48px 0 80px}
+  nav.rail{position:sticky; top:24px; align-self:start; font-size:13.5px}
+  nav.rail ol{list-style:none; margin:0; padding:0; border-left:2px solid var(--line)}
+  nav.rail li a{display:block; padding:6px 0 6px 14px; color:var(--muted); text-decoration:none; border-left:2px solid transparent; margin-left:-2px}
+  nav.rail li a:hover{color:var(--accent-ink); border-left-color:var(--accent)}
+  nav.rail .rail-label{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 10px; font-weight:600}
+  @media (max-width:900px){ .page{grid-template-columns:1fr} nav.rail{display:none} }
+
+  /* ---------- sections ---------- */
+  main{min-width:0}
+  section.part{margin:0 0 64px}
+  .part-head{display:flex; align-items:baseline; gap:14px; border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:8px}
+  .part-num{font-family:var(--mono); font-size:13px; color:var(--accent-ink); font-weight:500; letter-spacing:.05em}
+  h2{font-family:var(--serif); font-weight:700; font-size:clamp(24px,3.2vw,32px); margin:0; line-height:1.2; text-wrap:balance}
+  .depth{font-size:12.5px; color:var(--faint); margin:0 0 18px}
+  h3{font-family:var(--serif); font-weight:600; font-size:21px; margin:36px 0 10px; text-wrap:balance}
+  h4{font-size:15px; font-weight:700; margin:24px 0 8px}
+  p{margin:0 0 14px; max-width:46em; text-wrap:pretty}
+  ul,ol{margin:0 0 16px; padding-left:22px; max-width:44em}
+  li{margin-bottom:6px}
+  .tldr{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0; padding:14px 18px; margin:0 0 22px; max-width:52em;
+  }
+  .tldr p{margin:0; font-size:16.5px}
+  .tldr .k{font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--accent-ink); display:block; margin-bottom:4px}
+  .note{
+    background:var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding:14px 18px; margin:18px 0; font-size:14.5px; color:var(--muted); max-width:52em;
+  }
+  .note strong{color:var(--ink)}
+  blockquote{
+    font-family:var(--serif); font-size:19px; line-height:1.5; color:var(--ink);
+    border-left:3px solid var(--accent); margin:24px 0; padding:4px 0 4px 20px; max-width:40em;
+  }
+  blockquote cite{display:block; font-family:var(--sans); font-style:normal; font-size:13px; color:var(--faint); margin-top:8px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto; margin:18px 0 24px; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+  table{border-collapse:collapse; width:100%; font-size:14px; min-width:640px}
+  th{
+    text-align:left; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); font-weight:700; padding:10px 14px; border-bottom:2px solid var(--line);
+    background:var(--surface2);
+  }
+  td{padding:10px 14px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td:first-child{white-space:nowrap; font-weight:600}
+  .tnum{font-family:var(--mono); font-size:12.5px; color:var(--accent-ink); font-weight:500}
+
+  /* ---------- status chips ---------- */
+  .chip{display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:2px 10px 2px 8px; font-size:12.5px; font-weight:700; white-space:nowrap}
+  .chip .dot{width:9px; height:9px; border-radius:50%; flex:none}
+  .chip.good{background:var(--good-soft); color:var(--good)} .chip.good .dot{background:var(--good)}
+  .chip.warn{background:var(--warn-soft); color:var(--warn)} .chip.warn .dot{background:var(--warn)}
+  .chip.crit{background:var(--crit-soft); color:var(--crit)} .chip.crit .dot{background:var(--crit)}
+  .chip.idle{background:var(--idle-soft); color:var(--idle)} .chip.idle .dot{background:transparent; border:2px dashed var(--idle); width:7px; height:7px}
+
+  /* ---------- product cards ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin:18px 0 8px}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px 20px}
+  .card h4{margin:0 0 2px; font-size:17px; font-family:var(--serif); font-weight:700}
+  .card .inn{font-size:12.5px; color:var(--faint); font-family:var(--mono); margin-bottom:10px}
+  .card p{font-size:14px; margin:0 0 10px; color:var(--muted)}
+  .card p strong{color:var(--ink)}
+  .card .tag{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; display:inline-block; margin-bottom:10px; padding:2px 8px; border-radius:4px}
+  .tag.pipe{background:var(--accent-soft); color:var(--accent-ink)}
+  .tag.market{background:var(--warn-soft); color:var(--warn)}
+  .tag.future{background:var(--idle-soft); color:var(--idle)}
+
+  /* ---------- figures ---------- */
+  figure{margin:26px 0 30px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px 22px 14px; overflow-x:auto}
+  figure svg{display:block; max-width:100%; height:auto; min-width:720px; color:var(--ink)}
+  figcaption{font-size:13.5px; color:var(--muted); margin-top:12px; max-width:52em}
+
+  /* ---------- misc ---------- */
+  .pathfile{font-family:var(--mono); font-size:13px}
+  dl.gloss{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:4px 32px; margin:18px 0}
+  dl.gloss div{border-bottom:1px solid var(--line-soft); padding:10px 0}
+  dl.gloss dt{font-weight:700; font-size:14.5px}
+  dl.gloss dd{margin:2px 0 0; font-size:13.8px; color:var(--muted)}
+  footer.colophon{border-top:1px solid var(--line); padding:28px 0 56px; font-size:13.5px; color:var(--faint)}
+  footer.colophon p{margin:0 0 6px}
+  .keyfacts{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:22px 0 6px}
+  .fact{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 16px}
+  .fact .n{font-family:var(--serif); font-size:26px; font-weight:700; line-height:1.1}
+  .fact .l{font-size:12.5px; color:var(--muted); margin-top:4px}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Knowledge product · launch-transparency-dashboard</p>
+    <h1>Inside the LAUNCH Dashboard</h1>
+    <p class="standfirst">A complete plain-language guide to the LAUNCH Transparency Dashboard — <strong>what problem it solves, the world it describes, how to read it, where its numbers come from, and how it is built.</strong> Each part goes one level deeper; read to your depth and stop when you have what you need.</p>
+    <div class="router">
+      <a href="#part-1"><span class="who">Everyone</span> 1 · Why this exists</a>
+      <a href="#part-2"><span class="who">Everyone</span> 2 · The medicine's journey</a>
+      <a href="#part-3"><span class="who">Users</span> 3 · Reading the dashboard</a>
+      <a href="#part-4"><span class="who">Analysts</span> 4 · Where the numbers come from</a>
+      <a href="#part-5"><span class="who">Developers</span> 5 · How it is built</a>
+      <a href="#part-6"><span class="who">Reference</span> 6 · Glossary</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap page">
+<nav class="rail" aria-label="Sections">
+  <p class="rail-label">Contents</p>
+  <ol>
+    <li><a href="#part-1">Why this exists</a></li>
+    <li><a href="#part-2">The medicine's journey</a></li>
+    <li><a href="#part-3">Reading the dashboard</a></li>
+    <li><a href="#part-4">Where the numbers come from</a></li>
+    <li><a href="#part-5">How it is built</a></li>
+    <li><a href="#part-6">Glossary</a></li>
+    <li><a href="#part-7">Status &amp; open items</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================================================ PART 1 -->
+<section class="part" id="part-1">
+  <div class="part-head"><span class="part-num">PART 1</span><h2>Why this exists</h2></div>
+  <p class="depth">For everyone — no prior knowledge needed.</p>
+
+  <div class="tldr"><span class="k">In one sentence</span>
+    <p>New malaria medicines take 10–15 years to travel from "approved" to actually reaching patients, largely because no one can see where each medicine is stuck — so LAUNCH built a public dashboard that shows every medicine, every gate it must pass, and every bottleneck, with a dated reason on each delay.</p>
+  </div>
+
+  <h3>The problem: approval is not access</h3>
+  <p>Malaria still kills on the order of half a million people a year, and progress has stalled since 2015. New medicines exist, or are close — yet historically it has taken <strong>10 to 15 years or more</strong> for a malaria product to move from regulatory approval to routine use in the countries that need it. One worked example from this project's own documentation: pyrethroid-PBO bednets took <strong>eight years</strong> just to move from an interim to a full WHO recommendation — eight years spent inside a single gate, after the science was settled.</p>
+  <p>The clock now matters more than ever. <strong>Artemisinin partial resistance</strong> — malaria parasites responding more slowly to the core drug class behind nearly all modern treatment — has emerged in Southeast Asia and is confirmed in parts of East Africa. Medicines that work against resistant parasites are in the pipeline, but a decade-long lag in adoption could arrive too late.</p>
+
+  <h3>The diagnosis: a coordination failure</h3>
+  <p>The delay is largely a <em>visibility</em> problem, not a science problem. A medicine's journey to patients runs through many independent institutions — the WHO, regulators, funders, manufacturers, and health ministries — each waiting on signals from the others. Nobody can see the whole board, so delays are discovered years after they begin.</p>
+  <p><strong>LAUNCH</strong> (the Launch Transparency Initiative for new malaria tools, funded by Unitaid) is a bet that making the whole board visible changes behavior: if every actor can see every product, every gate, and every bottleneck — with a dated, written reason on each delay — partners can act on delays instead of discovering them later. The dashboard is that board. It will be hosted by the <strong>RBM Partnership to End Malaria</strong>, the global coordination platform for malaria, with technical oversight from the LAUNCH AMDR Core Advisory Group.</p>
+
+  <h3>Three ideas that carry everything else</h3>
+  <ol>
+    <li><strong>"Approved" is not one fact — it is at least three.</strong> The WHO <em>recommends</em> a medicine, the WHO separately <em>prequalifies</em> its quality, and each country <em>registers</em> it — three independent decisions by three different bodies on three different calendars. Then a ministry must write it into national guidelines, a funder must buy it, and a supply chain must deliver it. Any of these gates can stall for years while all the others show green.</li>
+    <li><strong>The dashboard is read by the institutions it measures.</strong> WHO committees, funders, and manufacturers all see their own gates on the board. Every design and governance decision follows from that: a red light is an accusation in this domain, so the system makes an unsubstantiated accusation structurally impossible.</li>
+    <li><strong>Credibility comes from refusing to guess.</strong> Where a figure is unverified, the dashboard shows <code>TBC</code> ("to be confirmed") rather than an estimate. Every displayed number carries its public source and the date it was last verified. One invented number, discovered by the institutions being measured, would end the dashboard's credibility; an honest gap does not.</li>
+  </ol>
+
+  <div class="keyfacts">
+    <div class="fact"><div class="n">8</div><div class="l">gates each medicine must pass, from lab to patient</div></div>
+    <div class="fact"><div class="n">5</div><div class="l">products tracked — two pre-launch, two launched-but-underused, one future prevention tool</div></div>
+    <div class="fact"><div class="n">10–15 yrs</div><div class="l">historical lag from approval to routine use — the gap LAUNCH exists to shrink</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ PART 2 -->
+<section class="part" id="part-2">
+  <div class="part-head"><span class="part-num">PART 2</span><h2>The medicine's journey</h2></div>
+  <p class="depth">For everyone — the domain the dashboard describes.</p>
+
+  <div class="tldr"><span class="k">In one sentence</span>
+    <p>Every medicine on the board travels the same eight-stage pathway — one science stage, four separate approvals run by four different bodies, and a three-stage delivery chain — and the dashboard tracks which gate each medicine is at and where it is stuck.</p>
+  </div>
+
+  <figure>
+    <svg role="img" viewBox="0 0 980 330" aria-label="The eight-stage access pathway: stage 0 is science, stages 1 to 4 are four separate approvals by different institutions, stages 5 to 7 are the delivery chain. Pipeline products GanLum and ALAQ are working through the left half; underutilized products ASPY and DHA-PPQ are stuck in the right half.">
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- group brackets -->
+      <g stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.75">
+        <path d="M20,52 L20,40 L130,40 L130,52"/>
+        <path d="M145,52 L145,40 L610,40 L610,52"/>
+        <path d="M625,52 L625,40 L960,40 L960,52"/>
+      </g>
+      <g font-family="Public Sans,Arial,sans-serif" font-size="12" font-weight="700" fill="currentColor">
+        <text x="75" y="30" text-anchor="middle">SCIENCE</text>
+        <text x="377" y="30" text-anchor="middle">FOUR SEPARATE APPROVALS — FOUR DIFFERENT BODIES</text>
+        <text x="792" y="30" text-anchor="middle">DELIVERY CHAIN</text>
+      </g>
+      <!-- connecting arrows -->
+      <g stroke="currentColor" stroke-width="1.4" fill="none">
+        <line x1="130" y1="105" x2="143" y2="105" marker-end="url(#arr)"/>
+        <line x1="252" y1="105" x2="265" y2="105" marker-end="url(#arr)"/>
+        <line x1="374" y1="105" x2="387" y2="105" marker-end="url(#arr)"/>
+        <line x1="496" y1="105" x2="509" y2="105" marker-end="url(#arr)"/>
+        <line x1="610" y1="105" x2="623" y2="105" marker-end="url(#arr)"/>
+        <line x1="732" y1="105" x2="745" y2="105" marker-end="url(#arr)"/>
+        <line x1="846" y1="105" x2="859" y2="105" marker-end="url(#arr)"/>
+      </g>
+      <!-- stage boxes: x widths 110, gap 12 -->
+      <g font-family="Public Sans,Arial,sans-serif">
+        <!-- stage 0 -->
+        <g>
+          <rect x="20" y="70" width="110" height="70" rx="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="75" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">0 · R&amp;D &amp;</text>
+          <text x="75" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">clinical</text>
+          <text x="75" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">lab + trials</text>
+          <text x="75" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">Manufacturer</text>
+          <text x="75" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">+ PDPs (MMV…)</text>
+        </g>
+        <!-- stage 1 -->
+        <g>
+          <rect x="142" y="70" width="110" height="70" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="197" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">1 · Regulatory</text>
+          <text x="197" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">approval (SRA)</text>
+          <text x="197" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">anchors the rest</text>
+          <text x="197" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">EMA (EU-M4all)</text>
+          <text x="197" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">or US FDA</text>
+        </g>
+        <!-- stage 2 -->
+        <g>
+          <rect x="264" y="70" width="110" height="70" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="319" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">2 · WHO</text>
+          <text x="319" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">guidelines</text>
+          <text x="319" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">"we recommend it"</text>
+          <text x="319" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">WHO Guidelines</text>
+          <text x="319" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">Development Group</text>
+        </g>
+        <!-- stage 3 -->
+        <g>
+          <rect x="386" y="70" width="110" height="70" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="441" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">3 · WHO</text>
+          <text x="441" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">prequalification</text>
+          <text x="441" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">"quality is assured"</text>
+          <text x="441" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">WHO PQ team —</text>
+          <text x="441" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">unlocks donor buying</text>
+        </g>
+        <!-- stage 4 -->
+        <g>
+          <rect x="508" y="70" width="110" height="70" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="563" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">4 · Country</text>
+          <text x="563" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">registration</text>
+          <text x="563" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">country by country</text>
+          <text x="563" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">National regulators</text>
+          <text x="563" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">(AMA / CRP help)</text>
+        </g>
+        <!-- stage 5 -->
+        <g>
+          <rect x="622" y="70" width="110" height="70" rx="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="677" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">5 · National</text>
+          <text x="677" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">policy adoption</text>
+          <text x="677" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">into treatment rules</text>
+          <text x="677" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">Ministries of health</text>
+          <text x="677" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">/ NMCPs</text>
+        </g>
+        <!-- stage 6 -->
+        <g>
+          <rect x="744" y="70" width="100" height="70" rx="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="794" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">6 ·</text>
+          <text x="794" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Procurement</text>
+          <text x="794" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">someone buys it</text>
+          <text x="794" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">Global Fund, PMI,</text>
+          <text x="794" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">governments</text>
+        </g>
+        <!-- stage 7 -->
+        <g>
+          <rect x="858" y="70" width="102" height="70" rx="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="909" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">7 · In-country</text>
+          <text x="909" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">delivery</text>
+          <text x="909" y="126" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65">the last mile</text>
+          <text x="909" y="160" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">Governments +</text>
+          <text x="909" y="173" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.8">implementing partners</text>
+        </g>
+      </g>
+      <!-- product stall markers -->
+      <g font-family="Public Sans,Arial,sans-serif" font-size="11.5">
+        <path d="M20,215 L20,227 L618,227 L618,215" fill="none" stroke="var(--crit)" stroke-width="1.4"/>
+        <circle cx="310" cy="246" r="4" fill="var(--crit)"/>
+        <text x="322" y="250" fill="currentColor" font-weight="600">Pipeline pair — GanLum &amp; ALAQ are working through this half</text>
+        <path d="M622,265 L622,277 L960,277 L960,265" fill="none" stroke="var(--crit)" stroke-width="1.4"/>
+        <circle cx="640" cy="296" r="4" fill="var(--crit)"/>
+        <text x="652" y="300" fill="currentColor" font-weight="600">Underutilized pair — ASPY (stage 5) &amp;</text>
+        <text x="652" y="315" fill="currentColor" font-weight="600">DHA-PPQ (stage 6) are stuck here, a decade after approval</text>
+      </g>
+    </svg>
+    <figcaption><strong>The access pathway.</strong> The highlighted middle gates (1–4) are four <em>independent</em> approvals by four different institutions — the single most misunderstood fact in this domain. A product can pass all of them and still reach no one if a ministry never adopts it (stage 5) or no funder buys it (stage 6).</figcaption>
+  </figure>
+
+  <h3>The eight stages, in plain words</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>Stage</th><th>What it means</th><th>Who runs it</th></tr></thead>
+    <tbody>
+      <tr><td class="tnum">0</td><td>R&amp;D &amp; clinical</td><td>Laboratory development and human trials (Phase I safety → Phase II dosing → Phase III large multi-country efficacy trials, typically 3–6 years).</td><td>Manufacturer + product development partnerships</td></tr>
+      <tr><td class="tnum">1</td><td>Regulatory approval (SRA)</td><td>Review by a stringent regulator such as the EMA or US FDA. Malaria products usually use the EMA's <strong>EU-M4all</strong> procedure (formerly "Article 58") — a full EMA scientific review for medicines used outside the EU. This opinion anchors everything downstream.</td><td>EMA / FDA</td></tr>
+      <tr><td class="tnum">2</td><td>WHO guidelines</td><td>WHO's expert group (the Guidelines Development Group) weighs the clinical evidence and decides whether WHO <em>recommends</em> the medicine. Countries largely copy these recommendations.</td><td>WHO Global Malaria Programme</td></tr>
+      <tr><td class="tnum">3</td><td>WHO prequalification</td><td>WHO's <em>quality</em> check — dossier review plus factory inspections — that makes a product eligible for purchase by UN agencies and major donors. This is the ticket that lets the Global Fund buy it.</td><td>WHO Prequalification Team</td></tr>
+      <tr><td class="tnum">4</td><td>Country registration</td><td>Each country's own regulator licenses the product nationally — often sequentially, country by country. The African Medicines Agency and WHO's collaborative registration procedure exist to speed this up.</td><td>National regulatory authorities</td></tr>
+      <tr><td class="tnum">5</td><td>National policy adoption</td><td>The ministry of health writes the medicine into <em>national treatment guidelines</em> — the document that determines what health workers actually prescribe and what the public sector buys. A WHO recommendation does <strong>not</strong> flow into these automatically.</td><td>Ministries of health / NMCPs</td></tr>
+      <tr><td class="tnum">6</td><td>Procurement</td><td>Someone actually pays: Global Fund grants (the majority of treatment volume), the US President's Malaria Initiative, UNICEF, domestic budgets. Tenders, reference pricing, demand forecasting.</td><td>Global Fund, PMI, governments</td></tr>
+      <tr><td class="tnum">7</td><td>In-country delivery</td><td>The last mile: supply chain from ports to clinics, health-worker training, job aids, and safety monitoring (pharmacovigilance).</td><td>Governments + implementing partners</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The traffic lights</h3>
+  <p>Each medicine gets one light per stage — always paired with a symbol so the board works for colorblind readers and in print:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Light</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip good"><span class="dot"></span>✓ Complete</span></td><td>This gate has been passed (with a cited source).</td></tr>
+      <tr><td><span class="chip warn"><span class="dot"></span>› In progress</span></td><td>Actively moving at a normal pace.</td></tr>
+      <tr><td><span class="chip crit"><span class="dot"></span>! Delayed</span></td><td>Stuck or slipped — a one-sentence, dated reason under the row says why. A red light can <em>never</em> appear without a written reason; the data validator makes that structurally impossible.</td></tr>
+      <tr><td><span class="chip idle"><span class="dot"></span>Not started</span></td><td>Not yet reached (dashed outline).</td></tr>
+    </tbody>
+  </table></div>
+  <p>A halo ring marks the medicine's <strong>current position</strong> — the gate it is actively working through. Elapsed time between gates is colored on one scale everywhere: <strong>green ≤ 2 years, amber 3–5, red over 5</strong>.</p>
+
+  <h3>The medicines tracked</h3>
+  <p>LAUNCH deliberately picked <strong>two pairs that stress opposite halves of the pathway</strong>. The pipeline pair tests whether transparency speeds the regulatory half; the underutilized pair — fully approved for a decade yet barely used — shows what the adoption half costs when nobody is watching. On the board, the pipeline products light up red on the left half, the marketed products on the right half.</p>
+  <div class="cards">
+    <div class="card">
+      <span class="tag pipe">Pipeline · new chemical class</span>
+      <h4>GanLum</h4><div class="inn">ganaplacide–lumefantrine (KLU156) · Novartis + MMV</div>
+      <p>The first non-artemisinin novel-class combination in ~25 years — strategically huge because it works against artemisinin-resistant parasites. Its Phase III trial (KALUMA) met its endpoint in Nov 2025 with a 97.4% cure rate. <strong>The watch:</strong> how fast SRA → guidelines → prequalification goes.</p>
+    </div>
+    <div class="card">
+      <span class="tag pipe">Pipeline · triple ACT</span>
+      <h4>ALAQ</h4><div class="inn">artemether–lumefantrine–amodiaquine · Fosun Pharma + MORU</div>
+      <p>A triple ACT: a second partner drug added to today's standard treatment to protect it from resistance. Developed under the MORU-led DeTACT partnership, targeting approval and prequalification around 2027.</p>
+    </div>
+    <div class="card">
+      <span class="tag market">Marketed · underutilized</span>
+      <h4>ASPY (Pyramax)</h4><div class="inn">pyronaridine–artesunate · Shin Poong + MMV</div>
+      <p>EMA opinion 2012, prequalified, WHO-recommended 2022, registered in 25+ countries — <strong>yet in only a handful of national treatment guidelines.</strong> Its bottleneck is stage 5, policy adoption. The ten-year gap between EMA opinion and WHO recommendation is exactly the kind of interval the dashboard's timing chart exposes.</p>
+    </div>
+    <div class="card">
+      <span class="tag market">Marketed · underutilized</span>
+      <h4>DHA–PPQ</h4><div class="inn">dihydroartemisinin–piperaquine · Alfasigma, Guilin &amp; others</div>
+      <p>Approved 2011, WHO-recommended 2015, multiple prequalified suppliers (which is supply security) — <strong>yet a small share of global treatment procurement.</strong> Its bottleneck is stage 6, procurement. Current use concentrates in seasonal prevention niches.</p>
+    </div>
+    <div class="card">
+      <span class="tag future">Future · prevention tool</span>
+      <h4>Spatial emanators</h4><div class="inn">airborne mosquito-repellent devices · SC Johnson</div>
+      <p>A placeholder row, pending funder approval (Gates Foundation). A prevention product travels a <em>different</em> WHO track (PQ Vector Control, a different guideline group), so the treatment stage names above won't literally apply — a known design decision waiting on activation. Two SC Johnson emanators were WHO PQ-listed in Aug 2025, so a real gate has already been passed.</p>
+    </div>
+  </div>
+
+  <h3>Who's who</h3>
+  <p>One institution deserves special care: <strong>the WHO wears three separate hats</strong> in this story — recommender (its Guidelines Development Group, stage 2), quality assessor (its Prequalification Team, stage 3), and overall coordinator. The project documentation is emphatic: never conflate them. The other actors:</p>
+  <ul>
+    <li><strong>EMA / FDA</strong> — stringent regulators; "SRA approval" in the data almost always means the EMA's EU-M4all opinion.</li>
+    <li><strong>National regulators</strong> — one per country (stage 4); the African Medicines Agency and WHO's ~90-working-day collaborative registration procedure exist to accelerate them.</li>
+    <li><strong>Ministries of health / national malaria control programmes</strong> — own national treatment guidelines (stage 5).</li>
+    <li><strong>Global Fund, US PMI, UNICEF, domestic budgets</strong> — the buyers (stage 6). The Global Fund's public PQR database is the record of prices and volumes.</li>
+    <li><strong>Product development partnerships</strong> — MMV (the dominant malaria PDP; co-developer of GanLum and ASPY), MORU (runs the DeTACT triple-ACT programme behind ALAQ), DNDi.</li>
+    <li><strong>Manufacturers</strong> — Novartis, Fosun Pharma, Shin Poong, Alfasigma/Guilin, SC Johnson.</li>
+    <li><strong>Unitaid</strong> — funds LAUNCH itself; <strong>RBM Partnership to End Malaria</strong> — will host the dashboard; the <strong>LAUNCH team</strong> supplies the analyst judgement behind each product's current position and bottleneck sentence.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ PART 3 -->
+<section class="part" id="part-3">
+  <div class="part-head"><span class="part-num">PART 3</span><h2>Reading the dashboard</h2></div>
+  <p class="depth">For dashboard users — donors, ministries, implementing partners, manufacturers.</p>
+
+  <div class="tldr"><span class="k">In one sentence</span>
+    <p>One row is one medicine's whole life story left-to-right; the red sentence under a row is the single most important thing on the page; and three trust signals — the banner, <code>TBC</code>, and the source lines — tell you exactly how much to believe every number.</p>
+  </div>
+
+  <h3>The views</h3>
+  <p>The same data file powers several presentations, each for a different reading style. Two page designs are currently live in parallel for a client decision; one will be retained.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>View</th><th>Page</th><th>What it's for</th></tr></thead>
+    <tbody>
+      <tr><td>Journey board</td><td class="pathfile">index.html</td><td><strong>Design Option A (default).</strong> One row per medicine, its full pathway left to right. Emphasises each product's story. Has the country map, timing chart, CSV download, glossary tooltips, print view, and the Recent updates panel.</td></tr>
+      <tr><td>Comparison matrix</td><td class="pathfile">option-b.html</td><td><strong>Design Option B.</strong> Stages as rows, medicines as columns — emphasises cross-product comparison at each gate. Same data, distinct visual identity.</td></tr>
+      <tr><td>Pipeline poster</td><td class="pathfile">pipeline.html</td><td>The whole portfolio laid out MMV-poster style, by development phase (Preclinical → Approved &amp; scaling up), with a prevention lane. Complementary — not part of the A/B decision.</td></tr>
+      <tr><td>Data story</td><td class="pathfile">story.html</td><td>"The Waiting Years" — a scroll-driven narrative for donors and advocacy: one medicine's decade from approval to still-pending adoption. Every number is computed live from the data, so the story updates itself.</td></tr>
+      <tr><td>Widget</td><td class="pathfile">widget.html</td><td>An embeddable one-row tracker for partner sites (<code>?product=aspy</code> etc.) — an iframe snippet drops a live single-medicine tracker into any web page.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Three parallel <strong>editions</strong> of all views also exist: a Unitaid-branded edition (brand review), a synthetic-data edition (entirely fictional data for safe development — marked with an unmissable purple warning strip), and a temporary v2 preview showing proposed data updates awaiting LAUNCH sign-off.</p>
+
+  <h3>How to read a row</h3>
+  <ul>
+    <li><strong>Start with the red sentence.</strong> The one-line note under a row names the bottleneck LAUNCH is tracking for that product, with a date. It is the initiative's core editorial output — the central UI element, not a decoration.</li>
+    <li><strong>The halo ring</strong> marks where the product is right now.</li>
+    <li><strong>Hover any stage dot</strong> for status detail, the next expected step, and the date the information was last verified.</li>
+    <li><strong>Click a row</strong> for the full profile: target use case, price, access and supply commitments, adoption requirements, country access counts, operational research, procured volumes by channel, the time-between-gates panel, and the full milestone table — the accountability ledger, where every row carries its own source.</li>
+    <li><strong>Dotted-underlined terms</strong> (SRA, PQ, MFT…) show plain-language definitions on hover or keyboard focus; a Definitions panel at the bottom lists them all.</li>
+    <li><strong>Returning visitors:</strong> start at <em>Recent updates</em> (bottom of page) — what changed and when. An RSS feed (<span class="pathfile">feed.xml</span>) carries every change.</li>
+  </ul>
+
+  <h3>The three trust signals</h3>
+  <ol>
+    <li><strong>The banner under the title.</strong> <em>Design mockup</em> = placeholder layout data. <em>Draft data</em> = compiled from public sources, pending verification. <em>No banner</em> = verified, live data. (The whole board is currently in <em>draft</em>.)</li>
+    <li><strong><code>TBC</code>.</strong> The LAUNCH team does not yet have a verifiable figure. The dashboard never estimates: an honest gap beats an invented number. Most visible on price.</li>
+    <li><strong>Provenance lines under figures</strong> — the public source, whether the manufacturer confirmed release in writing, and the date last verified.</li>
+  </ol>
+  <p>Two rules worth knowing the reasoning behind:</p>
+  <ul>
+    <li><strong>The price rule.</strong> A price appears only when the figure is public or the manufacturer has confirmed in writing that it may be shared; until then it reads <code>TBC</code>. Manufacturers operate tiered, confidential pricing — publishing an unconfirmed number could damage the very relationships LAUNCH needs.</li>
+    <li><strong>The map rule.</strong> The country access map shades each country by highest level achieved (registered → in national guidelines → in MFT plans). While the underlying country survey is unverified it carries an <em>ILLUSTRATIVE</em> warning and must not be cited — a colored country reads as a fact in a way a <code>TBC</code> count never does, so the map gets a stricter verified-only standard.</li>
+  </ul>
+
+  <h3>Who uses it, and how</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Audience</th><th>Typical use</th></tr></thead>
+    <tbody>
+      <tr><td>Donors &amp; funders</td><td>See which products are stuck at procurement; read procured volumes by channel; export CSV for their own reporting.</td></tr>
+      <tr><td>Ministries of health</td><td>Check country access status, the adoption-requirements panel (what a country must do before use — training, guideline updates, safety monitoring), and peer-country status on the map.</td></tr>
+      <tr><td>Implementing partners</td><td>Track operational research (who is studying real-world use, where, until when) and the delivery stage.</td></tr>
+      <tr><td>Manufacturers</td><td>See their product's board position, confirm or correct the price field, and see where downstream gates stand.</td></tr>
+      <tr><td>Anyone republishing</td><td>Everything shown is public — use Download CSV and cite the dashboard and the underlying sources; or embed the per-medicine widget.</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Update cadence:</strong> milestones are reviewed monthly and updated within days of major public events; procurement and country data quarterly. The "last updated" date sits top right. Errors can be reported to the LAUNCH team (via RBM once hosted there) or as a GitHub issue; corrections are logged in Recent updates.</p>
+</section>
+
+<!-- ============================================================ PART 4 -->
+<section class="part" id="part-4">
+  <div class="part-head"><span class="part-num">PART 4</span><h2>Where the numbers come from</h2></div>
+  <p class="depth">For analysts and anyone who needs to trust (or maintain) the data.</p>
+
+  <div class="tldr"><span class="k">In one sentence</span>
+    <p>Robots collect evidence from public sources into a staging area, a human analyst decides what becomes dashboard data, and an automated validator — the only gate — makes it structurally impossible for the board to show an unsourced price, an unexplained delay, or a silently lying traffic light.</p>
+  </div>
+
+  <h3>One file, one gate</h3>
+  <p>All routine updates change exactly one file: <span class="pathfile">data/products.js</span> — a single, human-readable data file holding every product, stage status, milestone, price, and country status, plus a glossary and a changelog. Every view, edition, and export reads from it. Before any change ships, a validator script checks it against the governance rules; the validator's own stated purpose is that <em>"a traffic light must never be able to lie silently."</em></p>
+
+  <h3>Every value carries its provenance</h3>
+  <ul>
+    <li><code>source</code> — a public, citable origin (WHO PQ list, EMA register, press release).</li>
+    <li><code>asOf</code> — the date the value was last verified.</li>
+    <li><code>confirmedInWriting</code> — the manufacturer confirmed release of this figure in writing. The register of those written confirmations deliberately lives <em>outside</em> the public repository.</li>
+    <li><code>TBC</code> — honestly unknown. Never estimated.</li>
+  </ul>
+
+  <h3>The governance rules the validator enforces</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Rule</th><th>Plain meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Red needs a reason</td><td>A delayed stage must carry a substantive written note, <em>and</em> the product must carry a top-level bottleneck sentence. An unsubstantiated accusation is structurally impossible.</td></tr>
+      <tr><td>Prices are earned</td><td>A displayed price requires written manufacturer confirmation <em>or</em> a public source. Otherwise it must read <code>TBC</code>.</td></tr>
+      <tr><td>No invented counts</td><td>Country counts must be real non-negative integers or <code>TBC</code> — "an invented number is worse than an admitted gap."</td></tr>
+      <tr><td>Volumes must add up</td><td>Procurement channel splits must sum to 100%; a missing volume needs a written explanation of why.</td></tr>
+      <tr><td>Structure is sacred</td><td>Exactly 8 stage entries per product, valid status values, valid dates, unique permanent product IDs, chronological journey gates, one map entry per country.</td></tr>
+      <tr><td>Definitions are real</td><td>Glossary definitions must be actual sentences; milestone completions should cite a source (warned if not).</td></tr>
+    </tbody>
+  </table></div>
+  <p>Summary statistics (medicines tracked, active bottlenecks) are <em>computed from the data at render time</em> — they can never disagree with the board.</p>
+
+  <h3>The analyst loop</h3>
+  <ol>
+    <li>Edit <span class="pathfile">data/products.js</span>.</li>
+    <li>Run the validator — not optional.</li>
+    <li>Add a changelog entry and bump the "last updated" date.</li>
+    <li>Commit and push — the live site updates within about two minutes.</li>
+    <li>Automation does the rest: a dated snapshot of the data file is committed to <span class="pathfile">history/</span> (the raw material for future trend charts), and the RSS feed is rebuilt.</li>
+  </ol>
+  <p>A quarterly script also generates a <strong>"what changed" brief</strong> — stage movements versus the history snapshots, logged updates, active bottlenecks, and every remaining <code>TBC</code> gap as the verification to-do list. A GitHub issue opens automatically on the 1st of each month with the milestone-scan checklist.</p>
+
+  <figure>
+    <svg role="img" viewBox="0 0 980 520" aria-label="Data flow: public sources feed automated fetchers and one manual download into the sourcing staging area; watch reports open review issues; a human analyst makes the only writes to the data file; the validator is the only gate; from the data file flow the website, editions, history snapshots, RSS feed, briefs, Streamlit app and Power BI kit.">
+      <defs>
+        <marker id="arr2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g font-family="Public Sans,Arial,sans-serif">
+        <!-- column labels -->
+        <g font-size="11" font-weight="700" fill="currentColor" opacity="0.65">
+          <text x="90" y="24" text-anchor="middle">PUBLIC SOURCES</text>
+          <text x="330" y="24" text-anchor="middle">COLLECTION (sourcing/)</text>
+          <text x="570" y="24" text-anchor="middle">HUMAN + GATE</text>
+          <text x="845" y="24" text-anchor="middle">WHAT PEOPLE SEE</text>
+        </g>
+        <!-- sources -->
+        <g font-size="11" fill="currentColor">
+          <rect x="20" y="40"  width="140" height="44" rx="7" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="90" y="58" text-anchor="middle" font-weight="600">ClinicalTrials.gov</text>
+          <text x="90" y="72" text-anchor="middle" opacity="0.65">trial registry API</text>
+          <rect x="20" y="96" width="140" height="44" rx="7" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="90" y="114" text-anchor="middle" font-weight="600">WHO PQ + EMA</text>
+          <text x="90" y="128" text-anchor="middle" opacity="0.65">approval lists</text>
+          <rect x="20" y="152" width="140" height="44" rx="7" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="90" y="170" text-anchor="middle" font-weight="600">Global Fund API</text>
+          <text x="90" y="184" text-anchor="middle" opacity="0.65">grants, disbursements</text>
+          <rect x="20" y="208" width="140" height="44" rx="7" fill="none" stroke="var(--warn)" stroke-width="1.4"/>
+          <text x="90" y="226" text-anchor="middle" font-weight="600">Global Fund PQR</text>
+          <text x="90" y="240" text-anchor="middle" opacity="0.65">prices &amp; volumes</text>
+        </g>
+        <!-- fetch arrows -->
+        <g stroke="currentColor" stroke-width="1.3" fill="none">
+          <line x1="160" y1="62"  x2="248" y2="90" marker-end="url(#arr2)"/>
+          <line x1="160" y1="118" x2="248" y2="108" marker-end="url(#arr2)"/>
+          <line x1="160" y1="174" x2="248" y2="126" marker-end="url(#arr2)"/>
+        </g>
+        <line x1="160" y1="230" x2="248" y2="150" stroke="var(--warn)" stroke-width="1.3" fill="none" stroke-dasharray="5 4" marker-end="url(#arr2)"/>
+        <g font-size="10" fill="currentColor" opacity="0.75">
+          <text x="196" y="52">bots: weekly /</text>
+          <text x="196" y="65">monthly fetch</text>
+        </g>
+        <text x="20" y="276" font-size="10" fill="var(--warn)" font-weight="600">manual download only</text>
+        <text x="20" y="289" font-size="10" fill="var(--warn)" font-weight="600">(scripted export is WAF-blocked)</text>
+        <!-- sourcing box -->
+        <rect x="250" y="70" width="160" height="180" rx="9" fill="var(--surface2)" stroke="currentColor" stroke-width="1.3"/>
+        <g font-size="11" fill="currentColor">
+          <text x="330" y="92" text-anchor="middle" font-weight="700">sourcing/</text>
+          <text x="330" y="116" text-anchor="middle">raw/ — dated snapshots,</text>
+          <text x="330" y="130" text-anchor="middle">append-only</text>
+          <text x="330" y="152" text-anchor="middle">staging/ — normalized</text>
+          <text x="330" y="166" text-anchor="middle">CSVs, regenerated</text>
+          <text x="330" y="188" text-anchor="middle">reports/ — what-changed</text>
+          <text x="330" y="202" text-anchor="middle">watch reports</text>
+          <text x="330" y="228" text-anchor="middle" font-weight="600" opacity="0.8">never feeds the</text>
+          <text x="330" y="242" text-anchor="middle" font-weight="600" opacity="0.8">dashboards directly</text>
+        </g>
+        <!-- watch issue -->
+        <rect x="250" y="290" width="160" height="46" rx="7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4"/>
+        <g font-size="11" fill="currentColor">
+          <text x="330" y="308" text-anchor="middle" font-weight="600">"Trial watch" /</text>
+          <text x="330" y="322" text-anchor="middle" font-weight="600">"Regulatory watch" issues</text>
+        </g>
+        <line x1="330" y1="250" x2="330" y2="288" stroke="currentColor" stroke-width="1.3" marker-end="url(#arr2)"/>
+        <text x="338" y="272" font-size="10" fill="currentColor" opacity="0.75">on changes</text>
+        <!-- analyst -->
+        <rect x="490" y="110" width="160" height="66" rx="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+        <g font-size="11" fill="currentColor">
+          <text x="570" y="134" text-anchor="middle" font-weight="700">LAUNCH analyst</text>
+          <text x="570" y="150" text-anchor="middle">verifies vs cited source,</text>
+          <text x="570" y="164" text-anchor="middle">decides what enters</text>
+        </g>
+        <line x1="410" y1="143" x2="488" y2="143" stroke="currentColor" stroke-width="1.3" marker-end="url(#arr2)"/>
+        <text x="418" y="135" font-size="10" fill="currentColor" opacity="0.75">evidence</text>
+        <line x1="410" y1="310" x2="570" y2="310" stroke="currentColor" stroke-width="1.3" fill="none"/>
+        <line x1="570" y1="310" x2="570" y2="180" stroke="currentColor" stroke-width="1.3" marker-end="url(#arr2)"/>
+        <!-- data file -->
+        <rect x="490" y="230" width="160" height="60" rx="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <g font-size="11" fill="currentColor">
+          <text x="570" y="254" text-anchor="middle" font-weight="700" font-family="IBM Plex Mono,monospace">data/products.js</text>
+          <text x="570" y="272" text-anchor="middle" opacity="0.7">the single data contract</text>
+        </g>
+        <line x1="570" y1="176" x2="570" y2="228" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#arr2)"/>
+        <text x="580" y="200" font-size="10" fill="var(--accent-ink)" font-weight="700">the only writes</text>
+        <text x="580" y="213" font-size="10" fill="var(--accent-ink)" font-weight="700">are human</text>
+        <!-- validator -->
+        <rect x="490" y="330" width="160" height="50" rx="9" fill="var(--crit-soft)" stroke="var(--crit)" stroke-width="1.5"/>
+        <g font-size="11" fill="currentColor">
+          <text x="570" y="350" text-anchor="middle" font-weight="700">validate-data.js</text>
+          <text x="570" y="366" text-anchor="middle" opacity="0.8">the only gate · CI on every push</text>
+        </g>
+        <line x1="570" y1="290" x2="570" y2="328" stroke="var(--crit)" stroke-width="1.4" marker-end="url(#arr2)"/>
+        <text x="580" y="313" font-size="10" fill="var(--crit)" font-weight="600">must pass</text>
+        <!-- outputs -->
+        <g font-size="11" fill="currentColor">
+          <rect x="750" y="52" width="200" height="58" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="850" y="74" text-anchor="middle" font-weight="700">GitHub Pages site</text>
+          <text x="850" y="90" text-anchor="middle">board · matrix · poster · story ·</text>
+          <text x="850" y="103" text-anchor="middle">widget + 3 generated editions</text>
+          <rect x="750" y="126" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="850" y="145" text-anchor="middle" font-weight="600">history/ snapshots + feed.xml</text>
+          <text x="850" y="160" text-anchor="middle" opacity="0.7">bot-committed on data change</text>
+          <rect x="750" y="188" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="850" y="207" text-anchor="middle" font-weight="600">Quarterly briefs</text>
+          <text x="850" y="222" text-anchor="middle" opacity="0.7">what changed, TBC to-do list</text>
+          <rect x="750" y="250" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="850" y="269" text-anchor="middle" font-weight="600">Streamlit app</text>
+          <text x="850" y="284" text-anchor="middle" opacity="0.7">analyst workbench, pre-flight</text>
+          <rect x="750" y="312" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="850" y="331" text-anchor="middle" font-weight="600">Power BI kit</text>
+          <text x="850" y="346" text-anchor="middle" opacity="0.7">refreshes from the live site</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.3" fill="none">
+          <line x1="650" y1="245" x2="748" y2="90"  marker-end="url(#arr2)"/>
+          <line x1="650" y1="255" x2="748" y2="149" marker-end="url(#arr2)"/>
+          <line x1="650" y1="265" x2="748" y2="211" marker-end="url(#arr2)"/>
+          <line x1="650" y1="275" x2="748" y2="273" marker-end="url(#arr2)"/>
+          <line x1="650" y1="285" x2="748" y2="330" marker-end="url(#arr2)"/>
+        </g>
+        <text x="662" y="238" font-size="10" fill="currentColor" opacity="0.75">push → live in ~2 min</text>
+        <!-- footnote inside diagram -->
+        <text x="20" y="420" font-size="11" fill="currentColor" opacity="0.75">Bots collect and propose. Humans decide. The validator guards. Everything downstream just displays.</text>
+        <g font-size="10.5" fill="currentColor" opacity="0.75">
+          <text x="20" y="450">Cadence:  trials — weekly (Mon) · Global Fund + WHO PQ/EMA — monthly (3rd) · PQR crosstab — quarterly, manual ·</text>
+          <text x="20" y="466">monthly reminder issue for everything a bot can't watch reliably</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption><strong>How evidence becomes a dashboard value.</strong> The collection layer is append-only and fully automated where a stable public API exists; where it doesn't (the Global Fund PQR price database actively blocks scripted export), a two-minute manual download is a deliberate design decision. Nothing collected ever flows to the dashboards automatically — an analyst's sourced edit, checked by the validator, is the only path in.</figcaption>
+  </figure>
+
+  <h3>The sourcing layer in more detail</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Collector</th><th>Source &amp; cadence</th><th>Feeds</th></tr></thead>
+    <tbody>
+      <tr><td class="pathfile">fetch-trials.js</td><td>ClinicalTrials.gov API v2 — weekly, automated. Diffs status, phase, completion-date and results changes; slipped dates are early bottleneck warnings.</td><td>Stage 0 evidence, operational research, milestones</td></tr>
+      <tr><td class="pathfile">fetch-regulatory.js</td><td>WHO prequalification lists (medicines + vector control) and EMA EU-M4all opinions — monthly, automated. Watches for new listings, delistings, opinion changes.</td><td>Stages 1, 3, 4</td></tr>
+      <tr><td class="pathfile">fetch-globalfund.js</td><td>Global Fund Data Service API (grants + disbursements) — monthly, automated.</td><td>Funding-flow context for stage 6</td></tr>
+      <tr><td class="pathfile">normalize-pqr.js</td><td>Global Fund PQR price/volume crosstab — quarterly, <strong>manual download</strong> (scripted export is confirmed blocked by the site's firewall), then normalized by script.</td><td>Prices and procured volumes (stage 6)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Three rules keep this layer honest: raw snapshots are dated and append-only (so the past can be replayed and diffed); staging files are regenerated by script and never hand-edited; and every staging row carries its source URL and retrieval date, so provenance survives the trip into the dashboard.</p>
+
+  <h3>Source hierarchy and the confirmation register</h3>
+  <p>When sources disagree, analysts prefer, in order: WHO lists and guidelines → stringent regulators (EMA, FDA) → procurement databases (Global Fund PQR, PMI reports) → national regulators and ministries → manufacturer announcements (fine for milestones, never sufficient alone for prices) → LAUNCH's own surveys, labelled as draft until verified.</p>
+  <p>Written manufacturer confirmations (who confirmed what, when, under what conditions) are kept in a register <strong>outside the public repository</strong> — by policy, since they are relationship-sensitive. The public data file only ever carries the boolean flag.</p>
+</section>
+
+<!-- ============================================================ PART 5 -->
+<section class="part" id="part-5">
+  <div class="part-head"><span class="part-num">PART 5</span><h2>How it is built</h2></div>
+  <p class="depth">For developers and technical reviewers.</p>
+
+  <div class="tldr"><span class="k">In one sentence</span>
+    <p>A deliberately static, zero-build, zero-backend site — plain HTML pages rendering one strict-JSON data file with vanilla JavaScript, deployed by GitHub Pages on every push, with all automation (validation, snapshots, feeds, scheduled fetches) living in four GitHub Actions workflows.</p>
+  </div>
+
+  <h3>Why so deliberately simple</h3>
+  <p>The dataset is tiny (a few products × ~10 metrics), the maintainers are analysts rather than developers, and the 18-month initiative will be handed over to another organisation — so there must be nothing to install, upgrade, or break. There is no framework, no bundler, no package.json at the repo root. The repository root <em>is</em> the website.</p>
+  <p>The single data contract is a JavaScript file that assigns strict JSON to <code>window.LAUNCH_DATA</code>. Using a script assignment instead of fetching a <code>.json</code> file is deliberate: it works when an analyst double-clicks <span class="pathfile">index.html</span> from their file system — no server, no CORS. The body must stay strict JSON because the validator (and every other consumer, from the RSS builder to Power BI's query) extracts and parses it with the same idiom.</p>
+
+  <h3>How a page renders</h3>
+  <p>Each page is self-contained: design tokens and components in a <code>&lt;style&gt;</code> block, an HTML skeleton, and one render script that reads the data object and builds the DOM — deriving the summary stats from the data (so they can never disagree with the board), drawing the stage tracks, wiring tooltips and keyboard access, painting the country map from generated Natural Earth geometry, and positioning the timing chart with plain percent-positioned elements (no chart library). Every interpolated data value passes through an escaping function; status is always shape + color, never color alone; both light and dark themes are handled at the token level.</p>
+
+  <h3>Generated editions — regenerate, don't hand-edit</h3>
+  <p>Three builder scripts each read the original pages and write a themed or re-datasourced copy into a committed folder: <span class="pathfile">unitaid/</span> (brand-token override appended as the last stylesheet, so the skin can't drift from the source), <span class="pathfile">synthetic/</span> (points at the fictional dataset, adds an unmissable purple warning strip), and <span class="pathfile">v2/</span> (points at the proposal dataset, adds a preview strip; the whole edition is deleted once the data is signed off and merged). The iron rule for all committed build output — editions, map geometry, history snapshots, feeds, briefs, CSV exports: <strong>rerun the builder, never edit the output.</strong></p>
+
+  <h3>The four CI workflows</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Workflow</th><th>Trigger</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Validate</td><td>Every push and pull request</td><td>Runs the validator against all three datasets (real, v2, synthetic) and builds the single-file preview as a smoke test. The quality gate.</td></tr>
+      <tr><td>Snapshot &amp; feed</td><td>Push to main touching <span class="pathfile">data/products.js</span> only</td><td>Validates, copies the data file to a dated <span class="pathfile">history/</span> snapshot (append-only — refuses to overwrite a same-day snapshot with different content), rebuilds <span class="pathfile">feed.xml</span>, and bot-commits. Its own commit can't retrigger it.</td></tr>
+      <tr><td>Monthly reminder</td><td>1st of each month</td><td>Opens a GitHub issue with the milestone-scan checklist. Deliberately a reminder, not a scraper — most watched sources are CMS pages that change cosmetically, and hash-watching them would cry wolf; only stable-API sources are automated.</td></tr>
+      <tr><td>Scheduled source fetch</td><td>Mondays (trials); 3rd of month (Global Fund + regulatory); on demand</td><td>Runs the fetchers, commits only under <span class="pathfile">sourcing/</span> (which the snapshot workflow ignores, so a fetch can never trigger a dashboard change), and opens a watch issue when a report contains changes.</td></tr>
+    </tbody>
+  </table></div>
+  <p>GitHub Pages deploys the repo root on every push to main — live in one to two minutes. CI validates on the same push but does <em>not</em> gate the deploy: a red validation run is a fix-now / revert-now signal.</p>
+
+  <h3>The parallel platforms</h3>
+  <ul>
+    <li><strong>Streamlit app</strong> (<span class="pathfile">streamlit-app/</span>) — a Python twin of all views, used as the analyst workbench: it accepts the bundled file, a URL, or a dragged-in draft data file, and shows live governance-check results — so an analyst can preview and validate a data update <em>before</em> committing it. Also offers runtime configuration the static site can't: product filters, adjustable timing thresholds, and a "hide unverified map" toggle.</li>
+    <li><strong>Power BI kit</strong> (<span class="pathfile">powerbi/</span>) — not a binary report but a kit: Power Query scripts that load eight relational tables live from the published site (so reports refresh with the data), offline CSV exports of the same shape, a theme, DAX measures (including ones that carry the governance rules — the data-status banner and the unverified-map warning travel into Power BI too), and a page-by-page build guide.</li>
+  </ul>
+
+  <h3>Handover</h3>
+  <p>Three options for RBM, all cheap because the site is static files: copy the file set to any path on their own site; keep the Pages deployment (or a fork under an RBM GitHub org) and embed it in an iframe; or transfer the repository — history and CI move with it, only the URL changes (two hardcoded URL constants and partner embed snippets need updating).</p>
+</section>
+
+<!-- ============================================================ PART 6 -->
+<section class="part" id="part-6">
+  <div class="part-head"><span class="part-num">PART 6</span><h2>Glossary</h2></div>
+  <p class="depth">Plain-language definitions of every recurring term.</p>
+  <dl class="gloss">
+    <div><dt>ACT</dt><dd>Artemisinin-based combination therapy — a fast-acting artemisinin drug plus a longer-acting partner drug; the global standard treatment for uncomplicated malaria. One product (artemether–lumefantrine) is ~70%+ of the market; everything on this board is trying to diversify away from that monoculture.</dd></div>
+    <div><dt>TACT / triple ACT</dt><dd>An ACT with a second partner drug added to protect it from resistance (ALAQ is one).</dd></div>
+    <div><dt>Artemisinin partial resistance</dt><dd>Parasites cleared more slowly by the core drug class — not full treatment failure yet in Africa, but the urgency driver behind everything here.</dd></div>
+    <div><dt>SRA</dt><dd>Stringent regulatory authority — an advanced regulator such as the EMA or US FDA.</dd></div>
+    <div><dt>EU-M4all / Article 58</dt><dd>The EMA procedure giving a full scientific review to medicines intended for use outside the EU — the usual first approval for malaria medicines.</dd></div>
+    <div><dt>Prequalification (PQ)</dt><dd>WHO's quality and manufacturing assessment (dossier + factory inspections) that makes a product eligible for purchase by UN agencies and major donors. A quality judgement, not an efficacy one.</dd></div>
+    <div><dt>EOI</dt><dd>Expression of Interest — the WHO list a product must be invited onto before it can be prequalified.</dd></div>
+    <div><dt>GDG</dt><dd>Guidelines Development Group — the WHO expert committee that decides recommendations, meeting on its own calendar (a classic delay hotspot).</dd></div>
+    <div><dt>NMCP</dt><dd>National malaria control programme — the ministry unit that owns a country's malaria strategy and treatment guidelines.</dd></div>
+    <div><dt>MFT</dt><dd>Multiple first-line therapies — deploying two or three different first-line treatments at once (by district or age band) to spread drug pressure and slow resistance; the main use case under which new products enter.</dd></div>
+    <div><dt>PDP</dt><dd>Product development partnership — a non-profit that co-develops medicines with industry (MMV, DNDi, MORU's DeTACT programme).</dd></div>
+    <div><dt>PQR</dt><dd>The Global Fund's public Price &amp; Quality Reporting database — the public record of what was bought, in what volume, at what price.</dd></div>
+    <div><dt>CRP / AMA</dt><dd>WHO's collaborative registration procedure (~90 working days, reusing SRA/PQ assessments) and the African Medicines Agency — the two accelerators for country-by-country registration.</dd></div>
+    <div><dt>Pharmacovigilance</dt><dd>Ongoing monitoring of a medicine's safety in real-world use — a standard adoption requirement.</dd></div>
+    <div><dt>Operational research</dt><dd>Real-world implementation studies — distinct from the clinical trials that got the product approved.</dd></div>
+    <div><dt>"Treatment" as a unit</dt><dd>One full course for one patient. Procured volumes count courses, not tablets or packs.</dd></div>
+    <div><dt>TBC</dt><dd>To be confirmed — the LAUNCH team does not yet have a verifiable figure, and the dashboard never estimates.</dd></div>
+    <div><dt>Bottleneck flag</dt><dd>The one-sentence, dated reason a product is stuck — the initiative's core editorial output, structurally required wherever a red light appears.</dd></div>
+  </dl>
+</section>
+
+<!-- ============================================================ PART 7 -->
+<section class="part" id="part-7">
+  <div class="part-head"><span class="part-num">PART 7</span><h2>Current status &amp; open items</h2></div>
+  <p class="depth">An honest snapshot, so no reader over-trusts the prototype.</p>
+  <ul>
+    <li><strong>The data is in draft.</strong> Compiled from public sources, pending LAUNCH-team verification and written manufacturer confirmations. Every page says so in its banner.</li>
+    <li><strong>Two page designs are live in parallel</strong> (journey board vs comparison matrix) awaiting a client decision; the loser will be deleted and its extras folded into the winner.</li>
+    <li><strong>The country map shows an ILLUSTRATIVE warning</strong> until the country survey is verified.</li>
+    <li><strong>The timing thresholds</strong> (≤2 / 3–5 / &gt;5 years) are acknowledged draft placeholders pending LAUNCH's benchmark work.</li>
+    <li><strong>A v2 data preview is awaiting sign-off</strong> — the first harvest of collected public-source data (procurement volumes, regulatory dates, trial records) proposed as updates, kept separate until approved.</li>
+    <li><strong>Hosting, branding, and analytics</strong> are pending external parties: RBM's web team (hosting model), RBM brand guidelines (a one-token-block rebrand), and a usage-analytics decision.</li>
+    <li><strong>The spatial-emanators row awaits funder approval</strong> — and activating it will force the design decision about prevention-specific stage names.</li>
+  </ul>
+</section>
+
+</main>
+</div>
+
+<footer class="colophon">
+  <div class="wrap">
+    <p><strong>About this document.</strong> Synthesized from the project's own documentation (user guide, domain primer, data-analyst guide, data model &amp; lineage, data-sourcing plan, developer guide, remaining-tasks checklist) and repository at <span class="pathfile">github.com/kochrisdev/launch-transparency-dashboard</span> · live site: <span class="pathfile">kochrisdev.github.io/launch-transparency-dashboard</span>.</p>
+    <p>Where this document and the data file disagree, the data file wins. Compiled 2026-08-23. Data status at compile time: <strong>draft</strong>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
