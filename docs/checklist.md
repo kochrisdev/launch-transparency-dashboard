@@ -87,10 +87,12 @@ Nothing remaining. ✅
 Collection infrastructure per [data-sourcing-plan.md](data-sourcing-plan.md);
 three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.md)).
 
-- [ ] 📊 **First PQR Tableau crosstab export** — download the Transaction
-  Summary crosstab from the public PQR workbook, add a small normalizer to
-  `sourcing/staging/procurement_transactions.csv`. Closes the stage-2
-  procurement item's remaining gap.
+- [ ] 📊 **First PQR Tableau crosstab export** — the normalizer is built
+  (`scripts/normalize-pqr.js`, handles Tableau's UTF-16/TSV quirks and any
+  column layout); what remains is the ~2-minute manual download
+  (steps in [sourcing/README.md](../sourcing/README.md)) and running it.
+  Scripted export was tested and is WAF-blocked — it stays manual by design.
+  Closes the stage-2 procurement item's remaining gap.
 - [ ] 🧑‍💻 **NAFDAC Greenbook scraper (Nigeria-first)** — country-registration
   rows for the four products; proves the NRA pattern before widening to other
   portfolio countries (plan §3 Category C).

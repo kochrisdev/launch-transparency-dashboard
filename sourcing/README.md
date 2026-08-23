@@ -22,6 +22,17 @@ provenance carried over.
 | `node scripts/fetch-trials.js` | ClinicalTrials.gov API v2 (US public domain) | Weekly | `staging/trials.csv`, snapshot, and `reports/trials-watch-<date>.md` diffing status / completion-date / phase / results changes vs the previous snapshot — slipped dates are early bottleneck warnings. |
 | `node scripts/fetch-globalfund.js` | Global Fund Data Service OData v4.2 (no auth; Terms of Use, attribute) | Monthly | `staging/globalfund_grants.csv` (one row per malaria grant: country, status, signed/committed/disbursed, period) and `staging/globalfund_disbursements.csv` (grant × year totals). |
 | `node scripts/fetch-regulatory.js` | WHO PQ medicines + vector-control lists (CSV export; WHO terms) and EMA EU-M4all/Art. 58 opinions table (xlsx, regenerated nightly; attribute EMA) | Monthly | `staging/regulatory_events.csv` (malaria FPPs, all VC products, all EU-M4all opinions — portfolio products matched to `productId`) and `reports/regulatory-watch-<date>.md` diffing new listings, delistings and opinion changes. |
+| `node scripts/normalize-pqr.js <file>` | Global Fund **PQR** Transaction Summary — input is a **manually downloaded** Tableau crosstab (see below) | Quarterly | `staging/procurement_transactions.csv` (all columns passed through, headers camelCased, portfolio `productId` prepended) + verbatim raw copy under `raw/pqr/`. |
+
+**The PQR manual step** (~2 minutes; scripted export is confirmed blocked by
+the server's WAF — do not attempt to automate it, see the plan's Category E):
+
+1. Open the [PQR Transaction Summary](https://insights.theglobalfund.org/t/Public/views/PriceQualityReportingTransactionSummary/TransactionSummary)
+   in a browser.
+2. Toolbar → **Download** → **Crosstab** → pick the transactions sheet →
+   **CSV** → Download.
+3. Run `node scripts/normalize-pqr.js <downloaded file>` — it auto-detects
+   Tableau's UTF-16/TSV quirks and any column layout.
 
 ## Running manually
 

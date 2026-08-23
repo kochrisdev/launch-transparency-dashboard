@@ -82,6 +82,7 @@ controls the on-page banner.
 | `scripts/fetch-trials.js` | Trial watch — ClinicalTrials.gov v2 pull for the portfolio, with a what-changed diff vs the previous snapshot. |
 | `scripts/fetch-globalfund.js` | Global Fund pull — malaria grants and disbursement transactions from the Data Service OData API. |
 | `scripts/fetch-regulatory.js` | Regulatory pull — WHO PQ medicines + vector-control lists and EMA EU-M4all opinions, with a new-listings/delistings watch report. |
+| `scripts/normalize-pqr.js` | Normalizes a manually downloaded Global Fund PQR crosstab into the procurement staging dataset (the download itself must stay manual — scripted export is WAF-blocked). |
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
