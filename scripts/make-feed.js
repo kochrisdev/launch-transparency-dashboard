@@ -15,7 +15,10 @@ const data = JSON.parse(raw.slice(m.index + m[0].length).replace(/;?\s*$/, ""));
 const escXml = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const rfc822 = d => new Date(d + "T12:00:00Z").toUTCString();
 
-const items = (data.changelog || []).slice(0, 30).map(c => `    <item>
+// Sort newest-first before taking the top 30 — don't rely on file order.
+const items = (data.changelog || []).slice()
+  .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
+  .slice(0, 30).map(c => `    <item>
       <title>${escXml(c.product)}: ${escXml(c.change.length > 80 ? c.change.slice(0, 77) + "…" : c.change)}</title>
       <description>${escXml(c.change)}</description>
       <link>${SITE}</link>

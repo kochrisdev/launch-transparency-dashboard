@@ -71,8 +71,8 @@ def validate(data: dict) -> list[str]:
                 issues.append(f"{tag}: delayed stage {i} lacks a substantive reason")
         if any(s.get("status") == "late" for s in p.get("stages", [])) and not p.get("flag"):
             issues.append(f"{tag}: has a delayed stage but no bottleneck flag")
-        price = p.get("detail", {}).get("price", {})
-        shown = price.get("value", "TBC").strip() not in ("TBC", "TBD", "—", "-", "")
+        price = p.get("detail", {}).get("price") or {}
+        shown = str(price.get("value") or "TBC").strip() not in ("TBC", "TBD", "—", "-", "")
         if shown and not price.get("confirmedInWriting") and not price.get("source"):
             issues.append(f"{tag}: displayed price lacks confirmation or public source")
     return issues

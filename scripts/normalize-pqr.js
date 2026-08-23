@@ -100,11 +100,13 @@ function camelize(header) {
     .replace(/ (\w)/g, (_, c) => c.toUpperCase()) || "column";
 }
 
-// same portfolio matching as fetch-regulatory.js
+// Portfolio matching — medicines subset of fetch-regulatory.js's mapping
+// (PQR is procurement, so the emanators vector-control mapping isn't needed);
+// keep the patterns themselves in sync with that script.
 function mapProductId(text) {
   const t = String(text || "").toLowerCase();
   if (/ganaplacide/.test(t)) return "ganlum";
-  if (/pyronaridine/.test(t)) return "pyramax";
+  if (/pyronaridine/.test(t) && /artesunate/.test(t)) return "pyramax";
   if (/(dihydroartemisinin|artenimol)/.test(t) && /piperaquine/.test(t)) return "dhappq";
   if (/artemether/.test(t) && /lumefantrine/.test(t) && /amodiaquine/.test(t)) return "alaq";
   return "";

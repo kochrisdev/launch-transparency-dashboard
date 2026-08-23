@@ -25,7 +25,7 @@ const raw = fs.readFileSync(FILE, "utf8");
 // Anchor to line start so the mention in the comment header doesn't match.
 const m = raw.match(/^window\.LAUNCH_DATA\s*=\s*/m);
 if (!m) {
-  console.error("ERROR: could not find `window.LAUNCH_DATA = { ... }` at a line start in data/products.js");
+  console.error(`ERROR: could not find \`window.LAUNCH_DATA = { ... }\` at a line start in ${path.relative(process.cwd(), FILE)}`);
   process.exit(1);
 }
 const body = raw.slice(m.index + m[0].length).replace(/;?\s*$/, "");
@@ -60,11 +60,16 @@ if (data.glossary !== undefined) {
 // ---- changelog ---------------------------------------------------------------
 if (data.changelog !== undefined) {
   if (!Array.isArray(data.changelog)) err("changelog: must be an array");
-  else data.changelog.forEach((c, ci) => {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(c.date || "")) err(`changelog[${ci}]: date must be YYYY-MM-DD`);
-    if (!c.product) err(`changelog[${ci}]: "product" is required (product name or "All")`);
-    if (!c.change || c.change.trim().length < 10) err(`changelog[${ci}]: "change" must describe what changed`);
-  });
+  else {
+    data.changelog.forEach((c, ci) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(c.date || "")) err(`changelog[${ci}]: date must be YYYY-MM-DD`);
+      if (!c.product) err(`changelog[${ci}]: "product" is required (product name or "All")`);
+      if (!c.change || c.change.trim().length < 10) err(`changelog[${ci}]: "change" must describe what changed`);
+      // The RSS feed takes the first N entries as the newest — order matters.
+      if (ci > 0 && (data.changelog[ci - 1].date || "") < (c.date || ""))
+        warn(`changelog[${ci}]: dates not newest-first ("${data.changelog[ci - 1].date}" before "${c.date}") — the feed would drop the newest entries`);
+    });
+  }
 }
 
 // ---- stages ----------------------------------------------------------------
@@ -130,10 +135,14 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
     // detail
     const d = p.detail;
     if (!d) { err(`${tag}: "detail" is required`); return; }
+    // == null also catches JSON null — a null shape must not slip past the
+    // governance rules below (a null price would skip the price rule entirely).
     for (const k of ["price", "useCase", "access", "adoption", "research", "country", "milestones"])
-      if (d[k] === undefined) err(`${tag}: detail.${k} is required`);
+      if (d[k] == null) err(`${tag}: detail.${k} is required (and must not be null)`);
 
-    if (d.price) {
+    if (d.price != null && (typeof d.price !== "object" || Array.isArray(d.price)))
+      err(`${tag}: detail.price must be an object`);
+    else if (d.price) {
       if (typeof d.price.confirmedInWriting !== "boolean")
         err(`${tag}: detail.price.confirmedInWriting must be true or false`);
       const shown = d.price.value && !["TBC", "TBD", "—", "-"].includes(d.price.value.trim());
@@ -141,7 +150,9 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
         err(`${tag}: a displayed price needs confirmedInWriting=true or a public "source" — governance rule`);
       if (shown && !d.price.asOf) warn(`${tag}: detail.price has no "asOf" date`);
     }
-    if (d.country) {
+    if (d.country != null && (typeof d.country !== "object" || Array.isArray(d.country)))
+      err(`${tag}: detail.country must be an object`);
+    else if (d.country) {
       for (const k of ["registered", "inGuidelines", "inMft"]) {
         const v = d.country[k];
         // "TBC" is the honest value for a count we haven't verified yet —
@@ -183,7 +194,7 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
         });
       }
     }
-    if (d.volume === null && !d.volumeNote)
+    if (d.volume == null && !d.volumeNote)
       warn(`${tag}: no volume data and no "volumeNote" explaining why`);
     if (d.volume) {
       if (!d.volume.total || !d.volume.period || !Array.isArray(d.volume.split))
@@ -194,7 +205,9 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
         d.volume.split.forEach((s) => { if (!s.channel) err(`${tag}: every volume split entry needs a "channel"`); });
       }
     }
-    if (Array.isArray(d.milestones)) {
+    if (d.milestones != null && !Array.isArray(d.milestones)) {
+      err(`${tag}: detail.milestones must be an array`);
+    } else if (Array.isArray(d.milestones)) {
       d.milestones.forEach((mrow, mi) => {
         const mtag = `${tag} milestone[${mi}]`;
         for (const k of ["milestone", "status", "label", "date", "next", "anticipated"])

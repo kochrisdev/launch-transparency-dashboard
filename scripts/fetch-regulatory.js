@@ -123,16 +123,21 @@ function readSheet(xlsxBuf) {
       shared.push(xmlDecode([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(t => t[1]).join("")));
     }
   }
-  const xml = files["xl/worksheets/sheet1.xml"].toString("utf8");
+  const sheetName = Object.keys(files).filter(n => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort()[0];
+  if (!sheetName) throw new Error("EMA xlsx: no worksheet found — layout changed?");
+  const xml = files[sheetName].toString("utf8");
   const rows = [];
   for (const rm of xml.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
     const cells = {};
-    for (const cm of rm[1].matchAll(/<c ([^>]*)>([\s\S]*?)<\/c>/g)) {
-      const attrs = cm[1];
+    // Empty cells are self-closing (<c r="F19" s="1"/>) — match them first, or
+    // the paired-cell pattern swallows the NEXT cell's content into this column.
+    for (const cm of rm[1].matchAll(/<c ([^>]*?)\/>|<c ([^>]*)>([\s\S]*?)<\/c>/g)) {
+      const attrs = cm[1] !== undefined ? cm[1] : cm[2];
+      const content = cm[3] || "";
       const col = (attrs.match(/r="([A-Z]+)\d+"/) || [])[1];
       const type = (attrs.match(/t="([^"]*)"/) || [])[1];
-      const v = (cm[2].match(/<v>([\s\S]*?)<\/v>/) || [])[1];
-      const is = (cm[2].match(/<is>([\s\S]*?)<\/is>/) || [])[1];
+      const v = (content.match(/<v>([\s\S]*?)<\/v>/) || [])[1];
+      const is = (content.match(/<is>([\s\S]*?)<\/is>/) || [])[1];
       let val = "";
       if (type === "s" && v !== undefined) val = shared[+v] ?? "";
       else if (is) val = xmlDecode([...is.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(t => t[1]).join(""));
@@ -269,7 +274,10 @@ function diff(prevRows, rows) {
   return changes;
 }
 
-(async () => {
+// Exported for offline re-normalization of existing raw snapshots and tests.
+module.exports = { normalizeFpp, normalizeVc, normalizeEma, readSheet, toCsv, isoDate, mapProductId };
+
+if (require.main === module) (async () => {
   fs.mkdirSync(RAW_PQ, { recursive: true });
   fs.mkdirSync(RAW_EMA, { recursive: true });
   fs.mkdirSync(STAGING_DIR, { recursive: true });
