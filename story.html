@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
 <title>The Waiting Years</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -56,6 +59,7 @@
   .banner { max-width: 732px; margin: 0 auto; padding: 9px 14px; border-radius: 8px;
     background: var(--accent-soft); color: var(--ink-2); font-size: 13px; border: 1px solid var(--line); }
   .banner b { color: var(--ink); }
+  .banner.error { background: var(--crit-soft); color: var(--crit); }
 
   /* ---------- scrolly layout ---------- */
   .scrolly { max-width: 1180px; margin: 30px auto 0; padding: 0 24px;
@@ -215,14 +219,22 @@
 <script src="data/world-map.js"></script>
 <script>
 (function () {
-  if (!window.LAUNCH_DATA) return;
+  const banner = document.getElementById("banner");
+  function fail(html) {
+    banner.hidden = false;
+    banner.classList.add("error");
+    banner.innerHTML = html;
+  }
+  if (!window.LAUNCH_DATA) {
+    fail("<b>Data failed to load.</b> data/products.js is missing or has a syntax error — run <code>node scripts/validate-data.js</code>.");
+    return;
+  }
   const DATA = window.LAUNCH_DATA;
   const tracked = DATA.products.filter(p => !p.placeholder);
   const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
   const nowYear = parseInt(DATA.meta.lastUpdated.slice(0, 4), 10);
 
   // banner
-  const banner = document.getElementById("banner");
   const BANNERS = {
     illustrative: "<b>Design mockup.</b> All values below are illustrative placeholders — not real programme data.",
     draft: "<b>Draft data.</b> Compiled from public sources, pending LAUNCH verification. Unverified values are TBC, never estimated."
@@ -231,6 +243,10 @@
 
   // ---- derive the story's numbers from the data (no hand-typed facts) ----
   const hero = tracked.find(p => p.id === "pyramax") || tracked.find(p => p.class === "market");
+  if (!hero) {
+    fail("<b>Data failed to load.</b> No marketed product found in data/products.js for the story to follow — run <code>node scripts/validate-data.js</code>.");
+    return;
+  }
   const journey = (hero.detail.journey || []).filter(g => Number.isInteger(g.year));
   const firstYear = journey.length ? journey[0].year : null;
   const recGate = journey.find(g => /recommend/i.test(g.label));
@@ -242,10 +258,16 @@
   const heroCountries = hero.detail.countries ? hero.detail.countries.list : [];
   const inGuidelinesCount = hero.detail.country.inGuidelines;
   const ganlum = tracked.find(p => p.id === "ganlum");
+  const ganlumStage0 = ganlum && ganlum.stages && ganlum.stages[0] ? ganlum.stages[0] : null;
+  const cure = ((ganlumStage0 && ganlumStage0.note || "").match(/([\d.]+)%/) || [])[1];
+  // "Announced 12 Nov 2025" → "announced 12 Nov 2025" for mid-sentence use
+  const cureAnnounced = ganlumStage0 && ganlumStage0.date
+    ? ganlumStage0.date.charAt(0).toLowerCase() + ganlumStage0.date.slice(1) : "";
 
   // ---- steps (left column) ----
+  const WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
   const steps = [
-    { viz: "poster", kicker: "The portfolio", h: "Four medicines, one goal",
+    { viz: "poster", kicker: "The portfolio", h: `${WORDS[tracked.length] || tracked.length} medicines, one goal`,
       t: `LAUNCH tracks ${tracked.length} antimalarials: ${pipelineProducts.map(p => p.name).join(" and ")} coming through the pipeline, and ${flagged.map(p => p.name).join(" and ")} — already approved, already recommended, and barely used. Follow one of them.` },
     { viz: "tl-early", kicker: hero.name + " · " + hero.inn, h: "The fast part: proving it works",
       t: `${hero.name} cleared the hardest scientific hurdles years ago${firstYear ? " — a stringent regulatory opinion in " + firstYear : ""}, WHO quality prequalification soon after. By the standards of drug development, this was success.` },
@@ -255,10 +277,10 @@
       t: "Three separate systems must each say yes — a stringent regulator, WHO's guideline group, WHO's quality team — and then every country must register it, write it into national guidelines, budget for it, and deliver it. Green on the left half of the pathway means nothing to a patient until the right half turns green too." },
     { viz: "flags", kicker: "Today", h: `${flagged.length} products are stuck right now`,
       t: "This is what the dashboard exists to surface: not history, but the current bottleneck for every product, named and dated, so the actor who can fix it knows it's theirs." },
-    { viz: "map", kicker: "The access map", h: inGuidelinesCount === "TBC" ? "The map is mostly blank" : "The map is mostly blank",
+    { viz: "map", kicker: "The access map", h: "The map is mostly blank",
       t: `Where ${hero.name} can actually be used remains a short list${typeof hero.detail.country.registered === "number" ? " — registered in " + hero.detail.country.registered + "+ countries" : ""}, and national guideline inclusion is the choke point. (Country coloring is illustrative until the LAUNCH survey is verified.)` },
     { viz: "next", kicker: "The next arrivals", h: "Will the new ones wait too?",
-      t: `${ganlum ? ganlum.name + " met its Phase III endpoint with a " + "97.4% cure rate — a genuinely new weapon against resistance. " : ""}The pipeline products will hit the exact same gates. Whether they take ${yearsToRec || "ten"} years or two is a choice the malaria community makes — and transparency is how LAUNCH intends to force the question.` }
+      t: `${ganlum ? ganlum.name + " met its Phase III endpoint" + (cure ? " with a " + cure + "% cure rate" : "") + " — a genuinely new weapon against resistance. " : ""}The pipeline products will hit the exact same gates. Whether they take ${yearsToRec || "ten"} years or two is a choice the malaria community makes — and transparency is how LAUNCH intends to force the question.` }
   ];
 
   document.getElementById("steps").innerHTML = steps.map((s, i) => `
@@ -340,10 +362,13 @@
     <div class="biglbl" style="margin-top:12px">${esc(hero.name)}: registered (light) → in national guidelines (medium) → in MFT plans (dark).</div>
   </div></div>`);
 
-  // next arrivals
+  // next arrivals — cure-rate headline only when the figure is present in the data
+  const cureHtml = cure
+    ? `<div class="bignum good">${esc(cure)}<span class="unit"> %</span></div>
+    <div class="biglbl">PCR-corrected cure rate in ${esc(ganlum ? ganlum.name : "the lead candidate")}'s Phase III trial (KALUMA${cureAnnounced ? ", " + esc(cureAnnounced) : ""}).</div>`
+    : `<div class="biglbl">The next medicines are moving through late-stage trials and regulatory review.</div>`;
   L.push(`<div class="layer" data-viz="next">
-    <div class="bignum good">97.4<span class="unit"> %</span></div>
-    <div class="biglbl">PCR-corrected cure rate in ${esc(ganlum ? ganlum.name : "the lead candidate")}'s Phase III trial (KALUMA, announced Nov 2025).</div>
+    ${cureHtml}
     <div class="panel"><div class="mini-cards">` +
     pipelineProducts.map(p => `<div class="mcard"><b>${esc(p.name)}</b><span class="s">${esc(p.inn)}</span><span class="s">Next: ${esc((p.detail.milestones.find(m => m.status !== "done") || {}).milestone || "—")}</span></div>`).join("") +
     `</div></div></div>`);

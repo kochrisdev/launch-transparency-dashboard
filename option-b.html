@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
 <title>LAUNCH Dashboard — Design Option B</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -484,12 +487,12 @@
   document.querySelectorAll(".mcell .dot").forEach(dot => {
     const show = () => {
       const rows = [];
-      if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
-      if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
-      if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
-      if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
-      if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
-      showTipAt(dot, `<b>${dot.dataset.title}</b>${rows.join("")}`);
+      if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${esc(dot.dataset.note)}</div>`);
+      if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${esc(dot.dataset.date)}</span></div>`);
+      if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${esc(dot.dataset.next)}</span></div>`);
+      if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${esc(dot.dataset.nextdate)}</span></div>`);
+      if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${esc(dot.dataset.asof)}</span></div>`);
+      showTipAt(dot, `<b>${esc(dot.dataset.title)}</b>${rows.join("")}`);
     };
     dot.addEventListener("mouseenter", show);
     dot.addEventListener("focus", show);
@@ -621,7 +624,7 @@
         "Not yet plotted (pathway starting): " + without.map(p => p.name).join(", ") + ".";
 
     document.querySelectorAll(".tgate").forEach(g => {
-      const show = () => showTipAt(g, `<b>${g.dataset.yr}</b>${g.dataset.lbl}`);
+      const show = () => showTipAt(g, `<b>${esc(g.dataset.yr)}</b>${esc(g.dataset.lbl)}`);
       g.addEventListener("mouseenter", show);
       g.addEventListener("focus", show);
       g.addEventListener("mouseleave", hideTip);

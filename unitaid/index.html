@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
 <title>LAUNCH Dashboard · Unitaid Brand</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -494,7 +497,7 @@
   if (updates.length) {
     document.getElementById("updates").hidden = false;
     document.getElementById("updates-list").innerHTML = updates.slice(0, 8).map(u =>
-      `<li><span class="ud">${u.date}</span><span class="up">${u.product}</span><span>${u.change}</span></li>`
+      `<li><span class="ud">${esc(u.date)}</span><span class="up">${esc(u.product)}</span><span>${esc(u.change)}</span></li>`
     ).join("");
   }
 
@@ -525,7 +528,7 @@
               data-asof="${esc(st.asOf)}">${ICON[st.status]}</span>
             <div class="bar post ${postDone ? "done-bar" : ""}"></div>
           </div>
-          <div class="lbl">${STAGES[i]}</div>
+          <div class="lbl">${esc(STAGES[i])}</div>
         </div>`;
     }).join("");
 
@@ -614,9 +617,9 @@
             </div>
             <div class="card">
               <h3>Country access</h3>
-              <div class="kv"><span>Registered</span><span>${d.country.registered}</span></div>
-              <div class="kv"><span>In national guidelines</span><span>${d.country.inGuidelines}</span></div>
-              <div class="kv"><span>In MFT plans</span><span>${d.country.inMft}</span></div>
+              <div class="kv"><span>Registered</span><span>${esc(d.country.registered)}</span></div>
+              <div class="kv"><span>In national guidelines</span><span>${esc(d.country.inGuidelines)}</span></div>
+              <div class="kv"><span>In MFT plans</span><span>${esc(d.country.inMft)}</span></div>
               <div class="kv"><span>Forecast demand</span><span>${esc(d.country.forecastDemand)}</span></div>
             </div>
             <div class="card">
@@ -700,12 +703,12 @@
   function hideTip() { tip.style.display = "none"; }
   function showStageTip(dot) {
     const rows = [];
-    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${dot.dataset.note}</div>`);
-    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${dot.dataset.date}</span></div>`);
-    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${dot.dataset.next}</span></div>`);
-    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${dot.dataset.nextdate}</span></div>`);
-    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${dot.dataset.asof}</span></div>`);
-    showTipAt(dot, `<b>${dot.dataset.stage} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`);
+    if (dot.dataset.note) rows.push(`<div style="margin-bottom:4px">${esc(dot.dataset.note)}</div>`);
+    if (dot.dataset.date) rows.push(`<div class="trow"><span>Date</span><span>${esc(dot.dataset.date)}</span></div>`);
+    if (dot.dataset.next) rows.push(`<div class="trow"><span>Next step</span><span>${esc(dot.dataset.next)}</span></div>`);
+    if (dot.dataset.nextdate) rows.push(`<div class="trow"><span>Expected</span><span>${esc(dot.dataset.nextdate)}</span></div>`);
+    if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${esc(dot.dataset.asof)}</span></div>`);
+    showTipAt(dot, `<b>${esc(dot.dataset.stage)} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`);
   }
   document.querySelectorAll(".stage .dot").forEach(dot => {
     dot.addEventListener("mouseenter", () => showStageTip(dot));
@@ -867,7 +870,7 @@
         "Not yet plotted (pathway starting): " + without.map(p => p.name).join(", ") + ".";
 
     document.querySelectorAll(".tgate").forEach(g => {
-      const show = () => showTipAt(g, `<b>${g.dataset.yr}</b>${g.dataset.lbl}`);
+      const show = () => showTipAt(g, `<b>${esc(g.dataset.yr)}</b>${esc(g.dataset.lbl)}`);
       g.addEventListener("mouseenter", show);
       g.addEventListener("focus", show);
       g.addEventListener("mouseleave", hideTip);
