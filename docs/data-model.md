@@ -22,7 +22,8 @@ object assigned to `window.LAUNCH_DATA`. Two files implement it:
 
 | File | Contents | Served by |
 | --- | --- | --- |
-| [`data/products.js`](../data/products.js) | **Real data** (public-source draft, pending verification) | Root dashboards, `unitaid/` edition, Streamlit default, Power BI live queries |
+| [`data/products.js`](../data/products.js) | **Real data, v1** (public-source draft, pending verification) | Root dashboards, `unitaid/` edition, Streamlit default, Power BI live queries |
+| [`data/products.v2.js`](../data/products.v2.js) | **v2 proposal** — v1 plus collected public-source updates from `sourcing/staging/` (PQR volumes, WHO PQ, EMA, trial registry), pending sign-off | `v2/` preview edition; merged into `products.js` and retired on approval |
 | [`data/products.synthetic.js`](../data/products.synthetic.js) | **Fictional data** (invented companies and figures, every feature populated) | `synthetic/` edition; any tool via explicit path/URL |
 
 Same schema, same governance rules, one validator:
@@ -207,9 +208,9 @@ Rules the lineage encodes:
   passed it; no downstream product re-invents governance (they *display* it —
   see §7).
 - **Generated outputs are committed but never hand-edited**: `unitaid/`,
-  `synthetic/`, `powerbi/data/*.csv`, `history/`, `feed.xml`, `briefs/`,
-  `data/world-map.js`. Each has exactly one generator script; regenerate,
-  don't patch.
+  `synthetic/`, `v2/`, `powerbi/data/*.csv`, `history/`, `feed.xml`,
+  `briefs/`, `data/world-map.js`. Each has exactly one generator script;
+  regenerate, don't patch.
 - **Only `data/products.js` triggers automation.** `publish.yml` is
   path-filtered to that one file — edits to the synthetic dataset deploy with
   the push but produce no history snapshot, no feed rebuild, no brief input.
