@@ -22,6 +22,7 @@ provenance carried over.
 | `node scripts/fetch-trials.js` | ClinicalTrials.gov API v2 (US public domain) | Weekly | `staging/trials.csv`, snapshot, and `reports/trials-watch-<date>.md` diffing status / completion-date / phase / results changes vs the previous snapshot — slipped dates are early bottleneck warnings. |
 | `node scripts/fetch-globalfund.js` | Global Fund Data Service OData v4.2 (no auth; Terms of Use, attribute) | Monthly | `staging/globalfund_grants.csv` (one row per malaria grant: country, status, signed/committed/disbursed, period) and `staging/globalfund_disbursements.csv` (grant × year totals). |
 | `node scripts/fetch-regulatory.js` | WHO PQ medicines + vector-control lists (CSV export; WHO terms) and EMA EU-M4all/Art. 58 opinions table (xlsx, regenerated nightly; attribute EMA) | Monthly | `staging/regulatory_events.csv` (malaria FPPs, all VC products, all EU-M4all opinions — portfolio products matched to `productId`) and `reports/regulatory-watch-<date>.md` diffing new listings, delistings and opinion changes. |
+| `node scripts/fetch-nafdac.js` | **NAFDAC Greenbook** — Nigeria's public medicines register (Laravel/DataTables JSON endpoint; plain HTTP by necessity — the host's HTTPS hangs after handshake, checked 2026-08-23) | Monthly | `staging/nafdac_registrations.csv` (portfolio registrations, `iso3=NGA`: reg. no., composition, form, applicant, approval/expiry dates, Active/Inactive status) and `reports/nafdac-watch-<date>.md` diffing new registrations and status/expiry changes. The template for other NRA registers. |
 | `node scripts/normalize-pqr.js <file>` | Global Fund **PQR** Transaction Summary — input is a **manually downloaded** Tableau crosstab (see below) | Quarterly | `staging/procurement_transactions.csv` — scoped to the malaria-relevant market (anti-malaria medicine + vector-control categories, plus any portfolio match; the ~99k-row full crosstab is mostly ARV/TB), all columns passed through, headers camelCased, portfolio `productId` prepended. Full crosstab kept gzipped under `raw/pqr/`. |
 
 **The PQR manual step** (~2 minutes; scripted export is confirmed blocked by
@@ -70,8 +71,8 @@ history-snapshot bot):
 | When (UTC) | What runs |
 | --- | --- |
 | Mondays 06:00 | `fetch-trials.js` — and if the watch report contains changes, the workflow **opens a GitHub issue** carrying the report for analyst review. |
-| 3rd of each month 06:30 | `fetch-globalfund.js` and `fetch-regulatory.js` — the regulatory watch opens an issue on changes too (new PQ listings, delistings, EMA opinion changes). |
-| On demand | *Actions tab → "Scheduled source fetch" → Run workflow* — choose `all`, `trials`, `globalfund`, or `regulatory`. |
+| 3rd of each month 06:30 | `fetch-globalfund.js`, `fetch-regulatory.js` and `fetch-nafdac.js` — the regulatory and NAFDAC watches open issues on changes too (new PQ listings/delistings, EMA opinion changes, new/lapsed Nigerian registrations). |
+| On demand | *Actions tab → "Scheduled source fetch" → Run workflow* — choose `all`, `trials`, `globalfund`, `regulatory`, or `nafdac`. |
 
 Notes:
 

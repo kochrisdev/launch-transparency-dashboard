@@ -94,9 +94,13 @@ three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.m
   (DHA–PPQ 234, ASPY 68). Scripted export was tested and is WAF-blocked —
   the download stays manual by design (steps in
   [sourcing/README.md](../sourcing/README.md)); repeat quarterly.
-- [ ] 🧑‍💻 **NAFDAC Greenbook scraper (Nigeria-first)** — country-registration
-  rows for the four products; proves the NRA pattern before widening to other
-  portfolio countries (plan §3 Category C).
+- [x] 🧑‍💻 **NAFDAC Greenbook scraper (Nigeria-first)** — done 2026-08-23:
+  `scripts/fetch-nafdac.js` (DataTables JSON endpoint, monthly in
+  `sourcing.yml`) staged 48 portfolio registrations — DHA–PPQ 47
+  presentations (26 Active / 22 **Inactive**, i.e. lapsed) and Pyramax 1
+  (granules, approved 2024). Next: replicate the pattern for other
+  portfolio-country registers (plan §3 Category C — Tanzania IMIS2 next
+  most feasible).
 - [ ] 🧑‍💻 **MAGICapp version poll** — one GET against the guidelines API,
   compare `publishDate`, alert on change; cheap add to `sourcing.yml`.
 - [ ] 📊 **WMR annex ingest (due December)** — policy 4A/4B, commodities 4G,
