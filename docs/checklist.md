@@ -30,11 +30,12 @@ Nothing remaining. ✅
   the country map (stage 3).* Starting evidence: PQ/EMA rows are already
   staged in `sourcing/staging/regulatory_events.csv`; national registrations
   still need the NRA registers (see the data sourcing section below).
-- [ ] 📊 **Procurement volumes data pull** — fill the `volume` blocks for ASPY
-  and DHA–PPQ. Global Fund grant/disbursement data now arrives automatically
-  (`sourcing/staging/globalfund_*.csv`); still needed: the **PQR Tableau
-  crosstab export** for product-level prices/volumes, and note that PMI data
-  is archive-only post-2025 (disclose the gap — see
+- [ ] 📊 **Procurement volumes data pull** — the data is now staged
+  (`sourcing/staging/procurement_transactions.csv`: DHA–PPQ 11.5m packs /
+  $41.5m since 2008, ASPY 940k packs / $14.5m since 2018 — both with sharp
+  2025 upticks); what remains is the analyst edit filling the `volume`
+  blocks from it (channel = Global Fund only; PMI is archive-only
+  post-2025 — disclose the gap, see
   [data-sourcing-plan.md](data-sourcing-plan.md) Category E).
 - [ ] 📊🤝 **Flip `dataStatus` to `"live"`** after sign-off (checklist in
   [data-analyst-guide.md §6](data-analyst-guide.md#6-data-status-transitions))
@@ -87,12 +88,12 @@ Nothing remaining. ✅
 Collection infrastructure per [data-sourcing-plan.md](data-sourcing-plan.md);
 three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.md)).
 
-- [ ] 📊 **First PQR Tableau crosstab export** — the normalizer is built
-  (`scripts/normalize-pqr.js`, handles Tableau's UTF-16/TSV quirks and any
-  column layout); what remains is the ~2-minute manual download
-  (steps in [sourcing/README.md](../sourcing/README.md)) and running it.
-  Scripted export was tested and is WAF-blocked — it stays manual by design.
-  Closes the stage-2 procurement item's remaining gap.
+- [x] 📊 **First PQR Tableau crosstab export** — done 2026-08-23: manual
+  download + `scripts/normalize-pqr.js` → 12,151 malaria-relevant
+  transactions staged (of 98,647 total), 302 matched to portfolio products
+  (DHA–PPQ 234, ASPY 68). Scripted export was tested and is WAF-blocked —
+  the download stays manual by design (steps in
+  [sourcing/README.md](../sourcing/README.md)); repeat quarterly.
 - [ ] 🧑‍💻 **NAFDAC Greenbook scraper (Nigeria-first)** — country-registration
   rows for the four products; proves the NRA pattern before widening to other
   portfolio countries (plan §3 Category C).

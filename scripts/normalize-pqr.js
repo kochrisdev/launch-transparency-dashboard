@@ -12,8 +12,15 @@
 //   build automation against those endpoints; see docs/data-sourcing-plan.md.)
 //
 // Outputs:
-//   sourcing/raw/pqr/<date>-crosstab.csv        verbatim copy of the download
+//   sourcing/raw/pqr/<date>-crosstab.csv.gz     gzipped verbatim copy of the
+//                                               download (the raw crosstab is
+//                                               ~60 MB — all components)
 //   sourcing/staging/procurement_transactions.csv
+//                                               scoped to the malaria-relevant
+//                                               market: rows whose product
+//                                               category mentions malaria or
+//                                               vector control, plus any row
+//                                               matched to a portfolio product
 //
 // Tableau crosstabs vary (UTF-16 TSV or UTF-8 CSV; column names shift between
 // workbook revisions), so this normalizer makes no hard column assumptions:
@@ -25,6 +32,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 const root = path.join(__dirname, "..");
 const RAW_DIR = path.join(root, "sourcing", "raw", "pqr");
@@ -126,19 +134,28 @@ if (!productCols.length) console.warn("Warning: no column name contains 'product
 
 fs.mkdirSync(RAW_DIR, { recursive: true });
 fs.mkdirSync(STAGING_DIR, { recursive: true });
-fs.copyFileSync(input, path.join(RAW_DIR, `${today}-crosstab${path.extname(input) || ".csv"}`));
+fs.writeFileSync(path.join(RAW_DIR, `${today}-crosstab.csv.gz`), zlib.gzipSync(fs.readFileSync(input)));
+
+// staging scope: the malaria-relevant market (drops ARV/TB/diagnostics bulk)
+const catCol = header.findIndex(h => /category/i.test(h));
+const inScope = (r, productId) =>
+  productId !== "" ||
+  (catCol >= 0 && /malaria|vector control/i.test(r[catCol] || ""));
 
 const outHeader = ["productId", ...header, "sourceUrl", "retrievedDate"];
 const out = [outHeader.join(",")];
-let matched = 0;
+let matched = 0, kept = 0;
 for (const r of rows.slice(1)) {
   const basis = productCols.length ? productCols.map(i => r[i]).join(" ") : r.join(" ");
   const productId = mapProductId(basis);
+  if (!inScope(r, productId)) continue;
+  kept++;
   if (productId) matched++;
   out.push([productId, ...header.map((_, i) => r[i] || ""), SOURCE_URL, today].map(csvEscape).join(","));
 }
 fs.writeFileSync(path.join(STAGING_DIR, "procurement_transactions.csv"), out.join("\n") + "\n");
 
-console.log(`\n${rows.length - 1} rows (${matched} matched to portfolio products) → sourcing/staging/procurement_transactions.csv`);
-console.log(`Raw copy → sourcing/raw/pqr/${today}-crosstab${path.extname(input) || ".csv"}`);
+console.log(`\n${rows.length - 1} rows parsed → ${kept} in the malaria-relevant scope (${matched} matched to portfolio products)`);
+console.log(`Staging → sourcing/staging/procurement_transactions.csv`);
+console.log(`Raw copy (gzipped, full crosstab) → sourcing/raw/pqr/${today}-crosstab.csv.gz`);
 console.log("Reminder: PQR is self-reported with reporting lags — treat recent quarters as incomplete (see the PQR Data Caveats note).");
