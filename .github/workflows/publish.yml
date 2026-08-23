@@ -11,6 +11,12 @@ on:
 permissions:
   contents: write
 
+# One bot push at a time — a queued run rebases on the previous one's commit
+# instead of failing non-fast-forward.
+concurrency:
+  group: bot-push-main
+  cancel-in-progress: false
+
 jobs:
   snapshot:
     runs-on: ubuntu-latest
@@ -23,10 +29,22 @@ jobs:
         run: node scripts/validate-data.js
       - name: Snapshot data file into history/
         run: |
-          DATE=$(node -e "const m=require('fs').readFileSync('data/products.js','utf8').match(/\"lastUpdated\": \"([0-9-]+)\"/); console.log(m[1])")
+          # Parse the JSON body (not a whitespace-sensitive regex) so a legal
+          # reformat can't break extraction.
+          DATE=$(node -e "
+            const raw = require('fs').readFileSync('data/products.js','utf8');
+            const m = raw.match(/^window\.LAUNCH_DATA\s*=\s*/m);
+            console.log(JSON.parse(raw.slice(m.index + m[0].length).replace(/;?\s*\$/, '')).meta.lastUpdated);
+          ")
           mkdir -p history
-          cp data/products.js "history/products-$DATE.js"
-          echo "Snapshot: history/products-$DATE.js"
+          TARGET="history/products-$DATE.js"
+          # History is append-only: never silently overwrite a prior snapshot.
+          if [ -f "$TARGET" ] && ! cmp -s data/products.js "$TARGET"; then
+            echo "::error::$TARGET already exists with different content — bump meta.lastUpdated before pushing data edits."
+            exit 1
+          fi
+          cp data/products.js "$TARGET"
+          echo "Snapshot: $TARGET"
       - name: Rebuild RSS feed
         run: node scripts/make-feed.js
       - name: Commit snapshot and feed

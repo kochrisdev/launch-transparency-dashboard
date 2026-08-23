@@ -2,7 +2,6 @@ name: Validate dashboard data
 
 on:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -13,7 +12,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate data file
+      - name: Validate data file (v1)
         run: node scripts/validate-data.js
+      - name: Validate v2 preview dataset
+        run: node scripts/validate-data.js data/products.v2.js
+      - name: Validate synthetic dataset
+        run: node scripts/validate-data.js data/products.synthetic.js
       - name: Build single-file preview (smoke test)
         run: node scripts/make-preview.js

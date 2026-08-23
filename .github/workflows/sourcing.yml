@@ -31,6 +31,12 @@ permissions:
   contents: write
   issues: write
 
+# Shares the bot-push group with publish.yml so two bot pushes to main
+# never race each other (the loser would fail non-fast-forward).
+concurrency:
+  group: bot-push-main
+  cancel-in-progress: false
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -73,9 +79,15 @@ jobs:
         run: node scripts/fetch-regulatory.js
 
       - name: Commit sourcing outputs
+        # always(): if one fetcher fails, the outputs of the ones that
+        # succeeded are still committed (the job stays red for triage).
+        if: always()
         run: |
           git config user.name "launch-dashboard-bot"
           git config user.email "actions@github.com"
+          # Record which watch reports THIS run produced/changed, for the issue
+          # step — done before committing, while they still show as dirty.
+          git status --porcelain sourcing/reports 2>/dev/null | grep -oE 'sourcing/reports/(trials|regulatory)-watch-[0-9-]+\.md' > /tmp/new-reports.txt || true
           git add sourcing
           if git diff --cached --quiet; then
             echo "Nothing new to commit."
@@ -85,15 +97,24 @@ jobs:
           fi
 
       - name: Open an issue if a watch report found changes
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          DATE=$(date -u +%F)
-          for KIND in trials regulatory; do
-            REPORT="sourcing/reports/$KIND-watch-$DATE.md"
-            if [ -f "$REPORT" ] && grep -q "Changes since" "$REPORT"; then
+          # Only the reports this run produced (recorded by the commit step,
+          # named by the fetcher's own start date — survives midnight rollover).
+          NEW_REPORTS=$(cat /tmp/new-reports.txt 2>/dev/null || true)
+          if [ -z "$NEW_REPORTS" ]; then echo "No new watch reports — no issue."; fi
+          for REPORT in $NEW_REPORTS; do
+            KIND=$(basename "$REPORT" | sed -E 's/-watch-.*//')
+            DATE=$(basename "$REPORT" | sed -E 's/^[a-z]+-watch-(.*)\.md$/\1/')
+            if grep -q "Changes since" "$REPORT"; then
+              case "$KIND" in
+                trials)     TITLE="Trial watch" ;;
+                regulatory) TITLE="Regulatory watch" ;;
+              esac
               gh issue create --repo "$GITHUB_REPOSITORY" \
-                --title "$(echo "$KIND" | sed 's/^t/T/;s/^r/R/') watch: changes detected — $DATE" \
+                --title "$TITLE: changes detected — $DATE" \
                 --body-file "$REPORT"
             else
               echo "No $KIND changes — no issue."

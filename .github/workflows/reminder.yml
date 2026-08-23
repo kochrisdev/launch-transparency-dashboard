@@ -26,11 +26,10 @@ jobs:
           gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$(cat <<'EOF'
           Monthly data review (see docs/data-analyst-guide.md §5 for the source hierarchy):
 
-          - [ ] WHO PQ list of prequalified medicines — new listings / requalifications
-          - [ ] WHO PQ Expression of Interest list — ALAQ / GanLum additions
+          - [ ] WHO PQ lists and EMA EU-M4all opinions arrive automatically via the monthly regulatory fetch — review sourcing/reports/regulatory-watch-*.md and any open "Regulatory watch" issues
+          - [ ] WHO PQ Expression of Interest list — ALAQ / GanLum additions (not covered by the fetcher)
           - [ ] WHO Guidelines for malaria — updates, GDG meeting outcomes
-          - [ ] EMA — Article 58 opinions, label changes
-          - [ ] Novartis / MMV / MORU-DeTACT / Shin Poong announcements
+          - [ ] Novartis / MMV / MORU (FD-TACT) / Shin Poong announcements
           - [ ] Global Fund PQR Tableau crosstab export (quarterly — check if due; grants/disbursements arrive automatically via the scheduled source fetch — see sourcing/README.md)
           - [ ] Review recent sourcing/reports/trials-watch-*.md and any open "Trial watch" issues
           - [ ] Country survey refresh (quarterly — check if due)
