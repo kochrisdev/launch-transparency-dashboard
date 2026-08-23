@@ -15,7 +15,7 @@
 window.LAUNCH_DATA =
 {
   "meta": {
-    "lastUpdated": "2026-08-15",
+    "lastUpdated": "2026-08-23",
     "dataStatus": "draft",
     "host": "RBM Partnership to End Malaria"
   },
@@ -45,6 +45,10 @@ window.LAUNCH_DATA =
     "GMP": "Good Manufacturing Practice — quality standard verified by inspection of manufacturing sites."
   },
   "changelog": [
+    { "date": "2026-08-23", "product": "DHA–PPQ", "change": "WHO guideline recommendation year corrected to 2010 (second-edition treatment guidelines; reaffirmed 2015) — previously shown as 2015." },
+    { "date": "2026-08-23", "product": "ALAQ", "change": "Co-formulated pivotal Phase III renamed to FD-TACT (successor to the DeTACT programme); unverified 'taste-masked' wording replaced with the sourced 'child-friendly dispersible'." },
+    { "date": "2026-08-23", "product": "Spatial emanators", "change": "Status refreshed: WHO policy recommendation for spatial repellents (13 Aug 2025), WHO PQ of Guardian and Mosquito Shield, and the Global Fund–US rollout partnership (13 May 2026) recorded — no longer pending funder approval." },
+    { "date": "2026-08-23", "product": "GanLum", "change": "Use-case wording aligned with the sourced Novartis claim (first major innovation in malaria treatment since ACTs were introduced 25+ years ago)." },
     { "date": "2026-08-15", "product": "All", "change": "Added MMV-style pipeline poster view (pipeline.html) placing each product in its development phase." },
     { "date": "2026-08-15", "product": "All", "change": "Added country access map (illustrative until verified), cross-product pathway timing chart, embeddable product widget, RSS update feed and automatic data-history snapshots." },
     { "date": "2026-08-14", "product": "ASPY", "change": "Renamed from Pyramax to ASPY (pyronaridine–artesunate); trade name retained in the subtitle." },
@@ -77,7 +81,7 @@ window.LAUNCH_DATA =
       ],
       "detail": {
         "price": { "value": "TBC", "note": "Pricing not yet public — will be shown once confirmed by manufacturer", "source": "", "confirmedInWriting": false, "asOf": "2026-08-14" },
-        "useCase": "First non-artemisinin combination in over 25 years — candidate for artemisinin partial-resistance settings and MFT strategies; kills resistant parasites and blocks transmission.",
+        "useCase": "Non-artemisinin combination — the first major innovation in malaria treatment since ACTs were introduced over 25 years ago (Novartis) — candidate for artemisinin partial-resistance settings and MFT strategies; kills resistant parasites and blocks transmission.",
         "access": [
           "Co-developed with MMV under access-oriented partnership",
           "Access and affordability provisions under discussion",
@@ -110,7 +114,7 @@ window.LAUNCH_DATA =
       "currentStage": 0,
       "flag": null,
       "stages": [
-        { "status": "prog", "note": "Co-formulated fixed-dose triple ACT in Phase III programme (DeTACT); dose-optimization published 2025; dispersible taste-masked formulation", "date": "Phase III targeted completion 2025–26", "next": "Phase III results, then dossier preparation", "nextDate": "TBC", "source": "MORU / DeTACT; Clin Pharmacol Ther 2025; WHO PADO malaria, Jun 2025", "asOf": "2026-08-14" },
+        { "status": "prog", "note": "Co-formulated fixed-dose triple ACT in pivotal Phase III (FD-TACT, successor to the DeTACT programme; first patient Sep 2025); dose-optimization published 2025; child-friendly dispersible formulation", "date": "Phase III targeted completion 2025–26", "next": "Phase III results, then dossier preparation", "nextDate": "TBC", "source": "MORU / FD-TACT; Clin Pharmacol Ther 2025; WHO PADO malaria, Jun 2025", "asOf": "2026-08-23" },
         { "status": "idle", "note": "Not started", "date": "", "next": "SRA/WLA submission — partnership targets approval by ~2027", "nextDate": "~2027", "source": "DeTACT partnership statements" },
         { "status": "idle", "note": "Not started", "date": "", "next": "", "nextDate": "" },
         { "status": "idle", "note": "Not yet included in WHO PQ Expression of Interest list", "date": "", "next": "PQ targeted by ~2027 per partnership", "nextDate": "~2027", "source": "WHO PADO malaria, Jun 2025" },
@@ -125,19 +129,19 @@ window.LAUNCH_DATA =
         "access": [
           "Developed through MORU-led DeTACT partnership with Fosun Pharma",
           "Designed for affordability in endemic-country public sectors",
-          "Dispersible, taste-masked formulation suitable for children"
+          "Child-friendly dispersible formulation"
         ],
         "adoption": [
           "Updated treatment guidelines and job aids",
           "Health-worker training (3-drug regimen)"
         ],
-        "research": { "lead": "MORU / DeTACT consortium", "geographies": "Multi-site, Africa and Asia (DeTACT trials)", "timeline": "Phase III → 2025–26", "question": "Safety, efficacy and adherence of co-formulated ALAQ at scale" },
+        "research": { "lead": "MORU / DeTACT consortium", "geographies": "Multi-site, Africa and Asia (DeTACT / FD-TACT trials)", "timeline": "Phase III → 2025–26", "question": "Safety, efficacy and adherence of co-formulated ALAQ at scale" },
         "country": { "registered": 0, "inGuidelines": 0, "inMft": 0, "forecastDemand": "—" },
         "volume": null,
         "volumeNote": "Pre-launch — no procurement yet",
         "milestones": [
           { "milestone": "Dose-optimization of co-formulation", "status": "done", "label": "Complete", "date": "Published 2025", "next": "—", "anticipated": "—", "source": "Clin Pharmacol Ther (2025)" },
-          { "milestone": "Phase III programme (DeTACT)", "status": "prog", "label": "In progress", "date": "Ongoing", "next": "Results", "anticipated": "2026", "source": "MORU / DeTACT" },
+          { "milestone": "Pivotal Phase III (FD-TACT)", "status": "prog", "label": "In progress", "date": "First patient Sep 2025", "next": "Results", "anticipated": "2026", "source": "MORU / FD-TACT" },
           { "milestone": "SRA/WLA submission", "status": "idle", "label": "Not started", "date": "—", "next": "Dossier preparation", "anticipated": "~2027", "source": "" },
           { "milestone": "WHO prequalification", "status": "idle", "label": "Not started", "date": "—", "next": "EOI listing, then dossier", "anticipated": "~2027", "source": "WHO PADO malaria, Jun 2025" }
         ]
@@ -228,11 +232,11 @@ window.LAUNCH_DATA =
       "classLabel": "Recommended · underutilized",
       "phase": "access",
       "currentStage": 6,
-      "flag": "Procurement is the bottleneck — recommended and prequalified for a decade, yet a small share of global ACT volumes",
+      "flag": "Procurement is the bottleneck — WHO-recommended since 2010 and prequalified for a decade, yet a small share of global ACT volumes",
       "stages": [
         { "status": "done", "note": "Development complete", "date": "", "next": "", "nextDate": "", "source": "MMV", "asOf": "2026-08-14" },
         { "status": "done", "note": "EMA approval (Eurartesim)", "date": "2011", "next": "", "nextDate": "", "source": "EMA register", "asOf": "2026-08-14" },
-        { "status": "done", "note": "WHO-recommended ACT for uncomplicated malaria", "date": "2015 guidelines", "next": "", "nextDate": "", "source": "WHO Guidelines for malaria", "asOf": "2026-08-14" },
+        { "status": "done", "note": "WHO-recommended ACT for uncomplicated malaria — added as the fifth recommended ACT in the 2010 second-edition treatment guidelines; reaffirmed 2015", "date": "2010 guidelines (2nd ed.)", "next": "", "nextDate": "", "source": "WHO Guidelines for the treatment of malaria, 2nd ed. (2010); WHO news, 10 Dec 2010", "asOf": "2026-08-23" },
         { "status": "done", "note": "Eurartesim prequalified 2015, requalified Jan 2025; additional suppliers also prequalified", "date": "2015; requal. 20 Jan 2025", "next": "", "nextDate": "", "source": "WHO PQ list", "asOf": "2026-08-14" },
         { "status": "done", "note": "Registered widely; adopted as first-line in several Southeast Asian countries", "date": "Rolling", "next": "", "nextDate": "", "source": "MMV / WHO", "asOf": "2026-08-14" },
         { "status": "prog", "note": "First-line in several SE Asian countries; consideration in African MFT strategies growing; verified country counts pending", "date": "", "next": "MFT strategy decisions", "nextDate": "TBC", "source": "LAUNCH assessment (draft)", "asOf": "2026-08-14" },
@@ -276,16 +280,16 @@ window.LAUNCH_DATA =
           ]
         },
         "journey": [
+          { "label": "WHO guideline recommendation", "year": 2010 },
           { "label": "EMA approval (Eurartesim)", "year": 2011 },
-          { "label": "WHO guideline recommendation", "year": 2015 },
           { "label": "WHO prequalification", "year": 2015 },
           { "label": "Broad procurement uptake", "year": "TBC" }
         ],
         "volume": null,
         "volumeNote": "Procurement volumes being compiled from Global Fund PQR and national records",
         "milestones": [
+          { "milestone": "WHO guideline recommendation", "status": "done", "label": "Complete", "date": "2010 (2nd ed.; reaffirmed 2015)", "next": "—", "anticipated": "—", "source": "WHO Guidelines for the treatment of malaria, 2nd ed. (2010)" },
           { "milestone": "SRA approval (EMA, Eurartesim)", "status": "done", "label": "Complete", "date": "2011", "next": "—", "anticipated": "—", "source": "EMA register" },
-          { "milestone": "WHO guideline recommendation", "status": "done", "label": "Complete", "date": "2015", "next": "—", "anticipated": "—", "source": "WHO Guidelines for malaria" },
           { "milestone": "WHO prequalification (Eurartesim)", "status": "done", "label": "Complete", "date": "9 Oct 2015", "next": "—", "anticipated": "—", "source": "WHO PQ list" },
           { "milestone": "WHO PQ requalification", "status": "done", "label": "Complete", "date": "20 Jan 2025", "next": "—", "anticipated": "—", "source": "WHO PQ list" },
           { "milestone": "National guideline inclusion", "status": "prog", "label": "Counts TBC", "date": "—", "next": "MFT strategy decisions", "anticipated": "TBC", "source": "LAUNCH assessment (draft)" },
@@ -299,8 +303,8 @@ window.LAUNCH_DATA =
       "name": "Spatial emanators",
       "inn": "Vector-control prevention tool",
       "manufacturer": "SC Johnson",
-      "classLabel": "Prevention · pending funder approval",
-      "note": "Planned addition to LAUNCH tracking. The same pipeline view will apply, with WHO PQ/Vector Control and guideline stages adapted for prevention products."
+      "classLabel": "Prevention · WHO-recommended · rollout funded",
+      "note": "Planned addition to LAUNCH tracking. WHO issued a policy recommendation for spatial repellents on 13 Aug 2025 and has prequalified two SC Johnson emanators (Guardian, Mosquito Shield); a Global Fund–US partnership announced 13 May 2026 targets rollout to 60 million people by 2028. The same pipeline view will apply, with WHO PQ/Vector Control and guideline stages adapted for prevention products."
     }
   ]
 }

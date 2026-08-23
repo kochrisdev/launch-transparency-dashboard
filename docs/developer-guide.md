@@ -171,9 +171,9 @@ No test framework by design; two layers instead:
 - **Bot commits**: `publish.yml` pushes snapshot/feed commits to `main` after
   data changes — always `git pull` before pushing local work, or a
   fast-forward rejection will greet you.
-- **RBM options**: (a) copy the static set — `index.html`, `widget.html`,
-  `data/`, `feed.xml`, `.nojekyll` (plus `option-b.html` while the design
-  review runs) — to any path on their site; (b) iframe the Pages URL (snippet
+- **RBM options**: (a) copy the static set — `index.html`, `pipeline.html`,
+  `story.html`, `widget.html`, `data/`, `feed.xml`, `.nojekyll` (plus
+  `option-b.html` while the design review runs) — to any path on their site; (b) iframe the Pages URL (snippet
   in the README); (c) transfer the repo to an RBM GitHub org (history and CI
   move; Pages URL changes). The `feed.xml` URL and widget embed URLs change
   with the host — update the constants in `scripts/make-feed.js` and partner

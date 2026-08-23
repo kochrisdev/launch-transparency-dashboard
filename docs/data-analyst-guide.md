@@ -17,7 +17,8 @@ pages at once.
 1. Edit `data/products.js`. Everything after the `window.LAUNCH_DATA =` line is
    **strict JSON**: double quotes only, no comments inside the object, no
    trailing commas.
-2. Validate — this is not optional; CI blocks pushes that fail it:
+2. Validate — this is not optional; CI flags pushes that fail it (the Pages
+   deploy is not gated, so a red run means fix or revert immediately):
 
    ```bash
    node scripts/validate-data.js

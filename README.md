@@ -97,7 +97,7 @@ controls the on-page banner.
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
-| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue; scheduled source fetch (weekly trial watch, monthly Global Fund pull — see [sourcing/README.md](sourcing/README.md)). |
+| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue; scheduled source fetch (weekly trial watch, monthly Global Fund + regulatory pull — see [sourcing/README.md](sourcing/README.md)). |
 
 ### Embedding a single product on a partner site
 
@@ -163,14 +163,17 @@ render time — they can never disagree with the board.
 ## Hosting and deployment
 
 The site deploys automatically via GitHub Pages: every push to `main` goes live at
-https://kochrisdev.github.io/launch-transparency-dashboard/ within a minute or two
-(after CI validates the data). There is no build step — the repo root is served as-is.
+https://kochrisdev.github.io/launch-transparency-dashboard/ within a minute or two.
+CI validates the data on the same push but does not gate the Pages deploy —
+treat a red validation run as a fix-now signal. There is no build step — the
+repo root is served as-is.
 
 ### Handover options for RBM
 
 1. **RBM hosts** (preferred for production): copy the static set —
-   `index.html`, `widget.html`, `data/`, `feed.xml`, `.nojekyll` (plus
-   `option-b.html` during the design review) — to any static path on
+   `index.html`, `pipeline.html`, `story.html`, `widget.html`, `data/`,
+   `feed.xml`, `.nojekyll` (plus `option-b.html` during the design review) —
+   to any static path on
    dashboards.endmalaria.org. No server-side requirements — plain static files.
 2. **RBM embeds**: keep this Pages deployment (or a fork under an RBM GitHub org)
    and embed it:

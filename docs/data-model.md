@@ -18,7 +18,7 @@ Read this alongside its siblings — they deliberately don't repeat each other:
 ## 1. One contract, two datasets
 
 Everything in the project reads a single **data contract**: a strict-JSON
-object assigned to `window.LAUNCH_DATA`. Two files implement it:
+object assigned to `window.LAUNCH_DATA`. Three files implement it:
 
 | File | Contents | Served by |
 | --- | --- | --- |
