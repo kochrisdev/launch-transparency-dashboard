@@ -36,11 +36,12 @@ milestone-scan checklist; close it when the scan is done.
 
 **Incoming evidence arrives on its own schedule too**: the scheduled source
 fetch ([sourcing/README.md](../sourcing/README.md)) pulls ClinicalTrials.gov
-weekly and the Global Fund + WHO PQ/EMA lists monthly into `sourcing/staging/`,
-and opens a **"Trial watch" / "Regulatory watch" issue** whenever something
-changed. Treat those issues as inputs to this loop: verify the change against
-the cited source, make the corresponding `data/products.js` edit (or decide no
-change is needed), and close the issue. The staging CSVs never feed the
+weekly, and monthly the Global Fund, WHO PQ + EMA lists and the Nigeria
+(NAFDAC) and Tanzania (TMDA) registers into `sourcing/staging/`, opening a
+**"Trial watch" / "Regulatory watch" / "NAFDAC watch" / "TMDA watch" issue**
+whenever something changed. Treat those issues as inputs to this loop: verify
+the change against the cited source, make the corresponding
+`data/products.js` edit (or decide no change is needed), and close the issue. The staging CSVs never feed the
 dashboards directly — your edit, gated by the validator, is the only path in.
 
 The first batch of collected-data updates is currently packaged as the

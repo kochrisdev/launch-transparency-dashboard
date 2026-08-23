@@ -42,6 +42,9 @@ upgrade, or break.
 | `scripts/fetch-trials.js` | ClinicalTrials.gov v2 fetcher: portfolio trial snapshots + staging CSV + what-changed report (status, phase, completion-date, results diffs). |
 | `scripts/fetch-globalfund.js` | Global Fund Data Service (OData v4.2) fetcher: malaria grants + disbursement transactions → grant and grant-year staging CSVs. |
 | `scripts/fetch-regulatory.js` | WHO PQ (medicines + vector control, CSV export) and EMA EU-M4all (nightly xlsx, zero-dep ZIP/xlsx reader) fetcher → `regulatory_events` staging CSV + listings watch report. |
+| `scripts/fetch-nafdac.js` | NAFDAC Greenbook (Nigeria) fetcher — server-side DataTables JSON endpoint, plain HTTP by necessity → `nafdac_registrations` staging CSV + registrations watch report. |
+| `scripts/fetch-tmda.js` | TMDA IMIS2 (Tanzania) fetcher — common-name lookup + paged public-search JSON backend → `tmda_registrations` staging CSV + registrations watch report. |
+| `scripts/normalize-pqr.js` | Normalizes a **manually downloaded** Global Fund PQR Tableau crosstab (UTF-16/TSV tolerant) → `procurement_transactions` staging CSV + gzipped raw copy. Scripted PQR export is WAF-blocked — don't automate it. |
 | `.nojekyll` | Tells GitHub Pages to serve files verbatim. |
 | `streamlit-app/` | Parallel Python platform (analyst workbench): same data contract, flexible sources (file/URL/upload), runtime config, Plotly charts. Self-documented in its own README; `launch_data.py` is the pure-Python data layer, `app.py` the UI. Not part of the static deploy. See §11. |
 | `powerbi/` | Power BI kit: live Power Query (M) scripts against the Pages data URL, CSV exports + generator, LAUNCH report theme, DAX measures, page-by-page build guide. Self-documented in its own README. See §11. |
