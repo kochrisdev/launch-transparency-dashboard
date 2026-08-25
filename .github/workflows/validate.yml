@@ -26,4 +26,5 @@ jobs:
           pip install --quiet pyshacl
           node scripts/build-ontology.js data/products.js /tmp/real.jsonld
           node scripts/build-ontology.js data/products.synthetic.js /tmp/synthetic.jsonld
-          python scripts/check-shapes.py /tmp/real.jsonld /tmp/synthetic.jsonld
+          node scripts/build-history-graph.js /tmp/history.jsonld
+          python scripts/check-shapes.py /tmp/real.jsonld /tmp/synthetic.jsonld /tmp/history.jsonld

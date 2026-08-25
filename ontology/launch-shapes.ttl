@@ -371,6 +371,42 @@ shapes:PlaceholderShape a sh:NodeShape ;
         sh:message "A placeholder still needs its permanent id." ] .
 
 # ----------------------------------------------------------------------------
+# Temporal layer (launch-history.jsonld) — status periods must be coherent.
+# Cross-file references (product, stage) are checked as IRIs only: the
+# referenced nodes live in launch-data.jsonld / launch.ttl, not here.
+# ----------------------------------------------------------------------------
+
+shapes:StatusPeriodShape a sh:NodeShape ;
+    sh:targetClass launch:StatusPeriod ;
+    sh:property [ sh:path launch:periodProduct ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
+        sh:message "A status period must reference one product IRI." ] ;
+    sh:property [ sh:path launch:atStage ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
+        sh:message "A status period must reference one pathway-stage IRI." ] ;
+    sh:property [ sh:path launch:hasStatus ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:status-idle launch:status-late launch:status-prog launch:status-done ) ;
+        sh:message "A status period's status must be idle/late/prog/done." ] ;
+    sh:property [ sh:path launch:validFrom ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:date ;
+        sh:lessThan launch:validUntil ;
+        sh:message "validFrom must be one date, earlier than validUntil when the period is closed." ] ;
+    sh:property [ sh:path launch:validUntil ;
+        sh:maxCount 1 ; sh:datatype xsd:date ;
+        sh:message "validUntil, when present, must be one date." ] .
+
+shapes:HistoryGraphShape a sh:NodeShape ;
+    sh:targetClass launch:HistoryGraph ;
+    sh:property [ sh:path launch:firstSnapshot ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:date ;
+        sh:lessThanOrEquals launch:lastSnapshot ;
+        sh:message "firstSnapshot must be one date, not after lastSnapshot." ] ;
+    sh:property [ sh:path launch:lastSnapshot ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:date ;
+        sh:message "lastSnapshot must be one date." ] ;
+    sh:property [ sh:path launch:snapshotCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:minInclusive 1 ;
+        sh:message "snapshotCount must be a positive integer." ] .
+
+# ----------------------------------------------------------------------------
 # Glossary concepts — definitions are real sentences
 # ----------------------------------------------------------------------------
 

@@ -74,7 +74,7 @@
     </div>
   </header>
 
-  <h2>Classes <span class="count">· 15</span></h2>
+  <h2>Classes <span class="count">· 17</span></h2>
   <div class="tablewrap"><table>
     <thead><tr><th>term</th><th>subclass of</th><th>meaning</th></tr></thead>
     <tbody>
@@ -168,10 +168,22 @@
         <td>—</td>
         <td class="desc">A product's per-country access listing plus the coverage trust level of the whole listing (illustrative / draft / verified). The map renders a warning overlay unless verified.</td>
       </tr>
+      <tr id="HistoryGraph">
+        <td class="term"><code>launch:HistoryGraph</code><span class="lbl">History graph</span></td>
+        
+        <td>—</td>
+        <td class="desc">The temporal projection of the append-only history/ snapshots: metadata node for the set of status periods derived from them.</td>
+      </tr>
+      <tr id="StatusPeriod">
+        <td class="term"><code>launch:StatusPeriod</code><span class="lbl">Status period</span></td>
+        
+        <td>—</td>
+        <td class="desc">One continuous run of history snapshots during which a product held one traffic-light status at one pathway stage. validFrom is the date of the FIRST snapshot observing the status — the actual change happened between the previous snapshot and that one, so snapshot dates bound the change, they don't pinpoint it. An open period (no validUntil) is the current state.</td>
+      </tr>
     </tbody>
   </table></div>
 
-  <h2>Object properties <span class="count">· 23</span></h2>
+  <h2>Object properties <span class="count">· 24</span></h2>
   <div class="tablewrap"><table>
     <thead><tr><th>term</th><th>domain → range</th><th>meaning</th></tr></thead>
     <tbody>
@@ -313,10 +325,16 @@
         <td><code>launch:Dataset</code> → <code>launch:Product</code></td>
         <td class="desc"></td>
       </tr>
+      <tr id="periodProduct">
+        <td class="term"><code>launch:periodProduct</code><span class="lbl">period product</span></td>
+        
+        <td><code>launch:StatusPeriod</code> → <code>launch:Product</code></td>
+        <td class="desc">The product a status period belongs to (by its canonical IRI in launch-data.jsonld).</td>
+      </tr>
     </tbody>
   </table></div>
 
-  <h2>Data properties <span class="count">· 46</span></h2>
+  <h2>Data properties <span class="count">· 51</span></h2>
   <p class="lead">Any literal may carry the string <code>"TBC"</code> — honestly unknown, never
   estimated, never coerced to 0 or null.</p>
   <div class="tablewrap"><table>
@@ -327,6 +345,36 @@
         
         <td><code>skos:Concept</code> → <code>xsd:string</code></td>
         <td class="desc">Plain-language description of who runs the gate, covering actor classes that are not single organizations (manufacturers and PDPs, national regulators, ministries of health, implementing partners).</td>
+      </tr>
+      <tr id="validFrom">
+        <td class="term"><code>launch:validFrom</code><span class="lbl">valid from</span></td>
+        
+        <td><code>launch:StatusPeriod</code> → <code>xsd:date</code></td>
+        <td class="desc">Date of the first snapshot observing this status (inclusive lower bound on the change date).</td>
+      </tr>
+      <tr id="validUntil">
+        <td class="term"><code>launch:validUntil</code><span class="lbl">valid until</span></td>
+        
+        <td><code>launch:StatusPeriod</code> → <code>xsd:date</code></td>
+        <td class="desc">Date of the first snapshot observing a DIFFERENT status (exclusive upper bound). Absent on the current, open period.</td>
+      </tr>
+      <tr id="firstSnapshot">
+        <td class="term"><code>launch:firstSnapshot</code><span class="lbl">first snapshot</span></td>
+        
+        <td><code>launch:HistoryGraph</code> → <code>xsd:date</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="lastSnapshot">
+        <td class="term"><code>launch:lastSnapshot</code><span class="lbl">last snapshot</span></td>
+        
+        <td><code>launch:HistoryGraph</code> → <code>xsd:date</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="snapshotCount">
+        <td class="term"><code>launch:snapshotCount</code><span class="lbl">snapshot count</span></td>
+        
+        <td><code>launch:HistoryGraph</code> → <code>xsd:integer</code></td>
+        <td class="desc"></td>
       </tr>
       <tr id="productId">
         <td class="term"><code>launch:productId</code><span class="lbl">product id</span></td>
@@ -728,7 +776,7 @@
       </tr></tbody></table></div>
     </section>
 
-  <h2>Governance shapes <span class="count">· 19</span></h2>
+  <h2>Governance shapes <span class="count">· 21</span></h2>
   <p class="lead">The validator's rules, independently verifiable by any RDF consumer.
   <span class="viol">Violation</span> = the dashboard would lie; <span class="warn">Warning</span> = provenance debt.</p>
   <pre><code>pip install pyshacl
@@ -845,6 +893,18 @@ pyshacl -s https://kochrisdev.github.io/launch-transparency-dashboard/ontology/l
         <td><code>launch:PlaceholderProduct</code></td>
         <td><span class="viol">Violation</span></td>
         <td class="desc">A placeholder product needs a note.<br>A placeholder still needs its permanent id.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:StatusPeriodShape</code></td>
+        <td><code>launch:StatusPeriod</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A status period must reference one product IRI.<br>A status period must reference one pathway-stage IRI.<br>A status period's status must be idle/late/prog/done.<br>validFrom must be one date, earlier than validUntil when the period is closed.<br>validUntil, when present, must be one date.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:HistoryGraphShape</code></td>
+        <td><code>launch:HistoryGraph</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">firstSnapshot must be one date, not after lastSnapshot.<br>lastSnapshot must be one date.<br>snapshotCount must be a positive integer.</td>
       </tr>
       <tr>
         <td class="term"><code>shapes:GlossaryTermShape</code></td>

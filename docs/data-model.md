@@ -197,8 +197,10 @@ flowchart LR
 
     subgraph sem [Semantic layer]
         O["build-ontology.js<br/>→ ontology/launch-data.jsonld"]
+        OH["build-history-graph.js<br/>→ ontology/launch-history.jsonld"]
     end
     REAL --> O
+    H --> OH
 ```
 
 Rules the lineage encodes:
@@ -215,11 +217,12 @@ Rules the lineage encodes:
 - **Generated outputs are committed but never hand-edited**: `unitaid/`,
   `synthetic/`, `v2/`, `powerbi/data/*.csv`, `history/`, `feed.xml`,
   `briefs/`, `data/world-map.js`, `ontology/launch-data.jsonld`. Each has
-  exactly one generator script; regenerate, don't patch. `ontology/index.html`
-  (the browsable ontology page) is likewise generated, by
-  `build-ontology-page.js`. (The other three `ontology/` files — `launch.ttl`,
-  `context.jsonld` and `launch-shapes.ttl` — are hand-authored source, like
-  the validator.)
+  exactly one generator script; regenerate, don't patch.
+  `ontology/launch-history.jsonld` (the temporal graph over the snapshots)
+  and `ontology/index.html` (the browsable ontology page) are likewise
+  generated, by `build-history-graph.js` and `build-ontology-page.js`. (The
+  other three `ontology/` files — `launch.ttl`, `context.jsonld` and
+  `launch-shapes.ttl` — are hand-authored source, like the validator.)
 - **Only `data/products.js` triggers automation.** `publish.yml` is
   path-filtered to that one file — edits to the synthetic dataset deploy with
   the push but produce no history snapshot, no feed rebuild, no brief input.

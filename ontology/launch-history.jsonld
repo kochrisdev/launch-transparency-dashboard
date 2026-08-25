@@ -1,0 +1,268 @@
+{
+  "@context": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/context.jsonld",
+  "@graph": [
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#history",
+      "@type": "HistoryGraph",
+      "firstSnapshot": "2026-08-15",
+      "lastSnapshot": "2026-08-25",
+      "snapshotCount": 3
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s0-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-0",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s1-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-1",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s2-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-2",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s3-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-3",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s4-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-4",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s5-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-5",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s6-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-6",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-ganlum-s7-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
+      "atStage": "launch:stage-7",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s0-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-0",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s1-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-1",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s2-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-2",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s3-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-3",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s4-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-4",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s5-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-5",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s6-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-6",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-alaq-s7-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq",
+      "atStage": "launch:stage-7",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s0-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-0",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s1-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-1",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s2-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-2",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s3-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-3",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s4-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-4",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s5-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-5",
+      "hasStatus": "launch:status-late",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s6-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-6",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-pyramax-s7-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax",
+      "atStage": "launch:stage-7",
+      "hasStatus": "launch:status-idle",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s0-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-0",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s1-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-1",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s2-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-2",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s3-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-3",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s4-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-4",
+      "hasStatus": "launch:status-done",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s5-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-5",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s6-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-6",
+      "hasStatus": "launch:status-late",
+      "validFrom": "2026-08-15"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-history.jsonld#period-dhappq-s7-0",
+      "@type": "StatusPeriod",
+      "periodProduct": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq",
+      "atStage": "launch:stage-7",
+      "hasStatus": "launch:status-prog",
+      "validFrom": "2026-08-15"
+    }
+  ]
+}

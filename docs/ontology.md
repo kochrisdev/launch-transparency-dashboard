@@ -42,6 +42,7 @@ every term; the validator enforces the semantics. This layer makes it
 | [`ontology/context.jsonld`](../ontology/context.jsonld) | JSON-LD context mapping the contract's vocabulary to ontology IRIs. | **Hand-authored** — changes in lock-step with `launch.ttl`. |
 | [`ontology/launch-shapes.ttl`](../ontology/launch-shapes.ttl) | SHACL governance shapes — the validator's rules expressed so any RDF consumer can verify them independently (see §7a). | **Hand-authored** — changes in lock-step with `validate-data.js`. |
 | [`ontology/launch-data.jsonld`](../ontology/launch-data.jsonld) | The current dataset as linked-data instances (products, stage entries, country statuses, concepts, changelog). | **Generated** by `scripts/build-ontology.js` — regenerate, never hand-edit. |
+| [`ontology/launch-history.jsonld`](../ontology/launch-history.jsonld) | The temporal knowledge graph: one `launch:StatusPeriod` per continuous run of history snapshots in which a product held one status at one stage (see §7b). | **Generated** by `scripts/build-history-graph.js` — bot-rebuilt by `publish.yml`, never hand-edit. |
 | [`ontology/index.html`](../ontology/index.html) | The browsable rendering — classes, properties, vocabularies and shapes as a designed page, live at [/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/). | **Generated** by `scripts/build-ontology-page.js` from the two Turtle files — rerun after editing them, never hand-edit. |
 
 All three are served by GitHub Pages, so every IRI under
@@ -230,11 +231,53 @@ a governance-rule change in `validate-data.js` changes `launch-shapes.ttl` in
 the same commit.
 
 **Continuously proven in CI**: `validate.yml` projects both datasets fresh
-(`node scripts/build-ontology.js …`) and runs
-`python scripts/check-shapes.py` against them on every push and PR — so the
-shapes can't silently drift from the validator. The checker mirrors the
+(`node scripts/build-ontology.js …`), builds the temporal graph, and runs
+`python scripts/check-shapes.py` against all three on every push and PR — so
+the shapes can't silently drift from the validator. The checker mirrors the
 validator's semantics: `sh:Warning` results print but pass, `sh:Violation`
 fails the run.
+
+### 7b. The temporal layer: status history as data
+
+[`launch-history.jsonld`](../ontology/launch-history.jsonld) projects the
+append-only `history/` snapshots into **status periods** — one
+`launch:StatusPeriod` per continuous run of snapshots in which a product held
+one traffic-light status at one pathway stage. It is the queryable form of
+the question the dashboard exists to surface: *when did each light change,
+and how long has it been stuck?*
+
+Reading a period correctly:
+
+- `validFrom` is the date of the **first snapshot observing** the status —
+  the actual change happened between the previous snapshot and that one.
+  Snapshot dates **bound** a change; they don't pinpoint it.
+- `validUntil` (exclusive) is the date of the first snapshot observing a
+  different status. The current state is the **open period** (no
+  `validUntil`).
+- The graph starts at the first snapshot (2026-08-15) — earlier history
+  exists only as the products' own `journey` gates in the main export.
+- Snapshots whose stage-array shape differs from the current stage list are
+  skipped with a warning (the same positional-diff discontinuity caveat as
+  the brief generator).
+
+Example — the full status timeline of one stage:
+
+```sparql
+PREFIX launch: <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#>
+SELECT ?status ?from ?until WHERE {
+  ?per a launch:StatusPeriod ;
+       launch:periodProduct <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq> ;
+       launch:atStage launch:stage-6 ;
+       launch:hasStatus/skos:notation ?status ;
+       launch:validFrom ?from .
+  OPTIONAL { ?per launch:validUntil ?until }
+} ORDER BY ?from
+```
+
+The graph is bot-rebuilt by `publish.yml` in the same commit as each new
+history snapshot, so every data change extends the timeline automatically.
+Its coherence rules (`shapes:StatusPeriodShape` — one product, one stage, a
+valid status, `validFrom < validUntil`) are checked in CI with the rest.
 
 ## 8. Using it
 

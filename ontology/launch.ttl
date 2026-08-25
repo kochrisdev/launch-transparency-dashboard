@@ -101,6 +101,14 @@ launch:CountryMap a owl:Class ;
     rdfs:label "Country map" ;
     rdfs:comment "A product's per-country access listing plus the coverage trust level of the whole listing (illustrative / draft / verified). The map renders a warning overlay unless verified." .
 
+launch:HistoryGraph a owl:Class ;
+    rdfs:label "History graph" ;
+    rdfs:comment "The temporal projection of the append-only history/ snapshots: metadata node for the set of status periods derived from them." .
+
+launch:StatusPeriod a owl:Class ;
+    rdfs:label "Status period" ;
+    rdfs:comment "One continuous run of history snapshots during which a product held one traffic-light status at one pathway stage. validFrom is the date of the FIRST snapshot observing the status — the actual change happened between the previous snapshot and that one, so snapshot dates bound the change, they don't pinpoint it. An open period (no validUntil) is the current state." .
+
 # ----------------------------------------------------------------------------
 # Object properties
 # ----------------------------------------------------------------------------
@@ -216,6 +224,33 @@ launch:dataStatus a owl:ObjectProperty ;
 launch:tracksProduct a owl:ObjectProperty ;
     rdfs:domain launch:Dataset ; rdfs:range launch:Product ;
     rdfs:label "tracks product" .
+
+launch:periodProduct a owl:ObjectProperty ;
+    rdfs:domain launch:StatusPeriod ; rdfs:range launch:Product ;
+    rdfs:label "period product" ;
+    rdfs:comment "The product a status period belongs to (by its canonical IRI in launch-data.jsonld)." .
+
+launch:validFrom a owl:DatatypeProperty ;
+    rdfs:domain launch:StatusPeriod ; rdfs:range xsd:date ;
+    rdfs:label "valid from" ;
+    rdfs:comment "Date of the first snapshot observing this status (inclusive lower bound on the change date)." .
+
+launch:validUntil a owl:DatatypeProperty ;
+    rdfs:domain launch:StatusPeriod ; rdfs:range xsd:date ;
+    rdfs:label "valid until" ;
+    rdfs:comment "Date of the first snapshot observing a DIFFERENT status (exclusive upper bound). Absent on the current, open period." .
+
+launch:firstSnapshot a owl:DatatypeProperty ;
+    rdfs:domain launch:HistoryGraph ; rdfs:range xsd:date ;
+    rdfs:label "first snapshot" .
+
+launch:lastSnapshot a owl:DatatypeProperty ;
+    rdfs:domain launch:HistoryGraph ; rdfs:range xsd:date ;
+    rdfs:label "last snapshot" .
+
+launch:snapshotCount a owl:DatatypeProperty ;
+    rdfs:domain launch:HistoryGraph ; rdfs:range xsd:integer ;
+    rdfs:label "snapshot count" .
 
 # ----------------------------------------------------------------------------
 # Data properties
