@@ -42,6 +42,7 @@ every term; the validator enforces the semantics. This layer makes it
 | [`ontology/context.jsonld`](../ontology/context.jsonld) | JSON-LD context mapping the contract's vocabulary to ontology IRIs. | **Hand-authored** — changes in lock-step with `launch.ttl`. |
 | [`ontology/launch-shapes.ttl`](../ontology/launch-shapes.ttl) | SHACL governance shapes — the validator's rules expressed so any RDF consumer can verify them independently (see §7a). | **Hand-authored** — changes in lock-step with `validate-data.js`. |
 | [`ontology/launch-data.jsonld`](../ontology/launch-data.jsonld) | The current dataset as linked-data instances (products, stage entries, country statuses, concepts, changelog). | **Generated** by `scripts/build-ontology.js` — regenerate, never hand-edit. |
+| [`ontology/index.html`](../ontology/index.html) | The browsable rendering — classes, properties, vocabularies and shapes as a designed page, live at [/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/). | **Generated** by `scripts/build-ontology-page.js` from the two Turtle files — rerun after editing them, never hand-edit. |
 
 All three are served by GitHub Pages, so every IRI under
 `…/ontology/launch.ttl#` and `…/ontology/launch-data.jsonld#` dereferences to
@@ -294,6 +295,10 @@ g.parse("ontology/launch-data.jsonld")
 - **A new country in any product's list?** Add its QID to `WIKIDATA_COUNTRY`
   in `scripts/build-ontology.js` (the generator warns if you forget — look up
   the code via Wikidata property P298).
+- **Edited `launch.ttl` or `launch-shapes.ttl`?** Rerun
+  `node scripts/build-ontology-page.js` so the browsable page at
+  [/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/)
+  matches the Turtle.
 - **Governance rule changed in `validate-data.js`?** Mirror it in
   `launch-shapes.ttl` in the same commit (§7a has the rule-to-shape map) —
   CI runs both on every push.

@@ -33,7 +33,8 @@ upgrade, or break.
 | `scripts/validate-data.js` | Node validator: strict-JSON extraction + governance rules. Exit 1 on error. |
 | `scripts/make-preview.js` | Inlines the data **and map** files into `preview.html` (single-file build of option A for email/artifact sharing). Optional; never required to deploy. |
 | `scripts/make-feed.js` | Regenerates `feed.xml` from the changelog. Run by CI; safe by hand. |
-| `ontology/` | Semantic layer: `launch.ttl` (hand-authored OWL/SKOS ontology), `context.jsonld` (JSON-LD context) and `launch-shapes.ttl` (SHACL twin of the validator's governance rules — change them together) are source; `launch-data.jsonld` is the **generated** linked-data projection of the dataset, bot-rebuilt by `publish.yml`. See [docs/ontology.md](ontology.md). |
+| `ontology/` | Semantic layer: `launch.ttl` (hand-authored OWL/SKOS ontology), `context.jsonld` (JSON-LD context) and `launch-shapes.ttl` (SHACL twin of the validator's governance rules — change them together) are source; `launch-data.jsonld` is the **generated** linked-data projection of the dataset, bot-rebuilt by `publish.yml`; `index.html` is the **generated** browsable rendering (rerun `scripts/build-ontology-page.js` after Turtle edits). See [docs/ontology.md](ontology.md). |
+| `scripts/build-ontology-page.js` | Rebuilds `ontology/index.html` from the two Turtle files (zero-dep mini Turtle parser). Manual — rerun after editing `launch.ttl` / `launch-shapes.ttl`. |
 | `scripts/build-ontology.js` | Regenerates `ontology/launch-data.jsonld` from the data contract. Run by CI on data changes; run by hand after schema-layer edits. |
 | `scripts/build-map.js` | One-off map-geometry generator (dev-only deps documented in its header). |
 | `.github/workflows/validate.yml` | CI: validator + preview build on every push/PR. |

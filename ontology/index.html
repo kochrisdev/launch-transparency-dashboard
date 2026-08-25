@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAUNCH Dashboard Ontology</title>
+<meta name="description" content="Domain ontology for the LAUNCH (Launch Transparency Initiative) dashboard tracking new antimalarial medicines from regulatory approval to in-country access. Covers products, the 8-stage access pathway, per-stage status, milestones, country access levels, procurement volumes and the provenance/governance fields every value carries.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1e2430; --muted: #5b6675; --line: #e3e7ee;
+    --accent: #0e7c66; --card: #f6f8fa; --code-bg: #eef1f5; --warn: #9a6700; --viol: #b3261e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161d; --fg: #e6eaf1; --muted: #9aa5b4; --line: #2a3140;
+      --accent: #3ecfae; --card: #191f29; --code-bg: #222a37; --warn: #d4a72c; --viol: #f2857c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 system-ui, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+  header h1 { font-size: 1.9rem; margin: 0 0 4px; }
+  header .kicker { color: var(--accent); font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; font-size: .78rem; }
+  header .meta { color: var(--muted); margin: 6px 0 14px; }
+  .files { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
+  .files a { display: inline-block; padding: 6px 12px; border: 1px solid var(--line);
+    border-radius: 8px; background: var(--card); color: var(--fg); text-decoration: none;
+    font-size: .88rem; }
+  .files a:hover { border-color: var(--accent); }
+  h2 { font-size: 1.3rem; margin: 44px 0 6px; padding-top: 10px; border-top: 1px solid var(--line); }
+  h2 .count { color: var(--muted); font-weight: 400; font-size: .95rem; }
+  h3 { font-size: 1.05rem; margin: 26px 0 4px; }
+  p.lead { color: var(--muted); margin: 4px 0 16px; }
+  code { background: var(--code-bg); border-radius: 5px; padding: 1px 6px; font-size: .84em; }
+  code.dim { background: none; color: var(--muted); font-weight: 400; }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+  th { text-align: left; color: var(--muted); font-weight: 600; font-size: .8rem;
+    text-transform: uppercase; letter-spacing: .05em; }
+  th, td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.term { white-space: nowrap; }
+  td.term .lbl { display: block; color: var(--muted); font-size: .85rem; }
+  td.desc { color: var(--muted); }
+  .sub { color: var(--muted); font-size: .85rem; }
+  .rank { color: var(--accent); font-size: .8rem; }
+  .warn { color: var(--warn); font-weight: 600; }
+  .viol { color: var(--viol); font-weight: 600; }
+  .gen { color: var(--muted); font-style: italic; }
+  section.scheme { margin-bottom: 10px; }
+  a { color: var(--accent); }
+  footer { margin-top: 56px; color: var(--muted); font-size: .85rem;
+    border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">LAUNCH Transparency Dashboard · Semantic layer</div>
+    <h1>LAUNCH Dashboard Ontology</h1>
+    <div class="meta">Version 1.0.0 · namespace <code>https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#</code></div>
+    <p class="lead">Domain ontology for the LAUNCH (Launch Transparency Initiative) dashboard tracking new antimalarial medicines from regulatory approval to in-country access. Covers products, the 8-stage access pathway, per-stage status, milestones, country access levels, procurement volumes and the provenance/governance fields every value carries.</p>
+    <div class="files">
+      <a href="launch.ttl">launch.ttl — the ontology (Turtle)</a>
+      <a href="context.jsonld">context.jsonld — JSON-LD context</a>
+      <a href="launch-shapes.ttl">launch-shapes.ttl — governance shapes (SHACL)</a>
+      <a href="launch-data.jsonld">launch-data.jsonld — the dataset as linked data</a>
+      <a href="../">the dashboard</a>
+      <a href="https://github.com/kochrisdev/launch-transparency-dashboard/blob/main/docs/ontology.md">full guide (docs/ontology.md)</a>
+    </div>
+  </header>
+
+  <h2>Classes <span class="count">· 15</span></h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>term</th><th>subclass of</th><th>meaning</th></tr></thead>
+    <tbody>
+      <tr id="Dataset">
+        <td class="term"><code>launch:Dataset</code><span class="lbl">Dataset</span></td>
+        
+        <td>—</td>
+        <td class="desc">One release of the LAUNCH data contract (window.LAUNCH_DATA): meta, stage definitions, glossary, changelog and products. Carries the dataset-level trust signals (dataStatus, synthetic).</td>
+      </tr>
+      <tr id="Product">
+        <td class="term"><code>launch:Product</code><span class="lbl">Product</span></td>
+        
+        <td>—</td>
+        <td class="desc">A malaria tool tracked (or planned for tracking) on the dashboard. Identity is the permanent lowercase slug in launch:productId — it never changes even when the display name does.</td>
+      </tr>
+      <tr id="Medicine">
+        <td class="term"><code>launch:Medicine</code><span class="lbl">Medicine</span></td>
+        
+        <td><code>launch:Product</code>, <code>schema:Drug</code></td>
+        <td class="desc">An antimalarial treatment (class pipeline or market): full shape — exactly 8 stage entries, a current stage, optional bottleneck flag, and detail.</td>
+      </tr>
+      <tr id="VectorControlTool">
+        <td class="term"><code>launch:VectorControlTool</code><span class="lbl">Vector-control tool</span></td>
+        
+        <td><code>launch:Product</code></td>
+        <td class="desc">A prevention product (e.g. spatial emanators). Goes through a different WHO track (PQ Vector Control, different guideline group).</td>
+      </tr>
+      <tr id="PlaceholderProduct">
+        <td class="term"><code>launch:PlaceholderProduct</code><span class="lbl">Placeholder product</span></td>
+        
+        <td><code>launch:Product</code></td>
+        <td class="desc">Identity and note only (placeholder: true in the contract). Renders greyed and is excluded from every statistic, export and chart.</td>
+      </tr>
+      <tr id="StageEntry">
+        <td class="term"><code>launch:StageEntry</code><span class="lbl">Stage entry</span></td>
+        
+        <td>—</td>
+        <td class="desc">The reified status of one product at one pathway stage (the product × stage grain). In the contract this is positional: products[].stages[i] is the entry for stages[i].</td>
+      </tr>
+      <tr id="Milestone">
+        <td class="term"><code>launch:Milestone</code><span class="lbl">Milestone</span></td>
+        
+        <td>—</td>
+        <td class="desc">One fine-grained gate event for a product, with its next expected step — the accountability ledger. Each row carries its own source.</td>
+      </tr>
+      <tr id="CountryAccessStatus">
+        <td class="term"><code>launch:CountryAccessStatus</code><span class="lbl">Country access status</span></td>
+        
+        <td>—</td>
+        <td class="desc">One product's access level in one country (product × iso3 grain). Highest level wins on the map; unverified coverage must be flagged via the country map's coverage status.</td>
+      </tr>
+      <tr id="JourneyGate">
+        <td class="term"><code>launch:JourneyGate</code><span class="lbl">Journey gate</span></td>
+        
+        <td>—</td>
+        <td class="desc">A dated gate in a product's historical journey (e.g. 'EMA Article 58 positive opinion, 2012'). Consecutive integer-year gates feed the pathway timing chart; a 'TBC' year marks the gate still being waited on.</td>
+      </tr>
+      <tr id="Price">
+        <td class="term"><code>launch:Price</code><span class="lbl">Price</span></td>
+        
+        <td>—</td>
+        <td class="desc">Indicative price per treatment course. Governance: a displayed value requires confirmedInWriting = true or a public source; otherwise it must be 'TBC'.</td>
+      </tr>
+      <tr id="ProcurementVolume">
+        <td class="term"><code>launch:ProcurementVolume</code><span class="lbl">Procurement volume</span></td>
+        
+        <td>—</td>
+        <td class="desc">Procured treatment courses (one course = one full treatment for one patient) with a split by channel. Split percentages sum to 100.</td>
+      </tr>
+      <tr id="VolumeSplit">
+        <td class="term"><code>launch:VolumeSplit</code><span class="lbl">Volume split</span></td>
+        
+        <td>—</td>
+        <td class="desc">One procurement channel's share of a product's volume (product × channel grain).</td>
+      </tr>
+      <tr id="OperationalResearch">
+        <td class="term"><code>launch:OperationalResearch</code><span class="lbl">Operational research</span></td>
+        
+        <td>—</td>
+        <td class="desc">Real-world implementation research on a product (distinct from clinical trials): lead, geographies, timeline and the open question.</td>
+      </tr>
+      <tr id="ChangelogEntry">
+        <td class="term"><code>launch:ChangelogEntry</code><span class="lbl">Changelog entry</span></td>
+        
+        <td>—</td>
+        <td class="desc">One logged change to the dataset (append-only; historical statements are never rewritten). References its product by the display name it had at the time — a soft reference, not a key.</td>
+      </tr>
+      <tr id="CountryMap">
+        <td class="term"><code>launch:CountryMap</code><span class="lbl">Country map</span></td>
+        
+        <td>—</td>
+        <td class="desc">A product's per-country access listing plus the coverage trust level of the whole listing (illustrative / draft / verified). The map renders a warning overlay unless verified.</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>Object properties <span class="count">· 23</span></h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>term</th><th>domain → range</th><th>meaning</th></tr></thead>
+    <tbody>
+      <tr id="hasStageEntry">
+        <td class="term"><code>launch:hasStageEntry</code><span class="lbl">has stage entry</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:StageEntry</code></td>
+        <td class="desc">Exactly 8 per tracked medicine, one per pathway stage.</td>
+      </tr>
+      <tr id="atStage">
+        <td class="term"><code>launch:atStage</code><span class="lbl">at stage</span></td>
+        
+        <td><code>launch:StageEntry</code> → <code>skos:Concept</code></td>
+        <td class="desc">The pathway stage this entry reports on (a concept in launch:PathwayStageScheme).</td>
+      </tr>
+      <tr id="hasStatus">
+        <td class="term"><code>launch:hasStatus</code><span class="lbl">has status</span></td>
+        
+        <td><code>—</code> → <code>skos:Concept</code></td>
+        <td class="desc">Traffic-light status of a stage entry or milestone (a concept in launch:StageStatusScheme). Governance: status 'late' requires a substantive note and a top-level bottleneck flag on the product.</td>
+      </tr>
+      <tr id="currentStage">
+        <td class="term"><code>launch:currentStage</code><span class="lbl">current stage</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>skos:Concept</code></td>
+        <td class="desc">The gate the product is actively working through (must agree with the stage entries).</td>
+      </tr>
+      <tr id="productClass">
+        <td class="term"><code>launch:productClass</code><span class="lbl">product class</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>skos:Concept</code></td>
+        <td class="desc">pipeline or market (a concept in launch:ProductClassScheme).</td>
+      </tr>
+      <tr id="developmentPhase">
+        <td class="term"><code>launch:developmentPhase</code><span class="lbl">development phase</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>skos:Concept</code></td>
+        <td class="desc">Placement on the pipeline poster (a concept in launch:DevelopmentPhaseScheme).</td>
+      </tr>
+      <tr id="hasMilestone">
+        <td class="term"><code>launch:hasMilestone</code><span class="lbl">has milestone</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:Milestone</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasCountryMap">
+        <td class="term"><code>launch:hasCountryMap</code><span class="lbl">has country map</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:CountryMap</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasCountryStatus">
+        <td class="term"><code>launch:hasCountryStatus</code><span class="lbl">has country status</span></td>
+        
+        <td><code>launch:CountryMap</code> → <code>launch:CountryAccessStatus</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="country">
+        <td class="term"><code>launch:country</code><span class="lbl">country</span></td>
+        
+        <td><code>launch:CountryAccessStatus</code> → <code>schema:Country</code></td>
+        <td class="desc">The country, identified by ISO-3166 alpha-3 code — the only cross-file join in the system (to the map geometry).</td>
+      </tr>
+      <tr id="accessLevel">
+        <td class="term"><code>launch:accessLevel</code><span class="lbl">access level</span></td>
+        
+        <td><code>launch:CountryAccessStatus</code> → <code>skos:Concept</code></td>
+        <td class="desc">Ordinal level: registered &lt; guidelines &lt; mft (a concept in launch:CountryAccessLevelScheme).</td>
+      </tr>
+      <tr id="coverageStatus">
+        <td class="term"><code>launch:coverageStatus</code><span class="lbl">coverage status</span></td>
+        
+        <td><code>launch:CountryMap</code> → <code>skos:Concept</code></td>
+        <td class="desc">Trust level of the whole country listing (a concept in launch:CoverageStatusScheme). Anything below 'verified' must carry an explanatory note.</td>
+      </tr>
+      <tr id="hasJourneyGate">
+        <td class="term"><code>launch:hasJourneyGate</code><span class="lbl">has journey gate</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:JourneyGate</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasPrice">
+        <td class="term"><code>launch:hasPrice</code><span class="lbl">has price</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:Price</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasVolume">
+        <td class="term"><code>launch:hasVolume</code><span class="lbl">has volume</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:ProcurementVolume</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasSplit">
+        <td class="term"><code>launch:hasSplit</code><span class="lbl">has split</span></td>
+        
+        <td><code>launch:ProcurementVolume</code> → <code>launch:VolumeSplit</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="hasResearch">
+        <td class="term"><code>launch:hasResearch</code><span class="lbl">has research</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>launch:OperationalResearch</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="manufacturedBy">
+        <td class="term"><code>launch:manufacturedBy</code><span class="lbl">manufactured by</span></td>
+        
+        <td><code>launch:Product</code> → <code>schema:Organization</code><div class="sub">⊑ <code>schema:manufacturer</code></div></td>
+        <td class="desc">The organization holding/seeking the marketing authorization. Normalized from the manufacturerLabel display string via the generator's organization registry — the label stays authoritative; these links are enrichment.</td>
+      </tr>
+      <tr id="coDevelopedBy">
+        <td class="term"><code>launch:coDevelopedBy</code><span class="lbl">co-developed by</span></td>
+        
+        <td><code>launch:Product</code> → <code>schema:Organization</code></td>
+        <td class="desc">Product development partnership (PDP) or research consortium behind the product (e.g. MMV, MORU/DeTACT).</td>
+      </tr>
+      <tr id="suppliedBy">
+        <td class="term"><code>launch:suppliedBy</code><span class="lbl">supplied by</span></td>
+        
+        <td><code>launch:Product</code> → <code>schema:Organization</code></td>
+        <td class="desc">An additional prequalified supplier beyond the primary manufacturer — supply security via diversity (the DHA-PPQ pattern). Not necessarily exhaustive: the manufacturerLabel may name supplier groups that have no registry entry.</td>
+      </tr>
+      <tr id="operatedBy">
+        <td class="term"><code>launch:operatedBy</code><span class="lbl">operated by</span></td>
+        
+        <td><code>skos:Concept</code> → <code>schema:Organization</code></td>
+        <td class="desc">The concrete institution(s) that run a pathway gate (e.g. stage 2 → WHO Global Malaria Programme, stage 6 → Global Fund / PMI / UNICEF). WHO's three hats are modeled as distinct units so recommender, quality assessor and coordinator are never conflated. Stages run by classes of actors (national regulators, ministries of health) carry only an operatorNote.</td>
+      </tr>
+      <tr id="dataStatus">
+        <td class="term"><code>launch:dataStatus</code><span class="lbl">data status</span></td>
+        
+        <td><code>launch:Dataset</code> → <code>skos:Concept</code></td>
+        <td class="desc">How much to trust the whole dataset (a concept in launch:DataStatusScheme). Controls the on-page banner.</td>
+      </tr>
+      <tr id="tracksProduct">
+        <td class="term"><code>launch:tracksProduct</code><span class="lbl">tracks product</span></td>
+        
+        <td><code>launch:Dataset</code> → <code>launch:Product</code></td>
+        <td class="desc"></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>Data properties <span class="count">· 46</span></h2>
+  <p class="lead">Any literal may carry the string <code>"TBC"</code> — honestly unknown, never
+  estimated, never coerced to 0 or null.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>term</th><th>domain → range</th><th>meaning</th></tr></thead>
+    <tbody>
+      <tr id="operatorNote">
+        <td class="term"><code>launch:operatorNote</code><span class="lbl">operator note</span></td>
+        
+        <td><code>skos:Concept</code> → <code>xsd:string</code></td>
+        <td class="desc">Plain-language description of who runs the gate, covering actor classes that are not single organizations (manufacturers and PDPs, national regulators, ministries of health, implementing partners).</td>
+      </tr>
+      <tr id="productId">
+        <td class="term"><code>launch:productId</code><span class="lbl">product id</span></td>
+        
+        <td><code>launch:Product</code> → <code>xsd:string</code></td>
+        <td class="desc">Permanent lowercase slug — the primary key of everything (HTML anchor, widget parameter, foreign key in every flat export). Never renamed.</td>
+      </tr>
+      <tr id="inn">
+        <td class="term"><code>launch:inn</code><span class="lbl">INN / composition</span></td>
+        
+        <td><code>launch:Product</code> → <code>xsd:string</code><div class="sub">⊑ <code>schema:nonProprietaryName</code></div></td>
+        <td class="desc">International non-proprietary name(s) of the combination, with trade or code names in parentheses.</td>
+      </tr>
+      <tr id="manufacturerLabel">
+        <td class="term"><code>launch:manufacturerLabel</code><span class="lbl">manufacturer label</span></td>
+        
+        <td><code>launch:Product</code> → <code>xsd:string</code></td>
+        <td class="desc">Display string naming the manufacturer(s) and development partners (e.g. 'Novartis · MMV'), exactly as the contract stores it — the authoritative value. The normalized organization links (launch:manufacturedBy / coDevelopedBy / suppliedBy) are generator-side enrichment derived from it.</td>
+      </tr>
+      <tr id="classLabel">
+        <td class="term"><code>launch:classLabel</code><span class="lbl">class label</span></td>
+        
+        <td><code>launch:Product</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="bottleneckFlag">
+        <td class="term"><code>launch:bottleneckFlag</code><span class="lbl">bottleneck flag</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>xsd:string</code></td>
+        <td class="desc">The one-line bottleneck sentence — the initiative's core editorial output. Governance: required whenever any stage entry is 'late'; a red light must always carry a written reason.</td>
+      </tr>
+      <tr id="note">
+        <td class="term"><code>launch:note</code><span class="lbl">note</span></td>
+        
+        <td><code>—</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="stageIndex">
+        <td class="term"><code>launch:stageIndex</code><span class="lbl">stage index</span></td>
+        
+        <td><code>—</code> → <code>xsd:integer</code></td>
+        <td class="desc">0–7 position in the pathway. Order is meaning — stage relationships in the contract are positional, not named.</td>
+      </tr>
+      <tr id="statusRank">
+        <td class="term"><code>launch:statusRank</code><span class="lbl">status rank</span></td>
+        
+        <td><code>—</code> → <code>xsd:integer</code></td>
+        <td class="desc">Sort/color rank shipped alongside the status label: idle 0, late 1, prog 2, done 3.</td>
+      </tr>
+      <tr id="levelRank">
+        <td class="term"><code>launch:levelRank</code><span class="lbl">level rank</span></td>
+        
+        <td><code>—</code> → <code>xsd:integer</code></td>
+        <td class="desc">Ordinal rank of a country access level: registered 1, guidelines 2, mft 3.</td>
+      </tr>
+      <tr id="source">
+        <td class="term"><code>launch:source</code><span class="lbl">source</span></td>
+        
+        <td><code>—</code> → <code>xsd:string</code><div class="sub">⊑ <code>dcterms:source</code></div></td>
+        <td class="desc">Public, citable origin of the value. Provenance field carried by stage entries, milestones, prices.</td>
+      </tr>
+      <tr id="asOf">
+        <td class="term"><code>launch:asOf</code><span class="lbl">as of</span></td>
+        
+        <td><code>—</code> → <code>xsd:date</code></td>
+        <td class="desc">Date the value was last verified (YYYY-MM-DD).</td>
+      </tr>
+      <tr id="confirmedInWriting">
+        <td class="term"><code>launch:confirmedInWriting</code><span class="lbl">confirmed in writing</span></td>
+        
+        <td><code>launch:Price</code> → <code>xsd:boolean</code></td>
+        <td class="desc">Manufacturer confirmed release of this figure in writing. Governance: a displayed price requires this or a public source.</td>
+      </tr>
+      <tr id="dateLabel">
+        <td class="term"><code>launch:dateLabel</code><span class="lbl">date label</span></td>
+        
+        <td><code>—</code> → <code>xsd:string</code></td>
+        <td class="desc">Human-readable date or date range as recorded ('2012–2016', 'Announced 12 Nov 2025'). Kept verbatim — not normalized to xsd:date.</td>
+      </tr>
+      <tr id="nextStep">
+        <td class="term"><code>launch:nextStep</code><span class="lbl">next step</span></td>
+        
+        <td><code>—</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="nextDate">
+        <td class="term"><code>launch:nextDate</code><span class="lbl">next date</span></td>
+        
+        <td><code>—</code> → <code>xsd:string</code></td>
+        <td class="desc">Anticipated date of the next step — free-form ('~2027', 'TBC').</td>
+      </tr>
+      <tr id="gateYear">
+        <td class="term"><code>launch:gateYear</code><span class="lbl">gate year</span></td>
+        
+        <td><code>launch:JourneyGate</code> → <code>—</code></td>
+        <td class="desc">Integer year of a journey gate, or the string 'TBC' for the gate still pending.</td>
+      </tr>
+      <tr id="priceValue">
+        <td class="term"><code>launch:priceValue</code><span class="lbl">price value</span></td>
+        
+        <td><code>launch:Price</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="iso3">
+        <td class="term"><code>launch:iso3</code><span class="lbl">ISO 3166-1 alpha-3 code</span></td>
+        
+        <td><code>schema:Country</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="registeredCount">
+        <td class="term"><code>launch:registeredCount</code><span class="lbl">registered count</span></td>
+        
+        <td><code>—</code> → <code>—</code></td>
+        <td class="desc">Count of national marketing authorisations (number or 'TBC').</td>
+      </tr>
+      <tr id="inGuidelinesCount">
+        <td class="term"><code>launch:inGuidelinesCount</code><span class="lbl">in-guidelines count</span></td>
+        
+        <td><code>—</code> → <code>—</code></td>
+        <td class="desc">Count of national treatment guidelines including the product (number or 'TBC').</td>
+      </tr>
+      <tr id="inMftCount">
+        <td class="term"><code>launch:inMftCount</code><span class="lbl">in-MFT count</span></td>
+        
+        <td><code>—</code> → <code>—</code></td>
+        <td class="desc">Countries planning/running multiple first-line therapies including the product (number or 'TBC').</td>
+      </tr>
+      <tr id="forecastDemand">
+        <td class="term"><code>launch:forecastDemand</code><span class="lbl">forecast demand</span></td>
+        
+        <td><code>—</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="useCase">
+        <td class="term"><code>launch:useCase</code><span class="lbl">use case</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="accessCommitment">
+        <td class="term"><code>launch:accessCommitment</code><span class="lbl">access commitment</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="adoptionRequirement">
+        <td class="term"><code>launch:adoptionRequirement</code><span class="lbl">adoption requirement</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>xsd:string</code></td>
+        <td class="desc">What a country must do before use (training, pharmacovigilance...).</td>
+      </tr>
+      <tr id="researchLead">
+        <td class="term"><code>launch:researchLead</code><span class="lbl">research lead</span></td>
+        
+        <td><code>launch:OperationalResearch</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="researchGeographies">
+        <td class="term"><code>launch:researchGeographies</code><span class="lbl">research geographies</span></td>
+        
+        <td><code>launch:OperationalResearch</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="researchTimeline">
+        <td class="term"><code>launch:researchTimeline</code><span class="lbl">research timeline</span></td>
+        
+        <td><code>launch:OperationalResearch</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="researchQuestion">
+        <td class="term"><code>launch:researchQuestion</code><span class="lbl">research question</span></td>
+        
+        <td><code>launch:OperationalResearch</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="channel">
+        <td class="term"><code>launch:channel</code><span class="lbl">procurement channel</span></td>
+        
+        <td><code>launch:VolumeSplit</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="splitPct">
+        <td class="term"><code>launch:splitPct</code><span class="lbl">split percentage</span></td>
+        
+        <td><code>launch:VolumeSplit</code> → <code>xsd:decimal</code></td>
+        <td class="desc">Percentage of the product's procured volume through this channel. All splits of one volume sum to 100.</td>
+      </tr>
+      <tr id="volumeTotal">
+        <td class="term"><code>launch:volumeTotal</code><span class="lbl">volume total</span></td>
+        
+        <td><code>launch:ProcurementVolume</code> → <code>xsd:string</code></td>
+        <td class="desc">Total procured treatment courses in the period, as displayed (e.g. '1.4M treatment courses'). One course = one patient's full treatment; counts courses, not tablets or packs.</td>
+      </tr>
+      <tr id="volumePeriod">
+        <td class="term"><code>launch:volumePeriod</code><span class="lbl">volume period</span></td>
+        
+        <td><code>launch:ProcurementVolume</code> → <code>xsd:string</code></td>
+        <td class="desc">The period the volume covers (e.g. '2024–2025').</td>
+      </tr>
+      <tr id="volumeNote">
+        <td class="term"><code>launch:volumeNote</code><span class="lbl">volume note</span></td>
+        
+        <td><code>launch:Medicine</code> → <code>xsd:string</code></td>
+        <td class="desc">Shown when no volume object exists yet.</td>
+      </tr>
+      <tr id="synthetic">
+        <td class="term"><code>launch:synthetic</code><span class="lbl">synthetic</span></td>
+        
+        <td><code>launch:Dataset</code> → <code>xsd:boolean</code></td>
+        <td class="desc">True means the whole dataset is fictional. Check before treating any loaded dataset as real.</td>
+      </tr>
+      <tr id="lastUpdated">
+        <td class="term"><code>launch:lastUpdated</code><span class="lbl">last updated</span></td>
+        
+        <td><code>launch:Dataset</code> → <code>xsd:date</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="host">
+        <td class="term"><code>launch:host</code><span class="lbl">host</span></td>
+        
+        <td><code>launch:Dataset</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="changeDate">
+        <td class="term"><code>launch:changeDate</code><span class="lbl">change date</span></td>
+        
+        <td><code>launch:ChangelogEntry</code> → <code>xsd:date</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="changeText">
+        <td class="term"><code>launch:changeText</code><span class="lbl">change text</span></td>
+        
+        <td><code>launch:ChangelogEntry</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="productDisplayName">
+        <td class="term"><code>launch:productDisplayName</code><span class="lbl">product display name</span></td>
+        
+        <td><code>launch:ChangelogEntry</code> → <code>xsd:string</code></td>
+        <td class="desc">Soft reference by the display name the product had at the time (or 'All'). Historical statements are never rewritten, so this does not track renames.</td>
+      </tr>
+      <tr id="milestoneName">
+        <td class="term"><code>launch:milestoneName</code><span class="lbl">milestone name</span></td>
+        
+        <td><code>launch:Milestone</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="statusLabel">
+        <td class="term"><code>launch:statusLabel</code><span class="lbl">status label</span></td>
+        
+        <td><code>—</code> → <code>—</code></td>
+        <td class="desc">Human-readable label accompanying a milestone status ('Complete', '25+ countries').</td>
+      </tr>
+      <tr id="anticipated">
+        <td class="term"><code>launch:anticipated</code><span class="lbl">anticipated</span></td>
+        
+        <td><code>launch:Milestone</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="gateLabel">
+        <td class="term"><code>launch:gateLabel</code><span class="lbl">gate label</span></td>
+        
+        <td><code>launch:JourneyGate</code> → <code>—</code></td>
+        <td class="desc"></td>
+      </tr>
+      <tr id="placeholderNote">
+        <td class="term"><code>launch:placeholderNote</code><span class="lbl">placeholder note</span></td>
+        
+        <td><code>launch:PlaceholderProduct</code> → <code>xsd:string</code></td>
+        <td class="desc"></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>Controlled vocabularies <span class="count">· 8 schemes</span></h2>
+  
+    <section class="scheme" id="PathwayStageScheme">
+      <h3>Access pathway stages <code class="dim">launch:PathwayStageScheme</code></h3>
+      <p>The 8 ordered gates of a malaria product's journey from R&amp;D to in-country delivery — three different kinds of approval (SRA regulatory, WHO guideline recommendation, WHO prequalification) plus registration, policy adoption and the delivery chain. Recommendation ≠ prequalification ≠ registration: three independent approvals run by different institutions. Concepts are generated from the data file's stages[] array with their positional index.</p>
+      <p class="gen">Concepts are generated into <a href="launch-data.jsonld">launch-data.jsonld</a> from the data file itself, so they can never drift from the contract.</p>
+    </section>
+    <section class="scheme" id="GlossaryScheme">
+      <h3>LAUNCH glossary <code class="dim">launch:GlossaryScheme</code></h3>
+      <p>Domain terms and their definitions as shown in dashboard tooltips. Concepts are generated from the data file's glossary object.</p>
+      <p class="gen">Concepts are generated into <a href="launch-data.jsonld">launch-data.jsonld</a> from the data file itself, so they can never drift from the contract.</p>
+    </section>
+    <section class="scheme" id="StageStatusScheme">
+      <h3>Stage status <code class="dim">launch:StageStatusScheme</code></h3>
+      <p>Traffic-light status of a product at a gate. Ranks match the flat projection: idle 0, late 1, prog 2, done 3.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>idle</code></td>
+        <td>Not started <span class="rank">rank 0</span></td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>late</code></td>
+        <td>Delayed <span class="rank">rank 1</span></td>
+        <td class="desc">The red light. Governance: must carry a substantive note, and the product must carry a top-level bottleneck flag — 'delayed' is an accusation in this domain and is never shown without a written reason.</td>
+      </tr><tr>
+        <td><code>prog</code></td>
+        <td>In progress <span class="rank">rank 2</span></td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>done</code></td>
+        <td>Complete <span class="rank">rank 3</span></td>
+        <td class="desc"></td>
+      </tr></tbody></table></div>
+    </section>
+    <section class="scheme" id="CountryAccessLevelScheme">
+      <h3>Country access level <code class="dim">launch:CountryAccessLevelScheme</code></h3>
+      <p>Ordinal access level of a product in a country; the highest applicable level wins on the map.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>registered</code></td>
+        <td>Registered <span class="rank">rank 1</span></td>
+        <td class="desc">The national regulatory authority has licensed the product.</td>
+      </tr><tr>
+        <td><code>guidelines</code></td>
+        <td>In national guidelines <span class="rank">rank 2</span></td>
+        <td class="desc">Written into the national treatment guidelines — what health workers actually prescribe and the public sector buys.</td>
+      </tr><tr>
+        <td><code>mft</code></td>
+        <td>In MFT strategy <span class="rank">rank 3</span></td>
+        <td class="desc">Included in the country's multiple first-line therapies deployment.</td>
+      </tr></tbody></table></div>
+    </section>
+    <section class="scheme" id="ProductClassScheme">
+      <h3>Product class <code class="dim">launch:ProductClassScheme</code></h3>
+      <p>The two halves of the LAUNCH portfolio design: pipeline products stress the regulatory half of the pathway, marketed-but-underutilized products stress the adoption half.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>pipeline</code></td>
+        <td>Pipeline</td>
+        <td class="desc">Pre-market — working through trials and approvals.</td>
+      </tr><tr>
+        <td><code>market</code></td>
+        <td>Marketed</td>
+        <td class="desc">Fully approved but underutilized — the adoption story.</td>
+      </tr></tbody></table></div>
+    </section>
+    <section class="scheme" id="DevelopmentPhaseScheme">
+      <h3>Development phase <code class="dim">launch:DevelopmentPhaseScheme</code></h3>
+      <p>Poster-column placement, MMV-pipeline style: Preclinical → Approved · scaling up.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>preclinical</code></td>
+        <td>Preclinical</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>phase1</code></td>
+        <td>Phase I</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>phase2</code></td>
+        <td>Phase II</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>phase3</code></td>
+        <td>Phase III</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>regulatory</code></td>
+        <td>Regulatory review</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>access</code></td>
+        <td>Approved · scaling up</td>
+        <td class="desc"></td>
+      </tr></tbody></table></div>
+    </section>
+    <section class="scheme" id="DataStatusScheme">
+      <h3>Dataset status <code class="dim">launch:DataStatusScheme</code></h3>
+      <p>How much to trust the whole dataset. Controls the on-page banner in every consumer.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>illustrative</code></td>
+        <td>Illustrative</td>
+        <td class="desc">Design placeholders or fictional data — not real figures.</td>
+      </tr><tr>
+        <td><code>draft</code></td>
+        <td>Draft</td>
+        <td class="desc">Compiled from public sources, pending LAUNCH team verification and manufacturer written confirmation.</td>
+      </tr><tr>
+        <td><code>live</code></td>
+        <td>Live</td>
+        <td class="desc">Verified and maintained.</td>
+      </tr></tbody></table></div>
+    </section>
+    <section class="scheme" id="CoverageStatusScheme">
+      <h3>Country-map coverage status <code class="dim">launch:CoverageStatusScheme</code></h3>
+      <p>Trust level of a product's country listing. A colored country reads as a fact, so the map warns unless verified.</p>
+      <div class="tablewrap"><table><thead><tr><th>notation</th><th>label</th><th>definition</th></tr></thead><tbody><tr>
+        <td><code>illustrative</code></td>
+        <td>Illustrative</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>draft</code></td>
+        <td>Draft</td>
+        <td class="desc"></td>
+      </tr><tr>
+        <td><code>verified</code></td>
+        <td>Verified</td>
+        <td class="desc"></td>
+      </tr></tbody></table></div>
+    </section>
+
+  <h2>Governance shapes <span class="count">· 19</span></h2>
+  <p class="lead">The validator's rules, independently verifiable by any RDF consumer.
+  <span class="viol">Violation</span> = the dashboard would lie; <span class="warn">Warning</span> = provenance debt.</p>
+  <pre><code>pip install pyshacl
+pyshacl -s https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-shapes.ttl \
+        -e https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl \
+        https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld</code></pre>
+  <div class="tablewrap"><table>
+    <thead><tr><th>shape</th><th>targets</th><th>severity</th><th>enforces</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="term"><code>shapes:DatasetShape</code></td>
+        <td><code>launch:Dataset</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">meta.dataStatus must be illustrative/draft/live — it controls the trust banner.<br>meta.lastUpdated must be a YYYY-MM-DD date.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:MedicineShape</code></td>
+        <td><code>launch:Medicine</code></td>
+        <td><span class="warn">Warning</span></td>
+        <td class="desc">id required: lowercase letters/digits/hyphens, permanent.<br>name is required.<br>inn is required.<br>manufacturer is required.<br>classLabel is required.<br>class must be pipeline or market.<br>phase must be preclinical/phase1/phase2/phase3/regulatory/access.<br>No phase — the product will not appear on the pipeline poster view.<br>A tracked medicine must have exactly 8 stage entries, one per pathway stage.<br>currentStage must point at one pathway-stage concept.<br>detail.price is required (value may be TBC, the object may not be missing).<br>detail.useCase is required.<br>detail.research is required.<br>Product has a delayed (late) stage but no top-level bottleneck flag — a red light must carry a written reason.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:FlagWithoutLateShape</code></td>
+        <td><code>launch:Medicine</code></td>
+        <td><span class="warn">Warning</span></td>
+        <td class="desc">Product carries a bottleneck flag but no stage is marked late — the flag will show without a red light.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:StageEntryShape</code></td>
+        <td><code>launch:StageEntry</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A stage entry must point at one pathway-stage concept.<br>Status must be idle/late/prog/done.<br>asOf must be a YYYY-MM-DD date.<br>A delayed (late) stage must carry a substantive reason in its note.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:StageEntryAsOfShape</code></td>
+        <td><code>launch:StageEntry</code></td>
+        <td><span class="warn">Warning</span></td>
+        <td class="desc">A non-idle stage entry has no asOf verification date.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:PriceShape</code></td>
+        <td><code>launch:Price</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">confirmedInWriting must be true or false.<br>A displayed price needs confirmedInWriting=true or a public source — governance rule.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:PriceAsOfShape</code></td>
+        <td><code>launch:Price</code></td>
+        <td><span class="warn">Warning</span></td>
+        <td class="desc">A displayed price has no asOf verification date.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:CountryMapShape</code></td>
+        <td><code>launch:CountryMap</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">countries.status must be illustrative/draft/verified.<br>countries.list must be non-empty.<br>An unverified country map needs a substantive note (shown as the map warning).</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:CountryAccessStatusShape</code></td>
+        <td><code>launch:CountryAccessStatus</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A country access status must reference one country node.<br>Access level must be registered/guidelines/mft.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:CountryShape</code></td>
+        <td><code>schema:Country</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A country must carry one 3-letter uppercase ISO-3166 alpha-3 code.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:OrganizationShape</code></td>
+        <td><code>schema:Organization</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">An organization must carry one name.<br>Organizations do not manufacture products backwards — check the emission.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:JourneyGateShape</code></td>
+        <td><code>launch:JourneyGate</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A journey gate needs a label.<br>A gate year must be an integer 1990–2100 or the honest 'TBC'.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:VolumeShape</code></td>
+        <td><code>launch:ProcurementVolume</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A volume needs a total.<br>A volume needs a period.<br>A volume needs at least one channel split.<br>Volume channel splits must sum to 100 (±1).</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:VolumeSplitShape</code></td>
+        <td><code>launch:VolumeSplit</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">Every volume split needs a channel.<br>A split percentage must be a number 0–100.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:MilestoneShape</code></td>
+        <td><code>launch:Milestone</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A milestone needs a name.<br>Milestone status must be idle/late/prog/done.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:MilestoneSourceShape</code></td>
+        <td><code>launch:Milestone</code></td>
+        <td><span class="warn">Warning</span></td>
+        <td class="desc">A completed milestone has no source citation.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:ChangelogEntryShape</code></td>
+        <td><code>launch:ChangelogEntry</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A changelog entry needs a YYYY-MM-DD date.<br>A changelog entry needs a product display name (or 'All').<br>A changelog entry must describe what changed.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:PlaceholderShape</code></td>
+        <td><code>launch:PlaceholderProduct</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A placeholder product needs a note.<br>A placeholder still needs its permanent id.</td>
+      </tr>
+      <tr>
+        <td class="term"><code>shapes:GlossaryTermShape</code></td>
+        <td><code>skos:Concept</code></td>
+        <td><span class="viol">Violation</span></td>
+        <td class="desc">A glossary term's definition must be a real sentence.</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>Query it</h2>
+  <p class="lead">The accountability query — which products are delayed, at which gate, why,
+  and which institution owns that gate:</p>
+  <pre><code>PREFIX launch: &lt;https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#&gt;
+PREFIX schema: &lt;https://schema.org/&gt;
+PREFIX skos:   &lt;http://www.w3.org/2004/02/skos/core#&gt;
+SELECT ?product ?stage ?reason ?owner WHERE {
+  ?p launch:hasStageEntry ?e ; schema:name ?product .
+  ?e launch:hasStatus launch:status-late ;
+     launch:atStage ?st ;
+     launch:note ?reason .
+  ?st skos:prefLabel ?stage .
+  OPTIONAL { ?st launch:operatedBy/schema:name ?owner }
+}</code></pre>
+
+  <footer>
+    Generated by <code>scripts/build-ontology-page.js</code> from
+    <code>launch.ttl</code> and <code>launch-shapes.ttl</code> — regenerate after editing them,
+    never hand-edit this page. Part of the
+    <a href="https://github.com/kochrisdev/launch-transparency-dashboard">LAUNCH Transparency Dashboard</a>.
+  </footer>
+</div>
+</body>
+</html>
