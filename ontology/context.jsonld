@@ -37,6 +37,9 @@
     "manufacturedBy": { "@id": "launch:manufacturedBy", "@type": "@id" },
     "coDevelopedBy": { "@id": "launch:coDevelopedBy", "@type": "@id" },
     "suppliedBy": { "@id": "launch:suppliedBy", "@type": "@id" },
+    "operatedBy": { "@id": "launch:operatedBy", "@type": "@id" },
+    "operatorNote": "launch:operatorNote",
+    "parentOrg": { "@id": "schema:parentOrganization", "@type": "@id" },
 
     "tracksProduct": { "@id": "launch:tracksProduct", "@type": "@id" },
     "hasStageEntry": "launch:hasStageEntry",

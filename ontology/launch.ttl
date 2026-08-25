@@ -198,6 +198,16 @@ launch:suppliedBy a owl:ObjectProperty ;
     rdfs:label "supplied by" ;
     rdfs:comment "An additional prequalified supplier beyond the primary manufacturer — supply security via diversity (the DHA-PPQ pattern). Not necessarily exhaustive: the manufacturerLabel may name supplier groups that have no registry entry." .
 
+launch:operatedBy a owl:ObjectProperty ;
+    rdfs:domain skos:Concept ; rdfs:range schema:Organization ;
+    rdfs:label "operated by" ;
+    rdfs:comment "The concrete institution(s) that run a pathway gate (e.g. stage 2 → WHO Global Malaria Programme, stage 6 → Global Fund / PMI / UNICEF). WHO's three hats are modeled as distinct units so recommender, quality assessor and coordinator are never conflated. Stages run by classes of actors (national regulators, ministries of health) carry only an operatorNote." .
+
+launch:operatorNote a owl:DatatypeProperty ;
+    rdfs:domain skos:Concept ; rdfs:range xsd:string ;
+    rdfs:label "operator note" ;
+    rdfs:comment "Plain-language description of who runs the gate, covering actor classes that are not single organizations (manufacturers and PDPs, national regulators, ministries of health, implementing partners)." .
+
 launch:dataStatus a owl:ObjectProperty ;
     rdfs:domain launch:Dataset ; rdfs:range skos:Concept ;
     rdfs:label "data status" ;

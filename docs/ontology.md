@@ -80,6 +80,7 @@ classDiagram
     Product --> Organization : manufacturedBy
     Product --> Organization : coDevelopedBy
     Product --> Organization : suppliedBy
+    PathwayStage --> Organization : operatedBy
     Medicine "1" --> "*" Milestone : hasMilestone
     Milestone --> StageStatus : hasStatus
     Medicine "1" --> "0..1" CountryMap : hasCountryMap
@@ -138,6 +139,7 @@ never disagree with the contract):
 | `currentStage` | `launch:currentStage` → `launch:stage-<i>` | positional index made explicit |
 | `flag` | `launch:bottleneckFlag` | the red-flag governance sentence |
 | `stages[i]` | `launch:StageEntry` node `#product-<id>-stage-<i>` with `atStage` + `hasStatus` | reifies the positional relationship |
+| *(domain primer §2, "who runs it")* | `launch:operatedBy` + `launch:operatorNote` on each stage concept | who owns each gate — concrete institutions as org links (EMA/FDA, WHO GMP, WHO PQ, AMA, Global Fund/PMI/UNICEF; WHO's hats are distinct units under a `schema:parentOrganization` link so recommender and quality assessor are never conflated); actor classes (manufacturers, national regulators, ministries, implementing partners) live in the note. From the generator's `STAGE_OPERATORS` map, positional like everything stage-related. |
 | `source` / `asOf` / `confirmedInWriting` | `launch:source` ⊑ `dcterms:source` / `launch:asOf` (xsd:date) / `launch:confirmedInWriting` | provenance triple carried wherever the contract carries it |
 | `detail.price` | `launch:Price` node | |
 | `detail.countries` | `launch:CountryMap` → `CountryAccessStatus` nodes → `schema:Country` nodes keyed by `iso3` | countries deduplicated across products |
@@ -236,18 +238,25 @@ fails the run.
 ## 8. Using it
 
 Load `ontology/launch.ttl` + `ontology/launch-data.jsonld` into any RDF
-store (Jena, RDFLib, Oxigraph, GraphDB…) and query. Example — *"which
-products are delayed, at which gate, and why?"*:
+store (Jena, RDFLib, Oxigraph, GraphDB…) and query. Example — the
+accountability query: *"which products are delayed, at which gate, why —
+and which institution owns that gate?"*:
 
 ```sparql
 PREFIX launch: <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#>
-SELECT ?product ?stage ?reason WHERE {
+SELECT ?product ?stage ?reason ?owner WHERE {
   ?p launch:hasStageEntry ?e ; schema:name ?product .
   ?e launch:hasStatus launch:status-late ;
-     launch:atStage/skos:prefLabel ?stage ;
+     launch:atStage ?st ;
      launch:note ?reason .
+  ?st skos:prefLabel ?stage .
+  OPTIONAL { ?st launch:operatedBy/schema:name ?owner }
 }
 ```
+
+(On today's data that returns ASPY stuck at National policy adoption — an
+actor-class gate, ministries of health — and DHA–PPQ stuck at Procurement,
+owned by the Global Fund, PMI and UNICEF.)
 
 Or in Python, no triple store needed:
 
@@ -274,8 +283,10 @@ g.parse("ontology/launch-data.jsonld")
 - **Validator enumeration changed** (a new status/level/phase)? Add the
   matching `skos:Concept` to `launch.ttl` in the same commit.
 - **A new pathway stage** needs no ontology edit — stage concepts are
-  generated from `stages[]` — but note the same history-discontinuity caveat
-  as every other consumer.
+  generated from `stages[]` — but realign the positional `STAGE_OPERATORS`
+  map in the generator (it warns on a length mismatch) and the hardcoded
+  8-entry count in the shapes, and note the same history-discontinuity
+  caveat as every other consumer.
 - **Pages URL changed** (repo transfer)? Three places hold it: the `SITE`
   constant in `scripts/build-ontology.js`, the `launch:` prefix in
   `launch.ttl`, and the same prefix in `context.jsonld`. Old IRIs are

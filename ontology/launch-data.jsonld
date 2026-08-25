@@ -21,7 +21,8 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "0",
       "prefLabel": "R&D & clinical",
-      "stageIndex": 0
+      "stageIndex": 0,
+      "operatorNote": "Manufacturer and product development partnerships — product-specific; see each product's manufacturedBy / coDevelopedBy."
     },
     {
       "@id": "launch:stage-1",
@@ -29,7 +30,12 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "1",
       "prefLabel": "Regulatory approval (SRA)",
-      "stageIndex": 1
+      "stageIndex": 1,
+      "operatedBy": [
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-ema",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-fda"
+      ],
+      "operatorNote": "Stringent regulatory authorities — for malaria medicines usually the EMA via the Article 58 / EU-M4all procedure."
     },
     {
       "@id": "launch:stage-2",
@@ -37,7 +43,9 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "2",
       "prefLabel": "WHO guidelines",
-      "stageIndex": 2
+      "stageIndex": 2,
+      "operatedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who-gmp",
+      "operatorNote": "WHO Global Malaria Programme — its Guidelines Development Group weighs the evidence and decides whether WHO recommends."
     },
     {
       "@id": "launch:stage-3",
@@ -45,7 +53,9 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "3",
       "prefLabel": "WHO prequalification",
-      "stageIndex": 3
+      "stageIndex": 3,
+      "operatedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who-pq",
+      "operatorNote": "WHO Prequalification — quality and manufacturing assessment, separate from the guideline decision."
     },
     {
       "@id": "launch:stage-4",
@@ -53,7 +63,9 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "4",
       "prefLabel": "Country registration",
-      "stageIndex": 4
+      "stageIndex": 4,
+      "operatedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-ama",
+      "operatorNote": "National regulatory authorities, country by country — accelerated by the African Medicines Agency and WHO collaborative registration."
     },
     {
       "@id": "launch:stage-5",
@@ -61,7 +73,8 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "5",
       "prefLabel": "National policy adoption",
-      "stageIndex": 5
+      "stageIndex": 5,
+      "operatorNote": "Ministries of health and national malaria control programmes — they write the national treatment guidelines."
     },
     {
       "@id": "launch:stage-6",
@@ -69,7 +82,13 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "6",
       "prefLabel": "Procurement",
-      "stageIndex": 6
+      "stageIndex": 6,
+      "operatedBy": [
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-global-fund",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-pmi",
+        "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-unicef"
+      ],
+      "operatorNote": "Global Fund, US PMI, UNICEF, domestic budgets and procurement agents — tenders, reference pricing, forecasting."
     },
     {
       "@id": "launch:stage-7",
@@ -77,7 +96,8 @@
       "inScheme": "launch:PathwayStageScheme",
       "notation": "7",
       "prefLabel": "In-country delivery",
-      "stageIndex": 7
+      "stageIndex": 7,
+      "operatorNote": "Governments and implementing partners — supply chain, health-worker training, pharmacovigilance."
     },
     {
       "@id": "launch:term-ACT",
@@ -309,10 +329,34 @@
       "sameAs": "http://www.wikidata.org/entity/Q30268742"
     },
     {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-ama",
+      "@type": "Organization",
+      "name": "African Medicines Agency",
+      "sameAs": "http://www.wikidata.org/entity/Q97167520"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-ema",
+      "@type": "Organization",
+      "name": "European Medicines Agency",
+      "sameAs": "http://www.wikidata.org/entity/Q130146"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-fda",
+      "@type": "Organization",
+      "name": "United States Food and Drug Administration",
+      "sameAs": "http://www.wikidata.org/entity/Q204711"
+    },
+    {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-fosun-pharma",
       "@type": "Organization",
       "name": "Fosun Pharmaceutical",
       "sameAs": "http://www.wikidata.org/entity/Q11071241"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-global-fund",
+      "@type": "Organization",
+      "name": "The Global Fund to Fight AIDS, Tuberculosis and Malaria",
+      "sameAs": "http://www.wikidata.org/entity/Q1414657"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-guilin-pharma",
@@ -338,6 +382,12 @@
       "sameAs": "http://www.wikidata.org/entity/Q507154"
     },
     {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-pmi",
+      "@type": "Organization",
+      "name": "President's Malaria Initiative",
+      "sameAs": "http://www.wikidata.org/entity/Q25101993"
+    },
+    {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-sc-johnson",
       "@type": "Organization",
       "name": "S. C. Johnson & Son",
@@ -348,6 +398,31 @@
       "@type": "Organization",
       "name": "Shin Poong Pharmaceutical",
       "sameAs": "http://www.wikidata.org/entity/Q56583278"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-unicef",
+      "@type": "Organization",
+      "name": "UNICEF",
+      "sameAs": "http://www.wikidata.org/entity/Q740308"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who",
+      "@type": "Organization",
+      "name": "World Health Organization",
+      "sameAs": "http://www.wikidata.org/entity/Q7817"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who-gmp",
+      "@type": "Organization",
+      "name": "WHO Global Malaria Programme",
+      "parentOrg": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who-pq",
+      "@type": "Organization",
+      "name": "WHO Prequalification",
+      "sameAs": "http://www.wikidata.org/entity/Q105963063",
+      "parentOrg": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-who"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",

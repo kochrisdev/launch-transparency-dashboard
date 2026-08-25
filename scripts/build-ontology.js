@@ -74,7 +74,18 @@ const ORGS = {
   "shin-poong":   { name: "Shin Poong Pharmaceutical", qid: "Q56583278" },
   "alfasigma":    { name: "Alfasigma", qid: "Q30268742" },
   "guilin-pharma": { name: "Guilin Pharmaceutical" },
-  "sc-johnson":   { name: "S. C. Johnson & Son", qid: "Q683170" }
+  "sc-johnson":   { name: "S. C. Johnson & Son", qid: "Q683170" },
+  // Pathway institutions. WHO's hats are distinct units (never conflate
+  // recommender / quality assessor); GMP has no Wikidata item of its own.
+  "who":          { name: "World Health Organization", qid: "Q7817" },
+  "who-gmp":      { name: "WHO Global Malaria Programme", parent: "who" },
+  "who-pq":       { name: "WHO Prequalification", qid: "Q105963063", parent: "who" },
+  "ema":          { name: "European Medicines Agency", qid: "Q130146" },
+  "fda":          { name: "United States Food and Drug Administration", qid: "Q204711" },
+  "global-fund":  { name: "The Global Fund to Fight AIDS, Tuberculosis and Malaria", qid: "Q1414657" },
+  "pmi":          { name: "President's Malaria Initiative", qid: "Q25101993" },
+  "unicef":       { name: "UNICEF", qid: "Q740308" },
+  "ama":          { name: "African Medicines Agency", qid: "Q97167520" }
 };
 // Which organizations play which role for each product. suppliedBy is not
 // necessarily exhaustive ("…and other PQ'd suppliers" stays in the label).
@@ -85,6 +96,22 @@ const PRODUCT_ORGS = {
   dhappq:    { manufacturedBy: ["alfasigma"], suppliedBy: ["guilin-pharma"] },
   emanators: { manufacturedBy: ["sc-johnson"] }
 };
+
+// Who runs each pathway gate (domain-primer §2), keyed by stage index —
+// positional like everything else stage-related; a change to the stage list
+// means updating this map. operatedBy links only concrete institutions;
+// actor classes (manufacturers, national regulators, ministries) live in
+// the note.
+const STAGE_OPERATORS = [
+  { orgs: [], note: "Manufacturer and product development partnerships — product-specific; see each product's manufacturedBy / coDevelopedBy." },
+  { orgs: ["ema", "fda"], note: "Stringent regulatory authorities — for malaria medicines usually the EMA via the Article 58 / EU-M4all procedure." },
+  { orgs: ["who-gmp"], note: "WHO Global Malaria Programme — its Guidelines Development Group weighs the evidence and decides whether WHO recommends." },
+  { orgs: ["who-pq"], note: "WHO Prequalification — quality and manufacturing assessment, separate from the guideline decision." },
+  { orgs: ["ama"], note: "National regulatory authorities, country by country — accelerated by the African Medicines Agency and WHO collaborative registration." },
+  { orgs: [], note: "Ministries of health and national malaria control programmes — they write the national treatment guidelines." },
+  { orgs: ["global-fund", "pmi", "unicef"], note: "Global Fund, US PMI, UNICEF, domestic budgets and procurement agents — tenders, reference pricing, forecasting." },
+  { orgs: [], note: "Governments and implementing partners — supply chain, health-worker training, pharmacovigilance." }
+];
 
 // ---- load the contract (same extraction as validate-data.js) ---------------
 const raw = fs.readFileSync(DATA_FILE, "utf8");
@@ -110,15 +137,24 @@ const warnGaps = !data.meta.synthetic;
 const graph = [];
 
 // ---- generated concepts: pathway stages + glossary ---------------------------
+if (data.stages.length !== STAGE_OPERATORS.length && warnGaps)
+  console.warn(`WARN: ${data.stages.length} stages but ${STAGE_OPERATORS.length} STAGE_OPERATORS entries — realign the map`);
 data.stages.forEach((label, i) => {
-  graph.push({
+  const node = {
     "@id": `launch:stage-${i}`,
     "@type": "Concept",
     "inScheme": "launch:PathwayStageScheme",
     "notation": String(i),
     "prefLabel": label,
     "stageIndex": i
-  });
+  };
+  const op = STAGE_OPERATORS[i];
+  if (op) {
+    const refs = op.orgs.filter((k) => ORGS[k]).map((k) => id(`org-${k}`));
+    if (refs.length) node.operatedBy = refs.length === 1 ? refs[0] : refs;
+    set(node, "operatorNote", op.note);
+  }
+  graph.push(node);
 });
 
 for (const [term, def] of Object.entries(data.glossary || {})) {
@@ -143,18 +179,24 @@ for (const iso3 of [...countries].sort()) {
   graph.push(node);
 }
 
-// ---- organizations (only those a product references) --------------------------
+// ---- organizations (those referenced by a product or a pathway stage) ----------
 const usedOrgs = new Set();
 for (const p of data.products) {
   const roles = PRODUCT_ORGS[p.id];
   if (!roles) { if (warnGaps) console.warn(`WARN: no organization registry entry for product "${p.id}" — add it to PRODUCT_ORGS`); continue; }
   Object.values(roles).flat().forEach((o) => usedOrgs.add(o));
 }
+STAGE_OPERATORS.forEach((op) => op.orgs.forEach((o) => usedOrgs.add(o)));
+for (const key of [...usedOrgs]) {
+  const parent = (ORGS[key] || {}).parent;
+  if (parent) usedOrgs.add(parent);
+}
 for (const key of [...usedOrgs].sort()) {
   const o = ORGS[key];
-  if (!o) { console.warn(`WARN: PRODUCT_ORGS references unknown org "${key}" — add it to ORGS`); continue; }
+  if (!o) { console.warn(`WARN: registry references unknown org "${key}" — add it to ORGS`); continue; }
   const node = { "@id": id(`org-${key}`), "@type": "Organization", "name": o.name };
   if (o.qid) node.sameAs = wd(o.qid);
+  if (o.parent && ORGS[o.parent]) node.parentOrg = id(`org-${o.parent}`);
   graph.push(node);
 }
 const attachOrgs = (node, productId) => {
