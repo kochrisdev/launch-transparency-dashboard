@@ -223,8 +223,9 @@ for (const p of data.products) {
 
   if (d.volume) {
     const v = { "@id": id(`product-${p.id}-volume`), "@type": "ProcurementVolume" };
-    set(v, "treatments", d.volume.treatments);
-    set(v, "note", d.volume.note);
+    set(v, "volumeTotal", d.volume.total);
+    set(v, "volumePeriod", d.volume.period);
+    set(v, "source", d.volume.source);
     if (Array.isArray(d.volume.split)) {
       v.hasSplit = d.volume.split.map((sp) => ({
         "@id": id(`product-${p.id}-split-${slug(sp.channel)}`),

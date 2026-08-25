@@ -1,0 +1,365 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix launch:  <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#> .
+@prefix shapes:  <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-shapes.ttl#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix schema:  <https://schema.org/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# ============================================================================
+# LAUNCH Transparency Dashboard — SHACL governance shapes
+#
+# The semantic twin of scripts/validate-data.js: the same governance rules
+# ("a traffic light must never be able to lie silently"), expressed so any
+# RDF consumer can verify them independently against the linked-data export:
+#
+#   pyshacl -s ontology/launch-shapes.ttl -e ontology/launch.ttl \
+#           ontology/launch-data.jsonld
+#
+# Severities mirror the validator: sh:Violation = the dashboard would lie
+# (validator error), sh:Warning = provenance debt (validator warning).
+#
+# Parallel implementation rule (docs/data-model.md §4): when a governance
+# rule changes in validate-data.js, change it here in the same commit —
+# docs/ontology.md §7a lists the rule-to-shape mapping.
+#
+# Two validator rules have no shape on purpose: duplicate product ids and
+# duplicate iso3 per product are structurally impossible in the graph (both
+# would merge into one IRI), and the 8-stage-entry count is hardcoded here
+# (a pathway-stage change means updating shapes:MedicineShape too).
+# ============================================================================
+
+<https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-shapes.ttl>
+    a owl:Ontology ;
+    dcterms:title "LAUNCH Dashboard governance shapes" ;
+    owl:imports <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl> ;
+    owl:versionInfo "1.0.0" ;
+    sh:declare [ sh:prefix "launch" ;
+                 sh:namespace "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch.ttl#"^^xsd:anyURI ] .
+
+# ----------------------------------------------------------------------------
+# Dataset
+# ----------------------------------------------------------------------------
+
+shapes:DatasetShape a sh:NodeShape ;
+    sh:targetClass launch:Dataset ;
+    sh:property [
+        sh:path launch:dataStatus ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:datastatus-illustrative launch:datastatus-draft launch:datastatus-live ) ;
+        sh:message "meta.dataStatus must be illustrative/draft/live — it controls the trust banner." ;
+    ] ;
+    sh:property [
+        sh:path launch:lastUpdated ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:date ;
+        sh:message "meta.lastUpdated must be a YYYY-MM-DD date." ;
+    ] .
+
+# ----------------------------------------------------------------------------
+# Medicine (tracked product)
+# ----------------------------------------------------------------------------
+
+shapes:MedicineShape a sh:NodeShape ;
+    sh:targetClass launch:Medicine ;
+    sh:property [
+        sh:path launch:productId ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[a-z0-9-]+$" ;
+        sh:message "id required: lowercase letters/digits/hyphens, permanent." ;
+    ] ;
+    sh:property [ sh:path schema:name ; sh:minCount 1 ;
+        sh:message "name is required." ] ;
+    sh:property [ sh:path launch:inn ; sh:minCount 1 ;
+        sh:message "inn is required." ] ;
+    sh:property [ sh:path launch:manufacturerLabel ; sh:minCount 1 ;
+        sh:message "manufacturer is required." ] ;
+    sh:property [ sh:path launch:classLabel ; sh:minCount 1 ;
+        sh:message "classLabel is required." ] ;
+    sh:property [
+        sh:path launch:productClass ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:class-pipeline launch:class-market ) ;
+        sh:message "class must be pipeline or market." ;
+    ] ;
+    sh:property [
+        sh:path launch:developmentPhase ;
+        sh:maxCount 1 ;
+        sh:in ( launch:phase-preclinical launch:phase-phase1 launch:phase-phase2
+                launch:phase-phase3 launch:phase-regulatory launch:phase-access ) ;
+        sh:message "phase must be preclinical/phase1/phase2/phase3/regulatory/access." ;
+    ] ;
+    sh:property [
+        sh:severity sh:Warning ;
+        sh:path launch:developmentPhase ;
+        sh:minCount 1 ;
+        sh:message "No phase — the product will not appear on the pipeline poster view." ;
+    ] ;
+    # Exactly 8 stage entries — one per pathway gate. Hardcoded: a change to
+    # the stage list means updating this count (and every other consumer).
+    sh:property [
+        sh:path launch:hasStageEntry ;
+        sh:minCount 8 ; sh:maxCount 8 ;
+        sh:message "A tracked medicine must have exactly 8 stage entries, one per pathway stage." ;
+    ] ;
+    sh:property [
+        sh:path launch:currentStage ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:node [ sh:property [ sh:path skos:inScheme ; sh:hasValue launch:PathwayStageScheme ] ] ;
+        sh:message "currentStage must point at one pathway-stage concept." ;
+    ] ;
+    sh:property [ sh:path launch:hasPrice ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "detail.price is required (value may be TBC, the object may not be missing)." ] ;
+    sh:property [ sh:path launch:useCase ; sh:minCount 1 ;
+        sh:message "detail.useCase is required." ] ;
+    sh:property [ sh:path launch:hasResearch ; sh:minCount 1 ;
+        sh:message "detail.research is required." ] ;
+    # THE red-flag rule: a delayed stage anywhere requires the top-level
+    # bottleneck sentence — an unsubstantiated accusation is impossible.
+    sh:or (
+        [ sh:property [
+            sh:path ( launch:hasStageEntry launch:hasStatus ) ;
+            sh:qualifiedValueShape [ sh:hasValue launch:status-late ] ;
+            sh:qualifiedMaxCount 0 ;
+        ] ]
+        [ sh:property [ sh:path launch:bottleneckFlag ; sh:minCount 1 ; sh:minLength 15 ] ]
+    ) ;
+    sh:message "Product has a delayed (late) stage but no top-level bottleneck flag — a red light must carry a written reason." .
+
+shapes:FlagWithoutLateShape a sh:NodeShape ;
+    sh:targetClass launch:Medicine ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:property [ sh:path launch:bottleneckFlag ; sh:maxCount 0 ] ]
+        [ sh:property [
+            sh:path ( launch:hasStageEntry launch:hasStatus ) ;
+            sh:qualifiedValueShape [ sh:hasValue launch:status-late ] ;
+            sh:qualifiedMinCount 1 ;
+        ] ]
+    ) ;
+    sh:message "Product carries a bottleneck flag but no stage is marked late — the flag will show without a red light." .
+
+# ----------------------------------------------------------------------------
+# Stage entries
+# ----------------------------------------------------------------------------
+
+shapes:StageEntryShape a sh:NodeShape ;
+    sh:targetClass launch:StageEntry ;
+    sh:property [
+        sh:path launch:atStage ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:node [ sh:property [ sh:path skos:inScheme ; sh:hasValue launch:PathwayStageScheme ] ] ;
+        sh:message "A stage entry must point at one pathway-stage concept." ;
+    ] ;
+    sh:property [
+        sh:path launch:hasStatus ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:status-idle launch:status-late launch:status-prog launch:status-done ) ;
+        sh:message "Status must be idle/late/prog/done." ;
+    ] ;
+    sh:property [
+        sh:path launch:asOf ; sh:datatype xsd:date ;
+        sh:message "asOf must be a YYYY-MM-DD date." ;
+    ] ;
+    # Red needs a reason (validator error).
+    sh:or (
+        [ sh:property [
+            sh:path launch:hasStatus ;
+            sh:in ( launch:status-idle launch:status-prog launch:status-done ) ;
+        ] ]
+        [ sh:property [ sh:path launch:note ; sh:minCount 1 ; sh:minLength 15 ] ]
+    ) ;
+    sh:message "A delayed (late) stage must carry a substantive reason in its note." .
+
+shapes:StageEntryAsOfShape a sh:NodeShape ;
+    sh:targetClass launch:StageEntry ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:property [ sh:path launch:hasStatus ; sh:hasValue launch:status-idle ] ]
+        [ sh:property [ sh:path launch:asOf ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "A non-idle stage entry has no asOf verification date." .
+
+# ----------------------------------------------------------------------------
+# Price — the most sensitive governance rule
+# ----------------------------------------------------------------------------
+
+shapes:PriceShape a sh:NodeShape ;
+    sh:targetClass launch:Price ;
+    sh:property [
+        sh:path launch:confirmedInWriting ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ;
+        sh:message "confirmedInWriting must be true or false." ;
+    ] ;
+    # A displayed price is earned: written confirmation or a public source.
+    sh:or (
+        [ sh:property [ sh:path launch:priceValue ; sh:maxCount 0 ] ]
+        [ sh:property [ sh:path launch:priceValue ; sh:in ( "TBC" "TBD" "—" "-" ) ] ]
+        [ sh:property [ sh:path launch:confirmedInWriting ; sh:hasValue true ] ]
+        [ sh:property [ sh:path launch:source ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "A displayed price needs confirmedInWriting=true or a public source — governance rule." .
+
+shapes:PriceAsOfShape a sh:NodeShape ;
+    sh:targetClass launch:Price ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:property [ sh:path launch:priceValue ; sh:maxCount 0 ] ]
+        [ sh:property [ sh:path launch:priceValue ; sh:in ( "TBC" "TBD" "—" "-" ) ] ]
+        [ sh:property [ sh:path launch:asOf ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "A displayed price has no asOf verification date." .
+
+# ----------------------------------------------------------------------------
+# Country map — a colored country reads as a fact
+# ----------------------------------------------------------------------------
+
+shapes:CountryMapShape a sh:NodeShape ;
+    sh:targetClass launch:CountryMap ;
+    sh:property [
+        sh:path launch:coverageStatus ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:coverage-illustrative launch:coverage-draft launch:coverage-verified ) ;
+        sh:message "countries.status must be illustrative/draft/verified." ;
+    ] ;
+    sh:property [ sh:path launch:hasCountryStatus ; sh:minCount 1 ;
+        sh:message "countries.list must be non-empty." ] ;
+    sh:or (
+        [ sh:property [ sh:path launch:coverageStatus ; sh:hasValue launch:coverage-verified ] ]
+        [ sh:property [ sh:path launch:note ; sh:minCount 1 ; sh:minLength 20 ] ]
+    ) ;
+    sh:message "An unverified country map needs a substantive note (shown as the map warning)." .
+
+shapes:CountryAccessStatusShape a sh:NodeShape ;
+    sh:targetClass launch:CountryAccessStatus ;
+    sh:property [
+        sh:path launch:country ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:class schema:Country ;
+        sh:message "A country access status must reference one country node." ;
+    ] ;
+    sh:property [
+        sh:path launch:accessLevel ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:level-registered launch:level-guidelines launch:level-mft ) ;
+        sh:message "Access level must be registered/guidelines/mft." ;
+    ] .
+
+shapes:CountryShape a sh:NodeShape ;
+    sh:targetClass schema:Country ;
+    sh:property [
+        sh:path launch:iso3 ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[A-Z]{3}$" ;
+        sh:message "A country must carry one 3-letter uppercase ISO-3166 alpha-3 code." ;
+    ] .
+
+# ----------------------------------------------------------------------------
+# Journey gates
+# ----------------------------------------------------------------------------
+
+shapes:JourneyGateShape a sh:NodeShape ;
+    sh:targetClass launch:JourneyGate ;
+    sh:property [ sh:path launch:gateLabel ; sh:minCount 1 ;
+        sh:message "A journey gate needs a label." ] ;
+    sh:property [
+        sh:path launch:gateYear ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:or (
+            [ sh:datatype xsd:integer ; sh:minInclusive 1990 ; sh:maxInclusive 2100 ]
+            [ sh:hasValue "TBC" ]
+        ) ;
+        sh:message "A gate year must be an integer 1990–2100 or the honest 'TBC'." ;
+    ] .
+
+# ----------------------------------------------------------------------------
+# Procurement volume — splits must add up
+# ----------------------------------------------------------------------------
+
+shapes:VolumeShape a sh:NodeShape ;
+    sh:targetClass launch:ProcurementVolume ;
+    sh:property [ sh:path launch:volumeTotal ; sh:minCount 1 ;
+        sh:message "A volume needs a total." ] ;
+    sh:property [ sh:path launch:volumePeriod ; sh:minCount 1 ;
+        sh:message "A volume needs a period." ] ;
+    sh:property [ sh:path launch:hasSplit ; sh:minCount 1 ;
+        sh:message "A volume needs at least one channel split." ] ;
+    sh:sparql [
+        sh:message "Volume channel splits must sum to 100 (±1)." ;
+        sh:prefixes <https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-shapes.ttl> ;
+        sh:select """
+            SELECT $this WHERE {
+                { SELECT $this (SUM(?pct) AS ?sum)
+                  WHERE { $this launch:hasSplit/launch:splitPct ?pct }
+                  GROUP BY $this }
+                FILTER (ABS(?sum - 100) > 1)
+            }
+        """ ;
+    ] .
+
+shapes:VolumeSplitShape a sh:NodeShape ;
+    sh:targetClass launch:VolumeSplit ;
+    sh:property [ sh:path launch:channel ; sh:minCount 1 ;
+        sh:message "Every volume split needs a channel." ] ;
+    sh:property [
+        sh:path launch:splitPct ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:minInclusive 0 ; sh:maxInclusive 100 ;
+        sh:message "A split percentage must be a number 0–100." ;
+    ] .
+
+# ----------------------------------------------------------------------------
+# Milestones
+# ----------------------------------------------------------------------------
+
+shapes:MilestoneShape a sh:NodeShape ;
+    sh:targetClass launch:Milestone ;
+    sh:property [ sh:path launch:milestoneName ; sh:minCount 1 ;
+        sh:message "A milestone needs a name." ] ;
+    sh:property [
+        sh:path launch:hasStatus ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( launch:status-idle launch:status-late launch:status-prog launch:status-done ) ;
+        sh:message "Milestone status must be idle/late/prog/done." ;
+    ] .
+
+shapes:MilestoneSourceShape a sh:NodeShape ;
+    sh:targetClass launch:Milestone ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:property [ sh:path launch:hasStatus ;
+            sh:in ( launch:status-idle launch:status-late launch:status-prog ) ] ]
+        [ sh:property [ sh:path launch:source ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "A completed milestone has no source citation." .
+
+# ----------------------------------------------------------------------------
+# Changelog and placeholders
+# ----------------------------------------------------------------------------
+
+shapes:ChangelogEntryShape a sh:NodeShape ;
+    sh:targetClass launch:ChangelogEntry ;
+    sh:property [ sh:path launch:changeDate ; sh:minCount 1 ; sh:datatype xsd:date ;
+        sh:message "A changelog entry needs a YYYY-MM-DD date." ] ;
+    sh:property [ sh:path launch:productDisplayName ; sh:minCount 1 ;
+        sh:message "A changelog entry needs a product display name (or 'All')." ] ;
+    sh:property [ sh:path launch:changeText ; sh:minCount 1 ; sh:minLength 10 ;
+        sh:message "A changelog entry must describe what changed." ] .
+
+shapes:PlaceholderShape a sh:NodeShape ;
+    sh:targetClass launch:PlaceholderProduct ;
+    sh:property [ sh:path launch:placeholderNote ; sh:minCount 1 ;
+        sh:message "A placeholder product needs a note." ] ;
+    sh:property [ sh:path launch:productId ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "A placeholder still needs its permanent id." ] .
+
+# ----------------------------------------------------------------------------
+# Glossary concepts — definitions are real sentences
+# ----------------------------------------------------------------------------
+
+shapes:GlossaryTermShape a sh:NodeShape ;
+    sh:targetClass skos:Concept ;
+    # Applies only to glossary concepts; stage/status concepts have no definition requirement.
+    sh:or (
+        [ sh:property [ sh:path skos:inScheme ;
+            sh:qualifiedValueShape [ sh:hasValue launch:GlossaryScheme ] ; sh:qualifiedMaxCount 0 ] ]
+        [ sh:property [ sh:path skos:definition ; sh:minCount 1 ; sh:minLength 20 ] ]
+    ) ;
+    sh:message "A glossary term's definition must be a real sentence." .

@@ -215,9 +215,9 @@ Rules the lineage encodes:
 - **Generated outputs are committed but never hand-edited**: `unitaid/`,
   `synthetic/`, `v2/`, `powerbi/data/*.csv`, `history/`, `feed.xml`,
   `briefs/`, `data/world-map.js`, `ontology/launch-data.jsonld`. Each has
-  exactly one generator script; regenerate, don't patch. (The other two
-  `ontology/` files — `launch.ttl` and `context.jsonld` — are hand-authored
-  source, like the validator.)
+  exactly one generator script; regenerate, don't patch. (The other three
+  `ontology/` files — `launch.ttl`, `context.jsonld` and `launch-shapes.ttl` —
+  are hand-authored source, like the validator.)
 - **Only `data/products.js` triggers automation.** `publish.yml` is
   path-filtered to that one file — edits to the synthetic dataset deploy with
   the push but produce no history snapshot, no feed rebuild, no brief input.

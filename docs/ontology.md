@@ -40,6 +40,7 @@ every term; the validator enforces the semantics. This layer makes it
 | --- | --- | --- |
 | [`ontology/launch.ttl`](../ontology/launch.ttl) | The ontology proper (OWL classes and properties, SKOS concept schemes and fixed concepts), in Turtle. | **Hand-authored** — the source of truth for the semantic layer. |
 | [`ontology/context.jsonld`](../ontology/context.jsonld) | JSON-LD context mapping the contract's vocabulary to ontology IRIs. | **Hand-authored** — changes in lock-step with `launch.ttl`. |
+| [`ontology/launch-shapes.ttl`](../ontology/launch-shapes.ttl) | SHACL governance shapes — the validator's rules expressed so any RDF consumer can verify them independently (see §7a). | **Hand-authored** — changes in lock-step with `validate-data.js`. |
 | [`ontology/launch-data.jsonld`](../ontology/launch-data.jsonld) | The current dataset as linked-data instances (products, stage entries, country statuses, concepts, changelog). | **Generated** by `scripts/build-ontology.js` — regenerate, never hand-edit. |
 
 All three are served by GitHub Pages, so every IRI under
@@ -189,6 +190,39 @@ signals without reading any documentation:
 | a red light has a written reason | `launch:status-late` entries carry `launch:note`; the product carries `launch:bottleneckFlag` (the concept's `skos:definition` states the rule) |
 | the whole dataset may be fictional | `launch:synthetic true` on the dataset node |
 
+### 7a. Verifiable governance: the SHACL shapes
+
+The promises above are not just *represented* — they are **checkable**.
+[`launch-shapes.ttl`](../ontology/launch-shapes.ttl) is the semantic twin of
+`scripts/validate-data.js`: the same rules, expressed as SHACL so a partner
+ingesting the graph can verify them without trusting that our validator ran.
+Severities mirror the validator — `sh:Violation` = the dashboard would lie
+(validator error), `sh:Warning` = provenance debt (validator warning).
+
+```bash
+pip install pyshacl
+pyshacl -s ontology/launch-shapes.ttl -e ontology/launch.ttl ontology/launch-data.jsonld
+```
+
+| Validator rule | Shape |
+| --- | --- |
+| a `late` stage needs a substantive note | `shapes:StageEntryShape` (the `sh:or` clause) |
+| a product with a `late` stage needs a top-level `flag` | `shapes:MedicineShape` (the `sh:or` clause) |
+| a displayed price needs `confirmedInWriting` or a source | `shapes:PriceShape` |
+| an unverified country map needs a substantive note | `shapes:CountryMapShape` |
+| volume channel splits sum to 100 (±1) | `shapes:VolumeShape` (`sh:sparql`) |
+| exactly 8 stage entries per medicine | `shapes:MedicineShape` (**hardcoded 8** — a pathway-stage change means updating it) |
+| enumerations (status, level, class, phase, dataStatus) | `sh:in` lists throughout |
+| non-idle stage without `asOf` / done milestone without source / flag without a red light | the `sh:Warning` shapes |
+
+Two validator rules have no shape **by design**: duplicate product ids and
+duplicate iso3 per product are structurally impossible in the graph — both
+would merge into a single IRI.
+
+**Parallel implementation rule** (per [data-model.md §4](data-model.md#4-derived-values--computed-never-stored)):
+a governance-rule change in `validate-data.js` changes `launch-shapes.ttl` in
+the same commit.
+
 ## 8. Using it
 
 Load `ontology/launch.ttl` + `ontology/launch-data.jsonld` into any RDF
@@ -239,10 +273,11 @@ g.parse("ontology/launch-data.jsonld")
 - **A new country in any product's list?** Add its QID to `WIKIDATA_COUNTRY`
   in `scripts/build-ontology.js` (the generator warns if you forget — look up
   the code via Wikidata property P298).
+- **Governance rule changed in `validate-data.js`?** Mirror it in
+  `launch-shapes.ttl` in the same commit (§7a has the rule-to-shape map).
 - **Future normalization candidates** (deliberately out of scope, because the
   contract stores display strings): organization entities for
   manufacturers/PDPs/funders (`manufacturerLabel` → `schema:manufacturer` →
   `schema:Organization` nodes, which would also give Wikidata org links a
-  home), typed dates for the free-form date labels, and SHACL shapes encoding
-  the governance rules for RDF-side validation. Add the normalizations only
+  home), and typed dates for the free-form date labels. Add them only
   when/if the contract itself normalizes the underlying fields.

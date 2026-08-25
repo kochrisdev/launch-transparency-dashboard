@@ -330,10 +330,15 @@ launch:splitPct a owl:DatatypeProperty ;
     rdfs:label "split percentage" ;
     rdfs:comment "Percentage of the product's procured volume through this channel. All splits of one volume sum to 100." .
 
-launch:treatments a owl:DatatypeProperty ;
-    rdfs:domain launch:ProcurementVolume ;
-    rdfs:label "treatments" ;
-    rdfs:comment "Procured treatment courses (one course = one patient's full treatment; counts courses, not tablets or packs)." .
+launch:volumeTotal a owl:DatatypeProperty ;
+    rdfs:domain launch:ProcurementVolume ; rdfs:range xsd:string ;
+    rdfs:label "volume total" ;
+    rdfs:comment "Total procured treatment courses in the period, as displayed (e.g. '1.4M treatment courses'). One course = one patient's full treatment; counts courses, not tablets or packs." .
+
+launch:volumePeriod a owl:DatatypeProperty ;
+    rdfs:domain launch:ProcurementVolume ; rdfs:range xsd:string ;
+    rdfs:label "volume period" ;
+    rdfs:comment "The period the volume covers (e.g. '2024–2025')." .
 
 launch:volumeNote a owl:DatatypeProperty ;
     rdfs:domain launch:Medicine ; rdfs:range xsd:string ;

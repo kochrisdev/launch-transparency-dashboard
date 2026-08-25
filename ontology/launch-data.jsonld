@@ -886,6 +886,9 @@
       "hasVolume": {
         "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-volume",
         "@type": "ProcurementVolume",
+        "volumeTotal": "940,111 packs · US$14.5m (2018–2025)",
+        "volumePeriod": "Global Fund PQR transactions, 2018–2025 (68 orders; US$11.6m in 2025 alone; top buyers Uganda, Burkina Faso, Ghana)",
+        "source": "Global Fund PQR Transaction Summary, extract 23 Aug 2026 — sourcing/staging/procurement_transactions.csv. Covers Global Fund-financed procurement only; US PMI data unavailable post-2025 (GHSC-PSM dataset offline). Recent quarters incomplete due to PQR reporting lag.",
         "hasSplit": [
           {
             "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-split-Global-Fund-PQR-recorded",
@@ -1241,6 +1244,9 @@
       "hasVolume": {
         "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-volume",
         "@type": "ProcurementVolume",
+        "volumeTotal": "11,493,039 packs · US$41.5m (2008–2026)",
+        "volumePeriod": "Global Fund PQR transactions, 2008–2026 (234 orders; US$15.3m in 2025; top buyers Uganda, Madagascar, Mozambique)",
+        "source": "Global Fund PQR Transaction Summary, extract 23 Aug 2026 — sourcing/staging/procurement_transactions.csv. Covers Global Fund-financed procurement only; US PMI data unavailable post-2025 (GHSC-PSM dataset offline). Recent quarters incomplete due to PQR reporting lag.",
         "hasSplit": [
           {
             "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-split-Global-Fund-PQR-recorded",
