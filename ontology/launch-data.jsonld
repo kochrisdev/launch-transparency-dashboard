@@ -303,6 +303,53 @@
       "sameAs": "http://www.wikidata.org/entity/Q953"
     },
     {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-alfasigma",
+      "@type": "Organization",
+      "name": "Alfasigma",
+      "sameAs": "http://www.wikidata.org/entity/Q30268742"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-fosun-pharma",
+      "@type": "Organization",
+      "name": "Fosun Pharmaceutical",
+      "sameAs": "http://www.wikidata.org/entity/Q11071241"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-guilin-pharma",
+      "@type": "Organization",
+      "name": "Guilin Pharmaceutical"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-mmv",
+      "@type": "Organization",
+      "name": "Medicines for Malaria Venture",
+      "sameAs": "http://www.wikidata.org/entity/Q6806774"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-moru",
+      "@type": "Organization",
+      "name": "Mahidol Oxford Tropical Medicine Research Unit",
+      "sameAs": "http://www.wikidata.org/entity/Q61931169"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-novartis",
+      "@type": "Organization",
+      "name": "Novartis",
+      "sameAs": "http://www.wikidata.org/entity/Q507154"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-sc-johnson",
+      "@type": "Organization",
+      "name": "S. C. Johnson & Son",
+      "sameAs": "http://www.wikidata.org/entity/Q683170"
+    },
+    {
+      "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-shin-poong",
+      "@type": "Organization",
+      "name": "Shin Poong Pharmaceutical",
+      "sameAs": "http://www.wikidata.org/entity/Q56583278"
+    },
+    {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
       "@type": "Medicine",
       "name": "GanLum",
@@ -313,6 +360,8 @@
       "productClass": "launch:class-pipeline",
       "currentStage": "launch:stage-1",
       "developmentPhase": "launch:phase-regulatory",
+      "manufacturedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-novartis",
+      "coDevelopedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-mmv",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum-stage-0",
@@ -469,6 +518,8 @@
       "productClass": "launch:class-pipeline",
       "currentStage": "launch:stage-0",
       "developmentPhase": "launch:phase-phase3",
+      "manufacturedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-fosun-pharma",
+      "coDevelopedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-moru",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-alaq-stage-0",
@@ -635,6 +686,8 @@
       },
       "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF06",
       "sameAs": "http://www.wikidata.org/entity/Q39053484",
+      "manufacturedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-shin-poong",
+      "coDevelopedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-mmv",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-0",
@@ -997,6 +1050,8 @@
       },
       "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF05",
       "sameAs": "http://www.wikidata.org/entity/Q17048104",
+      "manufacturedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-alfasigma",
+      "suppliedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-guilin-pharma",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-0",
@@ -1355,7 +1410,8 @@
       "inn": "Vector-control prevention tool",
       "manufacturerLabel": "SC Johnson",
       "classLabel": "Prevention · WHO-recommended · rollout funded",
-      "placeholderNote": "Planned addition to LAUNCH tracking. WHO PQ (vector control) lists two SC Johnson spatial emanators — Guardian and Mosquito Shield — prequalified 13 Aug 2025 (WHO PQ vector-control list, extract 22 Aug 2026), alongside WHO's policy recommendation for spatial repellents of the same date; a Global Fund–US partnership announced 13 May 2026 targets rollout to 60 million people by 2028. The pipeline view will apply with WHO PQ/Vector Control and guideline stages adapted for prevention products."
+      "placeholderNote": "Planned addition to LAUNCH tracking. WHO PQ (vector control) lists two SC Johnson spatial emanators — Guardian and Mosquito Shield — prequalified 13 Aug 2025 (WHO PQ vector-control list, extract 22 Aug 2026), alongside WHO's policy recommendation for spatial repellents of the same date; a Global Fund–US partnership announced 13 May 2026 targets rollout to 60 million people by 2028. The pipeline view will apply with WHO PQ/Vector Control and guideline stages adapted for prevention products.",
+      "manufacturedBy": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#org-sc-johnson"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#change-0",

@@ -23,6 +23,7 @@
     "OperationalResearch": "launch:OperationalResearch",
     "ChangelogEntry": "launch:ChangelogEntry",
     "Country": "schema:Country",
+    "Organization": "schema:Organization",
     "Concept": "skos:Concept",
 
     "name": "schema:name",
@@ -33,6 +34,9 @@
     "exactMatch": { "@id": "skos:exactMatch", "@type": "@id" },
     "seeAlso": { "@id": "rdfs:seeAlso", "@type": "@id" },
     "sameAs": { "@id": "owl:sameAs", "@type": "@id" },
+    "manufacturedBy": { "@id": "launch:manufacturedBy", "@type": "@id" },
+    "coDevelopedBy": { "@id": "launch:coDevelopedBy", "@type": "@id" },
+    "suppliedBy": { "@id": "launch:suppliedBy", "@type": "@id" },
 
     "tracksProduct": { "@id": "launch:tracksProduct", "@type": "@id" },
     "hasStageEntry": "launch:hasStageEntry",

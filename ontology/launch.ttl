@@ -182,6 +182,22 @@ launch:hasResearch a owl:ObjectProperty ;
     rdfs:domain launch:Medicine ; rdfs:range launch:OperationalResearch ;
     rdfs:label "has research" .
 
+launch:manufacturedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf schema:manufacturer ;
+    rdfs:domain launch:Product ; rdfs:range schema:Organization ;
+    rdfs:label "manufactured by" ;
+    rdfs:comment "The organization holding/seeking the marketing authorization. Normalized from the manufacturerLabel display string via the generator's organization registry — the label stays authoritative; these links are enrichment." .
+
+launch:coDevelopedBy a owl:ObjectProperty ;
+    rdfs:domain launch:Product ; rdfs:range schema:Organization ;
+    rdfs:label "co-developed by" ;
+    rdfs:comment "Product development partnership (PDP) or research consortium behind the product (e.g. MMV, MORU/DeTACT)." .
+
+launch:suppliedBy a owl:ObjectProperty ;
+    rdfs:domain launch:Product ; rdfs:range schema:Organization ;
+    rdfs:label "supplied by" ;
+    rdfs:comment "An additional prequalified supplier beyond the primary manufacturer — supply security via diversity (the DHA-PPQ pattern). Not necessarily exhaustive: the manufacturerLabel may name supplier groups that have no registry entry." .
+
 launch:dataStatus a owl:ObjectProperty ;
     rdfs:domain launch:Dataset ; rdfs:range skos:Concept ;
     rdfs:label "data status" ;
@@ -211,7 +227,7 @@ launch:inn a owl:DatatypeProperty ;
 launch:manufacturerLabel a owl:DatatypeProperty ;
     rdfs:domain launch:Product ; rdfs:range xsd:string ;
     rdfs:label "manufacturer label" ;
-    rdfs:comment "Display string naming the manufacturer(s) and development partners (e.g. 'Novartis · MMV'). Deliberately a literal, not an organization entity — the contract stores a display string; normalizing to organization individuals is a future extension." .
+    rdfs:comment "Display string naming the manufacturer(s) and development partners (e.g. 'Novartis · MMV'), exactly as the contract stores it — the authoritative value. The normalized organization links (launch:manufacturedBy / coDevelopedBy / suppliedBy) are generator-side enrichment derived from it." .
 
 launch:classLabel a owl:DatatypeProperty ;
     rdfs:domain launch:Product ; rdfs:range xsd:string ;

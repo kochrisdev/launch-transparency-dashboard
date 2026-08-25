@@ -253,6 +253,26 @@ shapes:CountryShape a sh:NodeShape ;
     ] .
 
 # ----------------------------------------------------------------------------
+# Organizations
+# ----------------------------------------------------------------------------
+
+# Organization nodes must be well-formed; whether a product HAS normalized
+# org links is an enrichment-completeness concern, policed by the generator's
+# console warning (real data only), not by a shape — fictional synthetic
+# companies are deliberately unmapped.
+shapes:OrganizationShape a sh:NodeShape ;
+    sh:targetClass schema:Organization ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "An organization must carry one name." ;
+    ] ;
+    sh:property [
+        sh:path launch:manufacturedBy ; sh:maxCount 0 ;
+        sh:message "Organizations do not manufacture products backwards — check the emission." ;
+    ] .
+
+# ----------------------------------------------------------------------------
 # Journey gates
 # ----------------------------------------------------------------------------
 

@@ -77,6 +77,9 @@ classDiagram
     Medicine --> PathwayStage : currentStage
     Medicine --> ProductClass : productClass
     Medicine --> DevelopmentPhase : developmentPhase
+    Product --> Organization : manufacturedBy
+    Product --> Organization : coDevelopedBy
+    Product --> Organization : suppliedBy
     Medicine "1" --> "*" Milestone : hasMilestone
     Milestone --> StageStatus : hasStatus
     Medicine "1" --> "0..1" CountryMap : hasCountryMap
@@ -130,7 +133,7 @@ never disagree with the contract):
 | `products[]` (placeholder) | `launch:PlaceholderProduct` | identity + note only |
 | `id` | `launch:productId` | the permanent slug; also the IRI fragment |
 | `inn` | `launch:inn` ⊑ `schema:nonProprietaryName` | |
-| `manufacturer` | `launch:manufacturerLabel` (literal) | deliberately *not* an organization entity — the contract stores a display string (see §8) |
+| `manufacturer` | `launch:manufacturerLabel` (literal, authoritative) **plus** normalized `launch:manufacturedBy` / `coDevelopedBy` / `suppliedBy` → `schema:Organization` nodes | org links come from the generator's `ORGS`/`PRODUCT_ORGS` registry, not the contract; `suppliedBy` is not exhaustive ("…and other PQ'd suppliers" stays in the label) |
 | `class` / `phase` | `launch:productClass` / `launch:developmentPhase` → concepts | |
 | `currentStage` | `launch:currentStage` → `launch:stage-<i>` | positional index made explicit |
 | `flag` | `launch:bottleneckFlag` | the red-flag governance sentence |
@@ -158,7 +161,7 @@ emitted as `""` — absence of a triple is the correct linked-data encoding of
 | --- | --- |
 | **schema.org** | `Medicine` ⊑ `schema:Drug`; `schema:name`, `inn` ⊑ `schema:nonProprietaryName`; countries typed `schema:Country`; ATC codes as `schema:code` (`schema:MedicalCode`) |
 | **WHO ATC** | ASPY → `P01BF06` (artesunate + pyronaridine), DHA–PPQ → `P01BF05` (artenimol + piperaquine), each with an `rdfs:seeAlso` to the BioPortal ATC PURL. GanLum and ALAQ have **no ATC code assigned yet** — add theirs to the `ATC` map in `scripts/build-ontology.js` when WHO assigns them. |
-| **Wikidata** | `owl:sameAs` links (QIDs verified against wikidata.org, 2026-08-25): every country node (all 22, via the `WIKIDATA_COUNTRY` map — the generator warns when a new country lacks an entry), and the marketed combinations — ASPY → [Q39053484](https://www.wikidata.org/wiki/Q39053484) (artesunate/pyronaridine FDC), DHA–PPQ → [Q17048104](https://www.wikidata.org/wiki/Q17048104). Products link only where an item for the **actual combination** exists: `ganaplacide` (Q28209255) is the compound alone and `Eurartesim` (Q29005826) is one brand of DHA–PPQ, so neither qualifies. These links make the graph federatable with the largest open knowledge base. |
+| **Wikidata** | `owl:sameAs` links (QIDs verified against wikidata.org, 2026-08-25): every country node (all 22, via the `WIKIDATA_COUNTRY` map — the generator warns when a new country lacks an entry), the marketed combinations — ASPY → [Q39053484](https://www.wikidata.org/wiki/Q39053484) (artesunate/pyronaridine FDC), DHA–PPQ → [Q17048104](https://www.wikidata.org/wiki/Q17048104) — and 7 of the 8 organizations (Novartis Q507154, MMV Q6806774, Fosun Q11071241, MORU Q61931169, Shin Poong Q56583278, Alfasigma Q30268742, SC Johnson Q683170; Guilin Pharmaceutical has no Wikidata item and carries a name only). Products link only where an item for the **actual combination** exists: `ganaplacide` (Q28209255) is the compound alone and `Eurartesim` (Q29005826) is one brand of DHA–PPQ, so neither qualifies. These links make the graph federatable with the largest open knowledge base. |
 | **ISO 3166-1 alpha-3** | `launch:iso3` on every country node — the same join key the map geometry uses |
 | **Dublin Core / SKOS / OWL** | provenance (`dcterms:source`), vocabularies (`skos:*`), the ontology itself |
 
@@ -223,6 +226,13 @@ would merge into a single IRI.
 a governance-rule change in `validate-data.js` changes `launch-shapes.ttl` in
 the same commit.
 
+**Continuously proven in CI**: `validate.yml` projects both datasets fresh
+(`node scripts/build-ontology.js …`) and runs
+`python scripts/check-shapes.py` against them on every push and PR — so the
+shapes can't silently drift from the validator. The checker mirrors the
+validator's semantics: `sh:Warning` results print but pass, `sh:Violation`
+fails the run.
+
 ## 8. Using it
 
 Load `ontology/launch.ttl` + `ontology/launch-data.jsonld` into any RDF
@@ -274,10 +284,13 @@ g.parse("ontology/launch-data.jsonld")
   in `scripts/build-ontology.js` (the generator warns if you forget — look up
   the code via Wikidata property P298).
 - **Governance rule changed in `validate-data.js`?** Mirror it in
-  `launch-shapes.ttl` in the same commit (§7a has the rule-to-shape map).
+  `launch-shapes.ttl` in the same commit (§7a has the rule-to-shape map) —
+  CI runs both on every push.
+- **A new product, or a manufacturer change?** Update `ORGS`/`PRODUCT_ORGS`
+  in `scripts/build-ontology.js` (the generator warns on a missing product
+  entry for real data). The `manufacturerLabel` display string in the
+  contract stays authoritative; the registry only normalizes it.
 - **Future normalization candidates** (deliberately out of scope, because the
-  contract stores display strings): organization entities for
-  manufacturers/PDPs/funders (`manufacturerLabel` → `schema:manufacturer` →
-  `schema:Organization` nodes, which would also give Wikidata org links a
-  home), and typed dates for the free-form date labels. Add them only
-  when/if the contract itself normalizes the underlying fields.
+  contract stores display strings): typed dates for the free-form date
+  labels, and moving the org registry into the contract itself if analysts
+  ever need to maintain it without a developer.

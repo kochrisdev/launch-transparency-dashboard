@@ -62,6 +62,30 @@ const WIKIDATA_COUNTRY = {
 };
 const wd = (qid) => "http://www.wikidata.org/entity/" + qid;
 
+// Organization registry (generator-side enrichment — the contract's
+// manufacturerLabel display string stays authoritative). QIDs verified
+// against wikidata.org 2026-08-25; Guilin Pharmaceutical has no Wikidata
+// item, so its node carries a name only.
+const ORGS = {
+  "novartis":     { name: "Novartis", qid: "Q507154" },
+  "mmv":          { name: "Medicines for Malaria Venture", qid: "Q6806774" },
+  "fosun-pharma": { name: "Fosun Pharmaceutical", qid: "Q11071241" },
+  "moru":         { name: "Mahidol Oxford Tropical Medicine Research Unit", qid: "Q61931169" },
+  "shin-poong":   { name: "Shin Poong Pharmaceutical", qid: "Q56583278" },
+  "alfasigma":    { name: "Alfasigma", qid: "Q30268742" },
+  "guilin-pharma": { name: "Guilin Pharmaceutical" },
+  "sc-johnson":   { name: "S. C. Johnson & Son", qid: "Q683170" }
+};
+// Which organizations play which role for each product. suppliedBy is not
+// necessarily exhaustive ("…and other PQ'd suppliers" stays in the label).
+const PRODUCT_ORGS = {
+  ganlum:    { manufacturedBy: ["novartis"], coDevelopedBy: ["mmv"] },
+  alaq:      { manufacturedBy: ["fosun-pharma"], coDevelopedBy: ["moru"] },
+  pyramax:   { manufacturedBy: ["shin-poong"], coDevelopedBy: ["mmv"] },
+  dhappq:    { manufacturedBy: ["alfasigma"], suppliedBy: ["guilin-pharma"] },
+  emanators: { manufacturedBy: ["sc-johnson"] }
+};
+
 // ---- load the contract (same extraction as validate-data.js) ---------------
 const raw = fs.readFileSync(DATA_FILE, "utf8");
 const m = raw.match(/^window\.LAUNCH_DATA\s*=\s*/m);
@@ -78,6 +102,10 @@ const set = (obj, key, val) => {
   obj[key] = val;
 };
 const slug = (s) => s.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+// Enrichment-completeness warnings apply to real data only — a synthetic
+// dataset's fictional companies and countries are unmapped by design.
+const warnGaps = !data.meta.synthetic;
 
 const graph = [];
 
@@ -111,9 +139,31 @@ for (const p of data.products) {
 for (const iso3 of [...countries].sort()) {
   const node = { "@id": id(`country-${iso3}`), "@type": "Country", "iso3": iso3 };
   if (WIKIDATA_COUNTRY[iso3]) node.sameAs = wd(WIKIDATA_COUNTRY[iso3]);
-  else console.warn(`WARN: no Wikidata mapping for country ${iso3} — add it to WIKIDATA_COUNTRY`);
+  else if (warnGaps) console.warn(`WARN: no Wikidata mapping for country ${iso3} — add it to WIKIDATA_COUNTRY`);
   graph.push(node);
 }
+
+// ---- organizations (only those a product references) --------------------------
+const usedOrgs = new Set();
+for (const p of data.products) {
+  const roles = PRODUCT_ORGS[p.id];
+  if (!roles) { if (warnGaps) console.warn(`WARN: no organization registry entry for product "${p.id}" — add it to PRODUCT_ORGS`); continue; }
+  Object.values(roles).flat().forEach((o) => usedOrgs.add(o));
+}
+for (const key of [...usedOrgs].sort()) {
+  const o = ORGS[key];
+  if (!o) { console.warn(`WARN: PRODUCT_ORGS references unknown org "${key}" — add it to ORGS`); continue; }
+  const node = { "@id": id(`org-${key}`), "@type": "Organization", "name": o.name };
+  if (o.qid) node.sameAs = wd(o.qid);
+  graph.push(node);
+}
+const attachOrgs = (node, productId) => {
+  const roles = PRODUCT_ORGS[productId] || {};
+  for (const [role, keys] of Object.entries(roles)) {
+    const refs = keys.filter((k) => ORGS[k]).map((k) => id(`org-${k}`));
+    if (refs.length) node[role] = refs.length === 1 ? refs[0] : refs;
+  }
+};
 
 // ---- products -----------------------------------------------------------------
 const stageEntryCount = { total: 0 };
@@ -126,6 +176,7 @@ for (const p of data.products) {
     set(node, "manufacturerLabel", p.manufacturer);
     set(node, "classLabel", p.classLabel);
     set(node, "placeholderNote", p.note);
+    attachOrgs(node, p.id);
     graph.push(node);
     continue;
   }
@@ -148,6 +199,7 @@ for (const p of data.products) {
     node.seeAlso = `http://purl.bioontology.org/ontology/ATC/${ATC[p.id]}`;
   }
   if (WIKIDATA_PRODUCT[p.id]) node.sameAs = wd(WIKIDATA_PRODUCT[p.id]);
+  attachOrgs(node, p.id);
 
   node.hasStageEntry = p.stages.map((s, i) => {
     stageEntryCount.total++;
