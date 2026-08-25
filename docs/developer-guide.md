@@ -53,7 +53,7 @@ upgrade, or break.
 | `scripts/make-brief.js` | Generates the quarterly "what changed" brief into `briefs/` (diffs stage statuses against the closest `history/` snapshot before the window). |
 | `briefs/` | Generated what-changed briefs; `latest.md` is the stable pointer. |
 | `unitaid/` | **Generated** Unitaid brand edition (journey board, matrix, poster, story) per brandpad.io/unitaid. Never hand-edit — rerun the builder. Reads the same `../data/` files, so data pushes update it automatically; only *structural* changes to the source pages need a rebuild. |
-| `scripts/build-unitaid-theme.js` | Rebuilds `unitaid/` from the current source pages: appends a brand-token override layer (pinned across all theme states), Source Sans 3, preview strip, path/link fixes. |
+| `scripts/build-unitaid-theme.js` | Rebuilds `unitaid/` from the current source pages: appends a brand-token override layer (pinned across all theme states), Source Sans 3, preview strip, official logo bar (unmodified lockup from brandpad.io in unitaid/assets/), path/link fixes. |
 | `v2/` | **Generated** version-2 preview edition (all views + widget) reading `data/products.v2.js` — v1 plus proposed collected-data updates, pending sign-off. Root pages stay on v1. Never hand-edit — rerun the builder. |
 | `data/products.v2.js` | The v2 proposal dataset (same contract; validate with the file argument). Merged into `data/products.js` and retired on approval — then delete `v2/` and its builder too. |
 | `scripts/build-v2-edition.js` | Rebuilds `v2/` from the current source pages (data script rewrite + preview strip; same pattern as the synthetic builder). |

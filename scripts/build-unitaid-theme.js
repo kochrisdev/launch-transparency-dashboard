@@ -55,6 +55,10 @@ const OVERRIDE = `
     display: block; background: #212E92; color: #75D8F7; padding: 6px 24px;
     font: 600 11px/1.5 "Source Sans 3", Arial, sans-serif; letter-spacing: .05em;
   }
+  /* official logo bar — full-colour lockup on white only (brand rule);
+     width kept above the 180px minimum required for the tagline version */
+  .unitaid-logobar { background: #FFFFFF; padding: 16px 24px; border-bottom: 1px solid #E6EAEE; }
+  .unitaid-logobar img { display: block; width: 230px; max-width: 60vw; height: auto; }
   /* de-serif option B's display face; keep one brand voice */
   .band h1, .pcard .pname, .stuck h2, .drawer h2, .viz h2 {
     font-family: "Source Sans 3", Arial, "Segoe UI", sans-serif !important;
@@ -66,6 +70,12 @@ const OVERRIDE = `
   .phase-head:nth-of-type(odd) { background: #212E92 !important; }
   #tip { background: #212E92; color: #FFFFFF; }
 </style>`;
+
+// Official primary lockup (downloaded unmodified from brandpad.io/unitaid —
+// unitaid_logo_tagline_rgb_col.svg). Lives in unitaid/assets/.
+const LOGOBAR =
+  '\n<div class="unitaid-logobar"><a href="https://unitaid.org" target="_blank" rel="noopener">' +
+  '<img src="assets/unitaid-logo.svg" alt="Unitaid — save lives faster"></a></div>';
 
 const PAGES = [
   { src: "index.html", out: "index.html",
@@ -89,8 +99,9 @@ for (const p of PAGES) {
   html = html.replace(
     '<a href="unitaid/index.html" style="color:var(--accent)">Unitaid brand preview</a>',
     '<a href="../index.html" style="color:var(--accent)">LAUNCH brand original</a>');
-  // append the brand override as the LAST style so its tokens win
-  html = html.replace(/<\/style>/, "</style>" + OVERRIDE);
+  // append the brand override as the LAST style so its tokens win,
+  // then the logo bar as the first markup on the page
+  html = html.replace(/<\/style>/, "</style>" + OVERRIDE + LOGOBAR);
   fs.writeFileSync(path.join(outDir, p.out), html);
   console.log(`unitaid/${p.out} <- ${p.src}`);
 }
