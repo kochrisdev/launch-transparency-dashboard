@@ -45,12 +45,12 @@ the change against the cited source, make the corresponding
 `data/products.js` edit (or decide no change is needed), and close the issue. The staging CSVs never feed the
 dashboards directly — your edit, gated by the validator, is the only path in.
 
-The first batch of collected-data updates is currently packaged as the
-**v2 preview** ([/v2/](https://kochrisdev.github.io/launch-transparency-dashboard/v2/),
-data in `data/products.v2.js`, changes listed in its changelog) so the LAUNCH
-team can review it side-by-side with the live v1 dashboards. Approving it
-means merging those values into `data/products.js` through this same loop —
-see the checklist's "Review & merge the v2 preview" item.
+The first batch of collected-data updates went through a temporary
+review-edition pattern (a `v2/` preview alongside the live pages) and was
+merged into `data/products.js` on 2026-08-25. Routine collection cycles now
+land as ordinary sourced edits through this loop; if a future batch is large
+enough to warrant side-by-side review again, the data model's "add a dataset
+edition" playbook recreates the pattern.
 
 ## 1b. The platforms your edit feeds
 
@@ -61,7 +61,6 @@ One data file drives three platforms. Know what each does with your push:
 | **Static site** (GitHub Pages) | The public flagship: journey board, comparison matrix, pipeline poster, data story, embeddable widget — plus the **Unitaid brand edition** of all four views under `/unitaid/` | Live within ~2 minutes, automatically. All pages in both brand editions read the same data file, so one push updates everything — stats, the story's computed numbers, the RSS feed included. |
 | **Streamlit app** (`streamlit-app/`) | The analyst workbench — and your **pre-commit preview tool** | If deployed on Streamlit Cloud: redeploys automatically. Locally: rerun. |
 | **Power BI kit** (`powerbi/`) | Report for Microsoft-stack partners, built once from the kit | Refreshes from the live site on its own schedule (set in the Power BI Service). No action for data-value changes; **schema** changes need the developer (see the developer guide's schema-change checklist). |
-| **v2 preview** (`v2/`, temporary) | All views on `data/products.v2.js` — the proposed collected-data updates awaiting LAUNCH sign-off | **Not fed by your push** — it has its own data file. Edit `data/products.v2.js` + rerun `node scripts/build-v2-edition.js` to change it. Once approved, merge its values into `data/products.js` through this loop and delete the edition. |
 | **Linked-data export** (`ontology/`) | The dataset as machine-readable linked data (JSON-LD) for semantic-web and integration consumers — see the [ontology guide](ontology.md) | Regenerated automatically by CI in the same bot commit as the history snapshot. Nothing to do for data-value changes; **schema** changes need the developer. |
 
 **Previewing a draft before you commit** (recommended for big updates): run the

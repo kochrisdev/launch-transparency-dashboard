@@ -19,12 +19,11 @@ Read this alongside its siblings — they deliberately don't repeat each other:
 ## 1. One contract, two datasets
 
 Everything in the project reads a single **data contract**: a strict-JSON
-object assigned to `window.LAUNCH_DATA`. Three files implement it:
+object assigned to `window.LAUNCH_DATA`. Two files implement it:
 
 | File | Contents | Served by |
 | --- | --- | --- |
-| [`data/products.js`](../data/products.js) | **Real data, v1** (public-source draft, pending verification) | Root dashboards, `unitaid/` edition, Streamlit default, Power BI live queries |
-| [`data/products.v2.js`](../data/products.v2.js) | **v2 proposal** — v1 plus collected public-source updates from `sourcing/staging/` (PQR volumes, WHO PQ, EMA, trial registry), pending sign-off | `v2/` preview edition; merged into `products.js` and retired on approval |
+| [`data/products.js`](../data/products.js) | **Real data** (v2 dataset since 2026-08-25: public-source draft plus the first collected-data updates, pending verification; v1 preserved in `history/`) | Root dashboards, `unitaid/` edition, Streamlit default, Power BI live queries |
 | [`data/products.synthetic.js`](../data/products.synthetic.js) | **Fictional data** (invented companies and figures, every feature populated) | `synthetic/` edition; any tool via explicit path/URL |
 
 Same schema, same governance rules, one validator:
@@ -149,32 +148,27 @@ implementations, listed in the developer guide's checklist.
 ```mermaid
 flowchart LR
     subgraph sources [Datasets]
-        REAL["data/products.js<br/>(real, draft — v1)"]
-        V2D["data/products.v2.js<br/>(v2 proposal, temporary)"]
+        REAL["data/products.js<br/>(real, draft — v2 dataset)"]
         SYN["data/products.synthetic.js<br/>(fictional)"]
         MAP["data/world-map.js<br/>(generated geometry)"]
     end
 
     V["scripts/validate-data.js<br/>(gate: CI blocks bad data)"]
     REAL --> V
-    V2D --> V
     SYN --> V
 
     subgraph static [Static site — GitHub Pages]
         A["index.html + option-b.html<br/>pipeline.html + story.html + widget.html"]
         U["unitaid/ (brand edition,<br/>generated)"]
         S["synthetic/ (dev edition,<br/>generated)"]
-        V2E["v2/ (preview edition,<br/>generated, temporary)"]
         CSVDL["CSV download<br/>(built in-browser)"]
     end
     REAL --> A
     REAL --> U
     SYN --> S
-    V2D --> V2E
     MAP --> A
     MAP --> U
     MAP --> S
-    MAP --> V2E
     A --> CSVDL
 
     subgraph ci [CI on data change — publish.yml]

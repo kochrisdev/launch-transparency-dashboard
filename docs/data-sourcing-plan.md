@@ -354,8 +354,8 @@ Three collection modes, matched to how each source publishes:
 4. The dashboard contract is fed *from* staging by an analyst decision, not by
    automation: collected values become proposals (a generated diff/brief), and
    the validator remains the only gate. *First cycle completed Aug 2026: the
-   staged evidence was packaged as the v2 preview (`data/products.v2.js` +
-   the `/v2/` edition) for LAUNCH review.*
+   staged evidence was packaged as a v2 preview edition, reviewed, and merged
+   into `data/products.js` on 2026-08-25 (v1 preserved in `history/`).*
 
 ## 5. Licensing & attribution constraints
 

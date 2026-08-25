@@ -116,13 +116,14 @@ three fetchers live and scheduled (see [sourcing/README.md](../sourcing/README.m
   are inputs to the stage-2 verification work; the first regulatory snapshot
   already carries fresher dates than parts of the draft data (e.g. Pyramax's
   EMA outcome update 2025-06-05, DHA–PPQ's nine PQ'd presentations).
-- [ ] 📊🤝 **Review & merge the v2 preview** — the first collected-data
-  updates are applied in `data/products.v2.js` and live at
-  [/v2/](https://kochrisdev.github.io/launch-transparency-dashboard/v2/)
-  (all views; root dashboards untouched). LAUNCH team reviews the v2
-  changelog entries; approved values merge into `data/products.js` via the
-  normal loop, then `v2/`, `data/products.v2.js` and
-  `scripts/build-v2-edition.js` are deleted.
+- [x] 📊🤝 **Review & merge the v2 preview** — merged 2026-08-25: the
+  collected-data updates (PQR volumes, WHO PQ listings, EMA dates, trial
+  registry, NGA/TZA register verification, sourced fact corrections) are
+  now the live draft dataset in `data/products.js`; v1 preserved in
+  `history/`; the `v2/` edition, `data/products.v2.js` and the builder
+  deleted. Future collection cycles land as ordinary sourced edits via
+  the watch-issue loop (no new preview edition needed unless a batch is
+  big enough to warrant one).
 
 ---
 

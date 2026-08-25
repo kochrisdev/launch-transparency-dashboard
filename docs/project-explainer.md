@@ -410,7 +410,7 @@ the URL changes (update the `SITE` constants in `scripts/make-feed.js` and
 - **Two page designs are live in parallel** (journey board vs comparison matrix) awaiting a client decision.
 - **The country map shows an ILLUSTRATIVE warning** until the country survey is verified.
 - **The timing thresholds** (≤2 / 3–5 / >5 years) are acknowledged draft placeholders pending LAUNCH's benchmark work.
-- **A v2 data preview awaits sign-off** — the first harvest of collected public-source data, kept separate at `/v2/` until approved.
+- **The v2 data merge landed (2026-08-25)** — the first harvest of collected public-source data (Global Fund volumes, WHO PQ listings, EMA dates, trial-registry records, Nigeria/Tanzania register verification) is now the live draft dataset; v1 is preserved in `history/`.
 - **Hosting, branding, and analytics** are pending external parties (RBM web team, RBM brand guidelines, analytics choice).
 - **The spatial-emanators row awaits funder approval** — activating it forces the prevention-specific stage-names decision.
 
