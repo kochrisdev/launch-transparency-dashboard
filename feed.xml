@@ -5,7 +5,28 @@
     <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
     <description>Changes to tracked antimalarial product statuses on the LAUNCH dashboard (draft data).</description>
     <language>en</language>
-    <lastBuildDate>Sun, 23 Aug 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 25 Aug 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>All: Version 2 merged: the collected-data updates reviewed in the /v2/ preview (Gl…</title>
+      <description>Version 2 merged: the collected-data updates reviewed in the /v2/ preview (Global Fund PQR volumes, WHO PQ listings, EMA dates, trial-registry records, Nigeria + Tanzania register verification, sourced fact corrections) are now the live draft dataset. The preview edition is retired.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-25:All:Version 2 merged: the collected-data upd</guid>
+      <pubDate>Tue, 25 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>DHA–PPQ: Nigeria and Tanzania registrations verified against the national registers: T…</title>
+      <description>Nigeria and Tanzania registrations verified against the national registers: TZA 10 presentations across four manufacturers (all compliant); NGA 47 presentations but only 26 Active — 22 lapsed, a registration-maintenance signal.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:DHA–PPQ:Nigeria and Tanzania registrations verif</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>ASPY: Nigeria and Tanzania registrations verified against the national registers: T…</title>
+      <description>Nigeria and Tanzania registrations verified against the national registers: TZA 2 (TMDA, 2022), NGA 1 (Greenbook granules, approved Feb 2024). The NGA/TZA registered-level map entries are now register-verified.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:ASPY:Nigeria and Tanzania registrations verif</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>DHA–PPQ: WHO guideline recommendation year corrected to 2010 (second-edition treatment…</title>
       <description>WHO guideline recommendation year corrected to 2010 (second-edition treatment guidelines; reaffirmed 2015) — previously shown as 2015.</description>
@@ -22,7 +43,7 @@
     </item>
     <item>
       <title>Spatial emanators: Status refreshed: WHO policy recommendation for spatial repellents (13 Aug 20…</title>
-      <description>Status refreshed: WHO policy recommendation for spatial repellents (13 Aug 2025), WHO PQ of Guardian and Mosquito Shield, and the Global Fund–US rollout partnership (13 May 2026) recorded — no longer pending funder approval.</description>
+      <description>Status refreshed: WHO policy recommendation for spatial repellents (13 Aug 2025) and the Global Fund–US rollout partnership (13 May 2026) recorded — no longer pending funder approval.</description>
       <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
       <guid isPermaLink="false">2026-08-23:Spatial emanators:Status refreshed: WHO policy recommendat</guid>
       <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
@@ -32,6 +53,41 @@
       <description>Use-case wording aligned with the sourced Novartis claim (first major innovation in malaria treatment since ACTs were introduced 25+ years ago).</description>
       <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
       <guid isPermaLink="false">2026-08-23:GanLum:Use-case wording aligned with the source</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>All: Version 2 preview: first collected-data updates from the public-source stagin…</title>
+      <description>Version 2 preview: first collected-data updates from the public-source staging layer (Global Fund PQR extract 23 Aug 2026, WHO PQ lists, EMA EU-M4all table, ClinicalTrials.gov).</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:All:Version 2 preview: first collected-data </guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>DHA–PPQ: Global Fund volumes filled from PQR: 11.5m packs / US$41.5m since 2008; 0.9–4…</title>
+      <description>Global Fund volumes filled from PQR: 11.5m packs / US$41.5m since 2008; 0.9–4.5% of Global Fund antimalarial spend 2022–24 with a sharp 2025 uptick (US$15.3m). Nine PQ'd presentations across Alfasigma, Guilin and Beijing Holley (2015–2023) recorded.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:DHA–PPQ:Global Fund volumes filled from PQR: 11.</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>ASPY: Global Fund volumes filled from PQR: 940k packs / US$14.5m since 2018, with U…</title>
+      <description>Global Fund volumes filled from PQR: 940k packs / US$14.5m since 2018, with US$11.6m of it in 2025 (Uganda, Burkina Faso). EMA opinion outcome date 5 Jun 2025 recorded from the EU-M4all table.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:ASPY:Global Fund volumes filled from PQR: 940</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GanLum: KALUMA registry record (NCT05842954) added: trial completed 25 Nov 2025, 1,72…</title>
+      <description>KALUMA registry record (NCT05842954) added: trial completed 25 Nov 2025, 1,720 participants (registry actual).</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:GanLum:KALUMA registry record (NCT05842954) add</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Spatial emanators: WHO PQ (vector control) listing of two SC Johnson spatial emanators — Guardia…</title>
+      <description>WHO PQ (vector control) listing of two SC Johnson spatial emanators — Guardian and Mosquito Shield — on 13 Aug 2025 noted on the placeholder row.</description>
+      <link>https://kochrisdev.github.io/launch-transparency-dashboard/</link>
+      <guid isPermaLink="false">2026-08-23:Spatial emanators:WHO PQ (vector control) listing of two S</guid>
       <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
