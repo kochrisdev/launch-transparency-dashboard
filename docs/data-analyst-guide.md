@@ -28,12 +28,14 @@ pages at once.
 4. Bump `meta.lastUpdated`.
 5. Commit and push. The live site updates automatically within ~2 minutes.
 
-Three things happen automatically after your push — no action needed: a dated
+Four things happen automatically after your push — no action needed: a dated
 snapshot of the data file is committed to `history/` (fuel for future trend
 charts), `feed.xml` (the public RSS feed of updates) is rebuilt from your
-changelog entries, and `ontology/launch-data.jsonld` (the machine-readable
-linked-data export) is regenerated. A GitHub issue also opens on the 1st of
-each month with the milestone-scan checklist; close it when the scan is done.
+changelog entries, `ontology/launch-data.jsonld` (the machine-readable
+linked-data export) is regenerated, and `ontology/launch-history.jsonld`
+(the temporal graph — when each traffic light changed) is extended with your
+change. A GitHub issue also opens on the 1st of each month with the
+milestone-scan checklist; close it when the scan is done.
 
 **Incoming evidence arrives on its own schedule too**: the scheduled source
 fetch ([sourcing/README.md](../sourcing/README.md)) pulls ClinicalTrials.gov
@@ -61,7 +63,7 @@ One data file drives three platforms. Know what each does with your push:
 | **Static site** (GitHub Pages) | The public flagship: journey board, comparison matrix, pipeline poster, data story, embeddable widget — plus the **Unitaid brand edition** of all four views under `/unitaid/` | Live within ~2 minutes, automatically. All pages in both brand editions read the same data file, so one push updates everything — stats, the story's computed numbers, the RSS feed included. |
 | **Streamlit app** (`streamlit-app/`) | The analyst workbench — and your **pre-commit preview tool** | If deployed on Streamlit Cloud: redeploys automatically. Locally: rerun. |
 | **Power BI kit** (`powerbi/`) | Report for Microsoft-stack partners, built once from the kit | Refreshes from the live site on its own schedule (set in the Power BI Service). No action for data-value changes; **schema** changes need the developer (see the developer guide's schema-change checklist). |
-| **Linked-data export** (`ontology/`) | The dataset as machine-readable linked data (JSON-LD) for semantic-web and integration consumers — see the [ontology guide](ontology.md) | Regenerated automatically by CI in the same bot commit as the history snapshot. Nothing to do for data-value changes; **schema** changes need the developer. |
+| **Semantic layer** (`ontology/`) | The dataset as machine-readable linked data plus a temporal graph of every traffic-light change, for integration consumers — browsable at [/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/); see the [ontology guide](ontology.md) | Both exports regenerated automatically by CI in the same bot commit as the history snapshot; CI also re-proves the governance shapes against your edit. Nothing to do for data-value changes; **schema** changes need the developer. |
 
 **Previewing a draft before you commit** (recommended for big updates): run the
 Streamlit app (`cd streamlit-app && streamlit run app.py`), choose **Upload

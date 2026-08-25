@@ -112,7 +112,9 @@ Below the board:
 - **Machine-readable data** — for technical integrators, the full dataset is
   also published as linked data (JSON-LD) at
   https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld,
-  with the formal vocabulary documented in the repository's ontology guide.
+  alongside a temporal graph of every status change. The vocabulary is
+  browsable at
+  https://kochrisdev.github.io/launch-transparency-dashboard/ontology/.
 - **Embed a product tracker** on your own site — a one-row live widget per
   medicine; ask the LAUNCH team for the snippet (or see the repository README).
 

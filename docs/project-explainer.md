@@ -209,7 +209,7 @@ Two rules worth knowing the reasoning behind:
 | Ministries of health | Country access status, adoption requirements, peer-country status on the map. |
 | Implementing partners | Operational research and the delivery stage. |
 | Manufacturers | Their product's position; confirm or correct the price field. |
-| Republishers | Everything shown is public — export CSV and cite; embed the per-medicine widget; or consume the machine-readable linked-data export (`ontology/launch-data.jsonld`). |
+| Republishers | Everything shown is public — export CSV and cite; embed the per-medicine widget; or consume the machine-readable linked data ([/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/)). |
 
 **Cadence:** milestones monthly (and within days of major events); procurement and
 country data quarterly. Errors → LAUNCH team (via RBM once hosted) or a GitHub
@@ -234,7 +234,7 @@ flowchart LR
   AN -->|"the only writes are human"| DATA["data/products.js"]
   DATA -->|"must pass"| VAL{{"validate-data.js<br/>the only gate"}}
   VAL --> SITE["GitHub Pages site<br/>+ 3 editions"]
-  VAL --> HIST["history/ + feed.xml +<br/>linked-data export<br/>(bot on data change)"]
+  VAL --> HIST["history/ + feed.xml +<br/>semantic-layer exports<br/>(bot on data change)"]
   VAL --> BRIEF["quarterly briefs"]
   VAL --> ST["Streamlit app"]
   VAL --> PBI["Power BI kit"]
@@ -278,7 +278,7 @@ at render time** — they can never disagree with the board.
 2. Run `node scripts/validate-data.js` — not optional.
 3. Add a changelog entry; bump `meta.lastUpdated`.
 4. Commit and push — live in ~2 minutes.
-5. Automation does the rest: a dated snapshot lands in `history/`, `feed.xml` is rebuilt, and the linked-data export (`ontology/launch-data.jsonld`) is regenerated.
+5. Automation does the rest: a dated snapshot lands in `history/`, `feed.xml` is rebuilt, and the semantic-layer exports are regenerated — the linked-data projection (`ontology/launch-data.jsonld`) and the temporal graph of status changes (`ontology/launch-history.jsonld`).
 
 A quarterly script (`scripts/make-brief.js`) generates a **"what changed" brief** —
 stage movements vs history, logged updates, bottlenecks, and every remaining `TBC`
@@ -352,8 +352,8 @@ build output — editions, map geometry, history, feeds, briefs, CSV exports:
 
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
-| `validate.yml` | Every push and PR | Validates all three datasets and builds the single-file preview as a smoke test. The quality gate. |
-| `publish.yml` | Push to main touching `data/products.js` only | Validates, appends a dated `history/` snapshot (append-only — refuses to overwrite same-day with different content), rebuilds `feed.xml` and the `ontology/launch-data.jsonld` linked-data export, bot-commits. Its own commit can't retrigger it. |
+| `validate.yml` | Every push and PR | Validates both datasets (real + synthetic), re-proves the SHACL governance shapes against fresh linked-data projections, and builds the single-file preview as a smoke test. The quality gate. |
+| `publish.yml` | Push to main touching `data/products.js` only | Validates, appends a dated `history/` snapshot (append-only — refuses to overwrite same-day with different content), rebuilds `feed.xml` and both semantic-layer exports (`launch-data.jsonld`, `launch-history.jsonld`), bot-commits. Its own commit can't retrigger it. |
 | `reminder.yml` | 1st of each month | Opens the milestone-scan checklist issue. Kept as a reminder rather than a scraper — most watched sources are CMS pages where hash-watching would cry wolf. |
 | `sourcing.yml` | Mondays (trials); 3rd of month (Global Fund + regulatory); on demand | Runs the fetchers, commits only under `sourcing/` (ignored by `publish.yml`'s path filter, so a fetch can never trigger a dashboard change), opens watch issues on changes. |
 
@@ -365,7 +365,7 @@ signal.
 
 - **Streamlit app** (`streamlit-app/`) — a Python twin of all views, used as the analyst workbench: accepts the bundled file, a URL, or a dragged-in draft, and shows live governance-check results — preview and validate a data update *before* committing. Adds runtime configuration the static site can't: product filters, adjustable timing thresholds, a hide-unverified-map toggle.
 - **Power BI kit** (`powerbi/`) — a kit, not a binary: Power Query scripts loading eight relational tables live from the published site, offline CSVs of the same shape, a theme, DAX measures (the data-status banner and unverified-map warning travel into Power BI too), and a page-by-page build guide.
-- **Semantic layer** (`ontology/`) — the project's data model expressed as a formal OWL/SKOS ontology, and the dataset published as linked data (JSON-LD) with alignments to schema.org, WHO ATC drug codes and ISO country codes — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, TBC) travel into the graph as first-class properties. Regenerated automatically by CI on every data change; see the [ontology guide](ontology.md).
+- **Semantic layer** (`ontology/`) — the project's data model expressed as a formal OWL/SKOS ontology, and the dataset published as linked data (JSON-LD) with alignments to schema.org, WHO ATC drug codes, ISO country codes and Wikidata (products, countries, and the organizations behind each product and each pathway gate) — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, TBC) travel into the graph as first-class properties, and the governance rules themselves ship as SHACL shapes any RDF consumer can verify independently — CI re-proves them on every push. A temporal graph records when each traffic light changed, and the whole vocabulary is browsable at [/ontology/](https://kochrisdev.github.io/launch-transparency-dashboard/ontology/). Exports regenerate automatically on every data change; see the [ontology guide](ontology.md).
 
 ### Handover
 

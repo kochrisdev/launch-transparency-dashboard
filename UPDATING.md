@@ -11,4 +11,5 @@ Quick version:
 3. Add a `changelog` entry and bump `meta.lastUpdated`.
 4. Commit and push — the live site updates automatically, and CI snapshots the
    change into `history/`, rebuilds the `feed.xml` RSS feed and regenerates
-   the `ontology/launch-data.jsonld` linked-data export for you.
+   the semantic-layer exports (`ontology/launch-data.jsonld` and the
+   `ontology/launch-history.jsonld` temporal graph) for you.

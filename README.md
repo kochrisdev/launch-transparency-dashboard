@@ -99,7 +99,7 @@ controls the on-page banner.
 | `scripts/make-preview.js` | Optional: builds `preview.html`, a single self-contained file for emailing/sharing. |
 | `scripts/make-brief.js` | Generates a dated "what changed" Markdown brief into `briefs/` (stage movements vs history snapshots, logged updates, bottlenecks, TBC gaps). |
 | `docs/` | Documentation for users, data analysts and developers (see table above). |
-| `.github/workflows/` | CI: data validation on every push/PR; history snapshot + feed rebuild on data changes; monthly review-reminder issue; scheduled source fetch (weekly trial watch, monthly Global Fund + regulatory pull — see [sourcing/README.md](sourcing/README.md)). |
+| `.github/workflows/` | CI: data validation + SHACL governance-shapes check on every push/PR; history snapshot + feed + semantic-layer export rebuilds on data changes; monthly review-reminder issue; scheduled source fetch (weekly trial watch, monthly Global Fund + regulatory pull — see [sourcing/README.md](sourcing/README.md)). |
 
 ### Embedding a single product on a partner site
 
@@ -146,7 +146,8 @@ can point at the same file via its file/URL input.
 
 3. Commit and push. Nothing else to do — the page reads the data file directly,
    and CI automatically snapshots the change into `history/` and rebuilds
-   `feed.xml`.
+   `feed.xml` and the semantic-layer exports (`ontology/launch-data.jsonld`,
+   `ontology/launch-history.jsonld`).
 
 Every data point carries provenance fields:
 

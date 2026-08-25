@@ -446,7 +446,7 @@
       <tr><td>Widget</td><td class="pathfile">widget.html</td><td>An embeddable one-row tracker for partner sites (<code>?product=aspy</code> etc.) — an iframe snippet drops a live single-medicine tracker into any web page.</td></tr>
     </tbody>
   </table></div>
-  <p>Three parallel <strong>editions</strong> of all views also exist: a Unitaid-branded edition (brand review), a synthetic-data edition (entirely fictional data for safe development — marked with an unmissable purple warning strip), and a temporary v2 preview showing proposed data updates awaiting LAUNCH sign-off.</p>
+  <p>Two parallel <strong>editions</strong> of all views also exist: a Unitaid-branded edition (brand review) and a synthetic-data edition (entirely fictional data for safe development — marked with an unmissable purple warning strip).</p>
 
   <h3>How to read a row</h3>
   <ul>
@@ -524,12 +524,12 @@
     <li>Run the validator — not optional.</li>
     <li>Add a changelog entry and bump the "last updated" date.</li>
     <li>Commit and push — the live site updates within about two minutes.</li>
-    <li>Automation does the rest: a dated snapshot of the data file is committed to <span class="pathfile">history/</span> (the raw material for future trend charts), the RSS feed is rebuilt, and the machine-readable linked-data export (<span class="pathfile">ontology/launch-data.jsonld</span>) is regenerated.</li>
+    <li>Automation does the rest: a dated snapshot of the data file is committed to <span class="pathfile">history/</span> (the raw material for future trend charts), the RSS feed is rebuilt, and both semantic-layer exports are regenerated — the linked-data projection (<span class="pathfile">ontology/launch-data.jsonld</span>) and the temporal graph of status changes (<span class="pathfile">ontology/launch-history.jsonld</span>).</li>
   </ol>
   <p>A quarterly script also generates a <strong>"what changed" brief</strong> — stage movements versus the history snapshots, logged updates, active bottlenecks, and every remaining <code>TBC</code> gap as the verification to-do list. A GitHub issue opens automatically on the 1st of each month with the milestone-scan checklist.</p>
 
   <figure>
-    <svg role="img" viewBox="0 0 980 520" aria-label="Data flow: public sources feed automated fetchers and one manual download into the sourcing staging area; watch reports open review issues; a human analyst makes the only writes to the data file; the validator is the only gate; from the data file flow the website, editions, history snapshots, RSS feed, linked-data export, briefs, Streamlit app and Power BI kit.">
+    <svg role="img" viewBox="0 0 980 520" aria-label="Data flow: public sources feed automated fetchers and one manual download into the sourcing staging area; watch reports open review issues; a human analyst makes the only writes to the data file; the validator is the only gate; from the data file flow the website, editions, history snapshots, RSS feed, semantic-layer exports, briefs, Streamlit app and Power BI kit.">
       <defs>
         <marker id="arr2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
           <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
@@ -639,8 +639,8 @@
           <text x="850" y="331" text-anchor="middle" font-weight="600">Power BI kit</text>
           <text x="850" y="346" text-anchor="middle" opacity="0.7">refreshes from the live site</text>
           <rect x="750" y="374" width="200" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
-          <text x="850" y="393" text-anchor="middle" font-weight="600">Linked-data export</text>
-          <text x="850" y="408" text-anchor="middle" opacity="0.7">ontology/ · JSON-LD, bot-rebuilt</text>
+          <text x="850" y="393" text-anchor="middle" font-weight="600">Semantic-layer exports</text>
+          <text x="850" y="408" text-anchor="middle" opacity="0.7">ontology/ · data + temporal graphs</text>
         </g>
         <g stroke="currentColor" stroke-width="1.3" fill="none">
           <line x1="650" y1="245" x2="748" y2="90"  marker-end="url(#arr2)"/>
@@ -702,8 +702,8 @@
   <div class="tablewrap"><table>
     <thead><tr><th>Workflow</th><th>Trigger</th><th>What it does</th></tr></thead>
     <tbody>
-      <tr><td>Validate</td><td>Every push and pull request</td><td>Runs the validator against all three datasets (real, v2, synthetic) and builds the single-file preview as a smoke test. The quality gate.</td></tr>
-      <tr><td>Snapshot &amp; feed</td><td>Push to main touching <span class="pathfile">data/products.js</span> only</td><td>Validates, copies the data file to a dated <span class="pathfile">history/</span> snapshot (append-only — refuses to overwrite a same-day snapshot with different content), rebuilds <span class="pathfile">feed.xml</span> and the <span class="pathfile">ontology/launch-data.jsonld</span> linked-data export, and bot-commits. Its own commit can't retrigger it.</td></tr>
+      <tr><td>Validate</td><td>Every push and pull request</td><td>Runs the validator against both datasets (real and synthetic), re-proves the SHACL governance shapes against fresh linked-data projections, and builds the single-file preview as a smoke test. The quality gate.</td></tr>
+      <tr><td>Snapshot &amp; feed</td><td>Push to main touching <span class="pathfile">data/products.js</span> only</td><td>Validates, copies the data file to a dated <span class="pathfile">history/</span> snapshot (append-only — refuses to overwrite a same-day snapshot with different content), rebuilds <span class="pathfile">feed.xml</span> and both semantic-layer exports (<span class="pathfile">launch-data.jsonld</span>, <span class="pathfile">launch-history.jsonld</span>), and bot-commits. Its own commit can't retrigger it.</td></tr>
       <tr><td>Monthly reminder</td><td>1st of each month</td><td>Opens a GitHub issue with the milestone-scan checklist. Kept as a reminder rather than a scraper — most watched sources are CMS pages that change cosmetically, and hash-watching them would cry wolf; only stable-API sources are automated.</td></tr>
       <tr><td>Scheduled source fetch</td><td>Mondays (trials); 3rd of month (Global Fund + regulatory); on demand</td><td>Runs the fetchers, commits only under <span class="pathfile">sourcing/</span> (which the snapshot workflow ignores, so a fetch can never trigger a dashboard change), and opens a watch issue when a report contains changes.</td></tr>
     </tbody>
@@ -714,7 +714,7 @@
   <ul>
     <li><strong>Streamlit app</strong> (<span class="pathfile">streamlit-app/</span>) — a Python twin of all views, used as the analyst workbench: it accepts the bundled file, a URL, or a dragged-in draft data file, and shows live governance-check results — so an analyst can preview and validate a data update <em>before</em> committing it. Also offers runtime configuration the static site can't: product filters, adjustable timing thresholds, and a "hide unverified map" toggle.</li>
     <li><strong>Power BI kit</strong> (<span class="pathfile">powerbi/</span>) — not a binary report but a kit: Power Query scripts that load eight relational tables live from the published site (so reports refresh with the data), offline CSV exports of the same shape, a theme, DAX measures (including ones that carry the governance rules — the data-status banner and the unverified-map warning travel into Power BI too), and a page-by-page build guide.</li>
-    <li><strong>Semantic layer</strong> (<span class="pathfile">ontology/</span>) — the project's data model expressed as a formal ontology (OWL/SKOS), and the dataset published as linked data (JSON-LD) aligned to schema.org, WHO ATC drug codes and ISO country codes — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, <code>TBC</code>) travel into the graph as first-class properties, and CI regenerates the export on every data change.</li>
+    <li><strong>Semantic layer</strong> (<span class="pathfile">ontology/</span>) — the project's data model expressed as a formal ontology (OWL/SKOS), and the dataset published as linked data (JSON-LD) aligned to schema.org, WHO ATC drug codes, ISO country codes and Wikidata (products, countries, and the organizations behind each product and each pathway gate) — so partners can consume the portfolio as a standard knowledge graph instead of reverse-engineering the JSON. The governance signals (data status, unverified-map warning, price confirmation, <code>TBC</code>) travel into the graph as first-class properties, the governance rules themselves ship as SHACL shapes any RDF consumer can verify independently (CI re-proves them on every push), and a temporal graph records when each traffic light changed. The whole vocabulary is browsable at <span class="pathfile">/ontology/</span>; CI regenerates the exports on every data change.</li>
   </ul>
 
   <h3>Handover</h3>
@@ -756,7 +756,7 @@
     <li><strong>Two page designs are live in parallel</strong> (journey board vs comparison matrix) awaiting a client decision; the loser will be deleted and its extras folded into the winner.</li>
     <li><strong>The country map shows an ILLUSTRATIVE warning</strong> until the country survey is verified.</li>
     <li><strong>The timing thresholds</strong> (≤2 / 3–5 / &gt;5 years) are acknowledged draft placeholders pending LAUNCH's benchmark work.</li>
-    <li><strong>A v2 data preview is awaiting sign-off</strong> — the first harvest of collected public-source data (procurement volumes, regulatory dates, trial records) proposed as updates, kept separate until approved.</li>
+    <li><strong>The first collected-data harvest has been merged</strong> — the v2 preview's procurement volumes, regulatory dates and trial records were approved and folded into the live dataset in August 2026; the temporary preview edition was retired.</li>
     <li><strong>Hosting, branding, and analytics</strong> are pending external parties: RBM's web team (hosting model), RBM brand guidelines (a one-token-block rebrand), and a usage-analytics decision.</li>
     <li><strong>The spatial-emanators row awaits funder approval</strong> — and activating it will force the design decision about prevention-specific stage names.</li>
   </ul>
