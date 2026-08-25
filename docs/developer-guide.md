@@ -21,7 +21,7 @@ upgrade, or break.
 
 | Path | Role |
 | --- | --- |
-| `index.html` | Design option A (journey board): CSS (design tokens + components), HTML skeleton, and the render script. The full-featured page (glossary, CSV, print, timing chart, country map). |
+| `index.html` | Design option A (journey board): CSS (design tokens + components), HTML skeleton, and the render script. The full-featured page (glossary, CSV, print, timing chart, country map, schema.org JSON-LD injection for crawlers — skipped when `meta.synthetic`). |
 | `option-b.html` | Design option B (comparison matrix): a standalone layout study for client review. Same data contract, feature subset. See §10. |
 | `pipeline.html` | Pipeline poster view (MMV-style phase columns), complementary to A/B rather than competing. Placement driven by each product's `phase` field; cards deep-link to `index.html#<id>`. Single-theme poster by design. |
 | `story.html` | Scroll-driven data story. Steps (left) drive a sticky layered visual (right) via IntersectionObserver (guarded — no IO means step 0 stays active). Every figure is derived from the data at render time — the hero product is `pyramax` falling back to the first `market` product, the headline gap is computed from its `journey`, so the narrative self-updates. Count-up respects `prefers-reduced-motion`. |

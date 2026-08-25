@@ -173,112 +173,134 @@
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-BFA",
       "@type": "Country",
-      "iso3": "BFA"
+      "iso3": "BFA",
+      "sameAs": "http://www.wikidata.org/entity/Q965"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CHN",
       "@type": "Country",
-      "iso3": "CHN"
+      "iso3": "CHN",
+      "sameAs": "http://www.wikidata.org/entity/Q148"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CIV",
       "@type": "Country",
-      "iso3": "CIV"
+      "iso3": "CIV",
+      "sameAs": "http://www.wikidata.org/entity/Q1008"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-CMR",
       "@type": "Country",
-      "iso3": "CMR"
+      "iso3": "CMR",
+      "sameAs": "http://www.wikidata.org/entity/Q1009"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-COD",
       "@type": "Country",
-      "iso3": "COD"
+      "iso3": "COD",
+      "sameAs": "http://www.wikidata.org/entity/Q974"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-GHA",
       "@type": "Country",
-      "iso3": "GHA"
+      "iso3": "GHA",
+      "sameAs": "http://www.wikidata.org/entity/Q117"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IDN",
       "@type": "Country",
-      "iso3": "IDN"
+      "iso3": "IDN",
+      "sameAs": "http://www.wikidata.org/entity/Q252"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-IND",
       "@type": "Country",
-      "iso3": "IND"
+      "iso3": "IND",
+      "sameAs": "http://www.wikidata.org/entity/Q668"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KEN",
       "@type": "Country",
-      "iso3": "KEN"
+      "iso3": "KEN",
+      "sameAs": "http://www.wikidata.org/entity/Q114"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-KHM",
       "@type": "Country",
-      "iso3": "KHM"
+      "iso3": "KHM",
+      "sameAs": "http://www.wikidata.org/entity/Q424"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-LAO",
       "@type": "Country",
-      "iso3": "LAO"
+      "iso3": "LAO",
+      "sameAs": "http://www.wikidata.org/entity/Q819"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MLI",
       "@type": "Country",
-      "iso3": "MLI"
+      "iso3": "MLI",
+      "sameAs": "http://www.wikidata.org/entity/Q912"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MMR",
       "@type": "Country",
-      "iso3": "MMR"
+      "iso3": "MMR",
+      "sameAs": "http://www.wikidata.org/entity/Q836"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-MOZ",
       "@type": "Country",
-      "iso3": "MOZ"
+      "iso3": "MOZ",
+      "sameAs": "http://www.wikidata.org/entity/Q1029"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-NGA",
       "@type": "Country",
-      "iso3": "NGA"
+      "iso3": "NGA",
+      "sameAs": "http://www.wikidata.org/entity/Q1033"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-RWA",
       "@type": "Country",
-      "iso3": "RWA"
+      "iso3": "RWA",
+      "sameAs": "http://www.wikidata.org/entity/Q1037"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-SEN",
       "@type": "Country",
-      "iso3": "SEN"
+      "iso3": "SEN",
+      "sameAs": "http://www.wikidata.org/entity/Q1041"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-THA",
       "@type": "Country",
-      "iso3": "THA"
+      "iso3": "THA",
+      "sameAs": "http://www.wikidata.org/entity/Q869"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-TZA",
       "@type": "Country",
-      "iso3": "TZA"
+      "iso3": "TZA",
+      "sameAs": "http://www.wikidata.org/entity/Q924"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-UGA",
       "@type": "Country",
-      "iso3": "UGA"
+      "iso3": "UGA",
+      "sameAs": "http://www.wikidata.org/entity/Q1036"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-VNM",
       "@type": "Country",
-      "iso3": "VNM"
+      "iso3": "VNM",
+      "sameAs": "http://www.wikidata.org/entity/Q881"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#country-ZMB",
       "@type": "Country",
-      "iso3": "ZMB"
+      "iso3": "ZMB",
+      "sameAs": "http://www.wikidata.org/entity/Q953"
     },
     {
       "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-ganlum",
@@ -612,6 +634,7 @@
         "codingSystem": "ATC"
       },
       "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF06",
+      "sameAs": "http://www.wikidata.org/entity/Q39053484",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-pyramax-stage-0",
@@ -970,6 +993,7 @@
         "codingSystem": "ATC"
       },
       "seeAlso": "http://purl.bioontology.org/ontology/ATC/P01BF05",
+      "sameAs": "http://www.wikidata.org/entity/Q17048104",
       "hasStageEntry": [
         {
           "@id": "https://kochrisdev.github.io/launch-transparency-dashboard/ontology/launch-data.jsonld#product-dhappq-stage-0",

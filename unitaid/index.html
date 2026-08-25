@@ -514,6 +514,43 @@
   document.getElementById("stat-pipeline").textContent =
     tracked.filter(p => p.class === "pipeline").length;
 
+  // schema.org structured data for search engines and knowledge-graph crawlers.
+  // Derived from the data at render time, never stored; @id ties each product to
+  // its canonical node in ontology/launch-data.jsonld (which carries the ATC and
+  // Wikidata alignments). Skipped for synthetic datasets so fictional products
+  // can never be indexed as real medicines.
+  if (!DATA.meta.synthetic) {
+    const SITE = "https://kochrisdev.github.io/launch-transparency-dashboard";
+    const ld = {
+      "@context": "https://schema.org",
+      "@graph": [{
+        "@type": "Dataset",
+        "@id": SITE + "/ontology/launch-data.jsonld#dataset",
+        "name": "LAUNCH Transparency Dashboard dataset",
+        "description": "Access-pathway status of new antimalarial medicines — stages, milestones, country access and procurement — with public-source provenance on every figure.",
+        "url": SITE + "/",
+        "dateModified": DATA.meta.lastUpdated,
+        "creativeWorkStatus": DATA.meta.dataStatus,
+        "distribution": [{
+          "@type": "DataDownload",
+          "encodingFormat": "application/ld+json",
+          "contentUrl": SITE + "/ontology/launch-data.jsonld"
+        }]
+      }].concat(tracked.map(p => ({
+        "@type": "Drug",
+        "@id": SITE + "/ontology/launch-data.jsonld#product-" + p.id,
+        "name": p.name,
+        "nonProprietaryName": p.inn,
+        "manufacturer": { "@type": "Organization", "name": p.manufacturer },
+        "url": SITE + "/#" + p.id
+      })))
+    };
+    const ldTag = document.createElement("script");
+    ldTag.type = "application/ld+json";
+    ldTag.textContent = JSON.stringify(ld);
+    document.head.appendChild(ldTag);
+  }
+
   function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
 

@@ -43,6 +43,25 @@ const ATC = {
   dhappq: "P01BF05"   // artenimol (DHA) and piperaquine
 };
 
+// Wikidata items (owl:sameAs), verified against wikidata.org 2026-08-25.
+// Products: only where an item for the actual COMBINATION exists — compound
+// or brand items don't qualify (ganaplacide Q28209255 is the compound alone,
+// Eurartesim Q29005826 is one brand of dhappq — neither is the product row).
+const WIKIDATA_PRODUCT = {
+  pyramax: "Q39053484", // artesunate/pyronaridine (fixed-dose combination)
+  dhappq: "Q17048104"   // dihydroartemisinin/piperaquine
+};
+// Countries by ISO-3166 alpha-3 (Wikidata P298). Extend when a new country
+// enters any product's list — the generator warns on a missing entry.
+const WIKIDATA_COUNTRY = {
+  BFA: "Q965", CHN: "Q148", CIV: "Q1008", CMR: "Q1009", COD: "Q974",
+  GHA: "Q117", IDN: "Q252", IND: "Q668", KEN: "Q114", KHM: "Q424",
+  LAO: "Q819", MLI: "Q912", MMR: "Q836", MOZ: "Q1029", NGA: "Q1033",
+  RWA: "Q1037", SEN: "Q1041", THA: "Q869", TZA: "Q924", UGA: "Q1036",
+  VNM: "Q881", ZMB: "Q953"
+};
+const wd = (qid) => "http://www.wikidata.org/entity/" + qid;
+
 // ---- load the contract (same extraction as validate-data.js) ---------------
 const raw = fs.readFileSync(DATA_FILE, "utf8");
 const m = raw.match(/^window\.LAUNCH_DATA\s*=\s*/m);
@@ -90,7 +109,10 @@ for (const p of data.products) {
   for (const c of ((p.detail || {}).countries || {}).list || []) countries.add(c.iso3);
 }
 for (const iso3 of [...countries].sort()) {
-  graph.push({ "@id": id(`country-${iso3}`), "@type": "Country", "iso3": iso3 });
+  const node = { "@id": id(`country-${iso3}`), "@type": "Country", "iso3": iso3 };
+  if (WIKIDATA_COUNTRY[iso3]) node.sameAs = wd(WIKIDATA_COUNTRY[iso3]);
+  else console.warn(`WARN: no Wikidata mapping for country ${iso3} — add it to WIKIDATA_COUNTRY`);
+  graph.push(node);
 }
 
 // ---- products -----------------------------------------------------------------
@@ -125,6 +147,7 @@ for (const p of data.products) {
     node.atcCode = { "@type": "schema:MedicalCode", "codeValue": ATC[p.id], "codingSystem": "ATC" };
     node.seeAlso = `http://purl.bioontology.org/ontology/ATC/${ATC[p.id]}`;
   }
+  if (WIKIDATA_PRODUCT[p.id]) node.sameAs = wd(WIKIDATA_PRODUCT[p.id]);
 
   node.hasStageEntry = p.stages.map((s, i) => {
     stageEntryCount.total++;

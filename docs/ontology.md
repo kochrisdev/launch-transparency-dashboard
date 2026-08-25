@@ -157,8 +157,22 @@ emitted as `""` — absence of a triple is the correct linked-data encoding of
 | --- | --- |
 | **schema.org** | `Medicine` ⊑ `schema:Drug`; `schema:name`, `inn` ⊑ `schema:nonProprietaryName`; countries typed `schema:Country`; ATC codes as `schema:code` (`schema:MedicalCode`) |
 | **WHO ATC** | ASPY → `P01BF06` (artesunate + pyronaridine), DHA–PPQ → `P01BF05` (artenimol + piperaquine), each with an `rdfs:seeAlso` to the BioPortal ATC PURL. GanLum and ALAQ have **no ATC code assigned yet** — add theirs to the `ATC` map in `scripts/build-ontology.js` when WHO assigns them. |
+| **Wikidata** | `owl:sameAs` links (QIDs verified against wikidata.org, 2026-08-25): every country node (all 22, via the `WIKIDATA_COUNTRY` map — the generator warns when a new country lacks an entry), and the marketed combinations — ASPY → [Q39053484](https://www.wikidata.org/wiki/Q39053484) (artesunate/pyronaridine FDC), DHA–PPQ → [Q17048104](https://www.wikidata.org/wiki/Q17048104). Products link only where an item for the **actual combination** exists: `ganaplacide` (Q28209255) is the compound alone and `Eurartesim` (Q29005826) is one brand of DHA–PPQ, so neither qualifies. These links make the graph federatable with the largest open knowledge base. |
 | **ISO 3166-1 alpha-3** | `launch:iso3` on every country node — the same join key the map geometry uses |
 | **Dublin Core / SKOS / OWL** | provenance (`dcterms:source`), vocabularies (`skos:*`), the ontology itself |
+
+### Discoverability: structured data in the dashboard page
+
+`index.html` injects a schema.org JSON-LD block (`<script type="application/ld+json">`)
+at render time — one `schema:Dataset` node plus one `schema:Drug` node per
+tracked product, each carrying the **same `@id` as its canonical node in
+`launch-data.jsonld`**, so page markup and linked-data export describe one
+graph. Search engines and knowledge-graph crawlers discover the portfolio
+directly from the live site. Derived at render time like every other
+computed value (never stored), it is **skipped whenever `meta.synthetic` is
+true**, so the synthetic edition can never index fictional medicines as real.
+Option-A-only for now, matching the glossary/print precedent — the A/B winner
+keeps it.
 
 ## 7. Governance semantics in the graph
 
@@ -222,9 +236,13 @@ g.parse("ontology/launch-data.jsonld")
   constant in `scripts/build-ontology.js`, the `launch:` prefix in
   `launch.ttl`, and the same prefix in `context.jsonld`. Old IRIs are
   breaking-change territory, same as renaming a product id.
-- **Future normalization candidates** (deliberately out of scope for v1,
-  because the contract stores display strings): organization entities for
+- **A new country in any product's list?** Add its QID to `WIKIDATA_COUNTRY`
+  in `scripts/build-ontology.js` (the generator warns if you forget — look up
+  the code via Wikidata property P298).
+- **Future normalization candidates** (deliberately out of scope, because the
+  contract stores display strings): organization entities for
   manufacturers/PDPs/funders (`manufacturerLabel` → `schema:manufacturer` →
-  `schema:Organization` nodes), typed dates for the free-form date labels,
-  and Wikidata `owl:sameAs` links for products and organizations. Add them
-  only when/if the contract itself normalizes the underlying fields.
+  `schema:Organization` nodes, which would also give Wikidata org links a
+  home), typed dates for the free-form date labels, and SHACL shapes encoding
+  the governance rules for RDF-side validation. Add the normalizations only
+  when/if the contract itself normalizes the underlying fields.

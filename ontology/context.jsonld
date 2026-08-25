@@ -32,6 +32,7 @@
     "inScheme": { "@id": "skos:inScheme", "@type": "@id" },
     "exactMatch": { "@id": "skos:exactMatch", "@type": "@id" },
     "seeAlso": { "@id": "rdfs:seeAlso", "@type": "@id" },
+    "sameAs": { "@id": "owl:sameAs", "@type": "@id" },
 
     "tracksProduct": { "@id": "launch:tracksProduct", "@type": "@id" },
     "hasStageEntry": "launch:hasStageEntry",
