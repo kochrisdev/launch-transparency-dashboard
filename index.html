@@ -131,6 +131,17 @@
   .dot.late { background: var(--crit); color: #fff; }
   .dot.idle { background: var(--idle-soft); border: 1.5px dashed var(--idle); color: var(--idle); }
 
+  /* ---------- pathway legend strip (illustrated journey) ---------- */
+  .pathway {
+    display: flex; align-items: flex-start; gap: 2px;
+    padding: 14px 18px 12px; margin-bottom: 22px; overflow-x: auto;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+  }
+  .pathnode { flex: 1; min-width: 84px; text-align: center; }
+  .pathnode img { width: 46px; height: 46px; }
+  .pathnode span { display: block; font-size: 11px; line-height: 1.25; color: var(--ink-2); margin-top: 5px; padding: 0 3px; }
+  .patharrow { flex: none; color: var(--ink-3); font-size: 15px; margin-top: 15px; user-select: none; }
+
   /* ---------- product rows ---------- */
   .board { display: flex; flex-direction: column; gap: 14px; }
   .product {
@@ -157,16 +168,23 @@
 
   /* pipeline track */
   .trackbox { overflow-x: auto; }
-  .track { display: flex; align-items: flex-start; min-width: 640px; }
-  .stage { flex: 1; min-width: 76px; position: relative; text-align: center; }
+  .track { display: flex; align-items: flex-start; min-width: 700px; }
+  .stage { flex: 1; min-width: 80px; position: relative; text-align: center; }
   .stage .row { display: flex; align-items: center; }
   .stage .bar { flex: 1; height: 3px; background: var(--line); }
   .stage .bar.done-bar { background: var(--good); }
   .stage:first-child .bar.pre, .stage:last-child .bar.post { visibility: hidden; }
   .stage .lbl { font-size: 11px; line-height: 1.25; color: var(--ink-3); margin-top: 7px; padding: 0 3px; }
   .stage.cur .lbl { color: var(--ink); font-weight: 650; }
-  .stage .dot { margin: 0 2px; cursor: help; }
-  .stage.cur .dot { box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* illustrated stage marker: journey icon + status badge overlay */
+  .stage .smark { position: relative; display: inline-flex; margin: 0 4px; cursor: help; border-radius: 50%; }
+  .stage .smark:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .stage .sicon { width: 42px; height: 42px; display: block; }
+  .stage.s-idle .sicon { filter: grayscale(1); opacity: .35; }
+  .stage .smark .dot { position: absolute; right: -4px; bottom: -2px; width: 16px; height: 16px; font-size: 9.5px; box-shadow: 0 0 0 2px var(--surface); cursor: help; }
+  .stage.s-idle .smark .dot { display: none; }
+  .stage.cur .smark { box-shadow: 0 0 0 4px var(--accent-soft); }
   .flagnote {
     margin: 10px 20px 0 290px; font-size: 12.5px; color: var(--crit);
     display: flex; gap: 7px; align-items: baseline;
@@ -336,6 +354,9 @@
     .meta { text-align: left; margin-left: 0; }
     .updates li { flex-wrap: wrap; gap: 4px 12px; }
     .strip { padding: 10px 14px; }
+    .pathway { padding: 12px 12px 10px; }
+    .pathnode { min-width: 72px; }
+    .pathnode img { width: 38px; height: 38px; }
     .dl-btn { margin-left: 0; }
     .detail { padding: 14px; }
     .timing-axis { margin-left: 110px; }
@@ -371,10 +392,12 @@
       <span class="key"><span class="dot done" aria-hidden="true">✓</span> Complete</span>
       <span class="key"><span class="dot prog" aria-hidden="true">›</span> In progress</span>
       <span class="key"><span class="dot late" aria-hidden="true">!</span> Delayed / bottleneck</span>
-      <span class="key"><span class="dot idle" aria-hidden="true"></span> Not started</span>
+      <span class="key"><img src="assets/journey-icons/04-who-prequalification.svg" alt="" aria-hidden="true" style="width:18px;height:18px;filter:grayscale(1);opacity:.4;vertical-align:-4px"> Not started (icon grayed)</span>
     </div>
     <button class="dl-btn" id="dl-csv" type="button">Download CSV</button>
   </div>
+
+  <div class="pathway" id="pathway" role="img" aria-label="The eight-stage access pathway, from research and development to in-country delivery" hidden></div>
 
   <div class="board" id="board"></div>
 
@@ -439,6 +462,13 @@
   const PRODUCTS = DATA.products;
   const ICON = { done: "✓", prog: "›", late: "!", idle: "" };
   const LABEL = { done: "Complete", prog: "In progress", late: "Delayed", idle: "Not started" };
+  // illustrated journey icons, one per stage, in stage order (assets/journey-icons/)
+  const STAGE_ICONS = [
+    "01-rnd-clinical", "02-regulatory-approval", "03-who-guidelines", "04-who-prequalification",
+    "05-country-registration", "06-national-policy", "07-procurement", "08-in-country-delivery"
+  ];
+  const stageIconImg = (i, cls) =>
+    STAGE_ICONS[i] ? `<img class="${cls}" src="assets/journey-icons/${STAGE_ICONS[i]}.svg" alt="" aria-hidden="true">` : "";
 
   // header + banner from meta
   const dt = new Date(DATA.meta.lastUpdated + "T00:00:00");
@@ -511,20 +541,27 @@
   function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
 
+  // pathway legend strip: the eight stages as illustrated badges
+  const pathway = document.getElementById("pathway");
+  pathway.hidden = false;
+  pathway.innerHTML = STAGES.map((s, i) =>
+    `<div class="pathnode">${stageIconImg(i, "")}<span>${esc(s)}</span></div>`
+  ).join(`<span class="patharrow" aria-hidden="true">→</span>`);
+
   tracked.forEach(p => {
     const stagesHtml = p.stages.map((st, i) => {
       const preDone = i > 0 && (p.stages[i - 1].status === "done");
       const postDone = st.status === "done";
       return `
-        <div class="stage ${i === p.currentStage ? "cur" : ""}">
+        <div class="stage ${i === p.currentStage ? "cur" : ""} s-${st.status}">
           <div class="row">
             <div class="bar pre ${preDone ? "done-bar" : ""}"></div>
-            <span class="dot ${st.status}" tabindex="0" role="img"
+            <span class="smark" tabindex="0" role="img"
               aria-label="${esc(STAGES[i])}: ${LABEL[st.status]}. ${esc(st.note)}"
               data-stage="${esc(STAGES[i])}" data-status="${st.status}"
               data-note="${esc(st.note)}" data-date="${esc(st.date)}"
               data-next="${esc(st.next)}" data-nextdate="${esc(st.nextDate)}"
-              data-asof="${esc(st.asOf)}">${ICON[st.status]}</span>
+              data-asof="${esc(st.asOf)}">${stageIconImg(i, "sicon")}<span class="dot ${st.status}" aria-hidden="true">${ICON[st.status]}</span></span>
             <div class="bar post ${postDone ? "done-bar" : ""}"></div>
           </div>
           <div class="lbl">${esc(STAGES[i])}</div>
@@ -678,7 +715,7 @@
   // expand/collapse
   document.querySelectorAll(".prow[aria-controls]").forEach(btn => {
     btn.addEventListener("click", e => {
-      if (e.target.closest(".dot")) return; // dots are for tooltips
+      if (e.target.closest(".smark")) return; // stage markers are for tooltips
       const prod = btn.closest(".product");
       const open = prod.classList.toggle("open");
       btn.setAttribute("aria-expanded", open ? "true" : "false");
@@ -709,7 +746,7 @@
     if (dot.dataset.asof) rows.push(`<div class="trow"><span>Verified</span><span>${esc(dot.dataset.asof)}</span></div>`);
     showTipAt(dot, `<b>${esc(dot.dataset.stage)} — ${LABEL[dot.dataset.status]}</b>${rows.join("")}`);
   }
-  document.querySelectorAll(".stage .dot").forEach(dot => {
+  document.querySelectorAll(".stage .smark").forEach(dot => {
     dot.addEventListener("mouseenter", () => showStageTip(dot));
     dot.addEventListener("focus", () => showStageTip(dot));
     dot.addEventListener("mouseleave", hideTip);
