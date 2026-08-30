@@ -2,13 +2,17 @@
 
 **Live site: https://kochrisdev.github.io/launch-transparency-dashboard/**
 
-Two design options are live for client review, running off the same data:
+Three design options are live for client review, running off the same data:
 
 - **Option A — journey board** (default, `index.html`): one row per medicine, its
   full pathway left to right. Emphasises each product's story.
 - **Option B — comparison matrix** ([`option-b.html`](https://kochrisdev.github.io/launch-transparency-dashboard/option-b.html)):
   stages as rows, medicines as columns. Emphasises cross-product comparison at
   each gate. Distinct visual identity (deep green, serif display, dark header band).
+- **Illustrated journey** ([`illustrated-journey-dashboard.html`](https://kochrisdev.github.io/launch-transparency-dashboard/illustrated-journey-dashboard.html)):
+  Option A with the illustrated stage badges (`assets/journey-icons/`) — an
+  eight-stage pathway legend strip and per-product stage icons with status
+  corner badges (grayed icon = not started).
 
 The pages cross-link in their headers. Both include the country access map,
 the pathway timing chart, CSV download and the Recent updates panel; glossary
