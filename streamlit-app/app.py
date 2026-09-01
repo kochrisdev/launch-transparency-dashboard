@@ -14,6 +14,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+import edit_tab
 import launch_data as ld
 
 st.set_page_config(page_title="LAUNCH Transparency Dashboard", page_icon="💊", layout="wide")
@@ -213,9 +214,9 @@ m3.metric("Expected to market ≤ 3 yrs", n_pipe)
 m4.metric("Open data gaps (TBC)", n_tbc, help="Values awaiting verification — the analyst to-do list.")
 
 # ---------------------------------------------------------------- tabs
-tab_board, tab_matrix, tab_map, tab_timing, tab_pipeline, tab_data = st.tabs(
+tab_board, tab_matrix, tab_map, tab_timing, tab_pipeline, tab_data, tab_edit = st.tabs(
     ["🚦 Journey board", "🔢 Comparison matrix", "🗺️ Country map",
-     "⏱️ Pathway timing", "🧪 Pipeline poster", "📄 Data & export"])
+     "⏱️ Pathway timing", "🧪 Pipeline poster", "📄 Data & export", "✏️ Edit & save"])
 
 
 def stage_track_html(p) -> str:
@@ -396,6 +397,10 @@ with tab_data:
     if data.get("changelog"):
         st.markdown("**Recent updates**")
         st.dataframe(pd.DataFrame(data["changelog"]), width="stretch", hide_index=True)
+
+# ---------- edit & save ----------
+with tab_edit:
+    edit_tab.render(data)
 
 st.caption("The LAUNCH dashboard displays publicly available information only; product details appear "
            "solely where the manufacturer confirmed release in writing. A LAUNCH initiative of Unitaid "

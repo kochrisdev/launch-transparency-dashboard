@@ -78,6 +78,56 @@ def validate(data: dict) -> list[str]:
     return issues
 
 
+# ---------- serialization (writes the same house style as data/products.js) ----------
+
+_SCALARS = (str, int, float, bool, type(None))
+_FALLBACK_HEADER = "window.LAUNCH_DATA =\n"
+
+
+def _enc(v) -> str:
+    return json.dumps(v, ensure_ascii=False)
+
+
+def _fmt(v, indent: int, depth: int, in_products: bool) -> str:
+    """House style: all-scalar objects print on one line (`{ "k": v, ... }`),
+    except top-level objects (meta, glossary) and product rows themselves."""
+    pad = "  " * indent
+    if isinstance(v, dict):
+        if not v:
+            return "{}"
+        if depth >= 2 and not (in_products and depth == 2) and all(isinstance(x, _SCALARS) for x in v.values()):
+            return "{ " + ", ".join(f"{_enc(k)}: {_enc(x)}" for k, x in v.items()) + " }"
+        lines = [f"{pad}  {_enc(k)}: {_fmt(x, indent + 1, depth + 1, in_products or k == 'products')}"
+                 for k, x in v.items()]
+        return "{\n" + ",\n".join(lines) + f"\n{pad}}}"
+    if isinstance(v, list):
+        if not v:
+            return "[]"
+        lines = [f"{pad}  {_fmt(x, indent + 1, depth + 1, in_products)}" for x in v]
+        return "[\n" + ",\n".join(lines) + f"\n{pad}]"
+    return _enc(v)
+
+
+def file_header(path: Path | str = DEFAULT_LOCAL) -> str:
+    """The comment banner up to and including the `window.LAUNCH_DATA =` line."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError:
+        return _FALLBACK_HEADER
+    m = re.search(r"^window\.LAUNCH_DATA\s*=[^\n]*\n", text, re.M)
+    return text[: m.end()] if m else _FALLBACK_HEADER
+
+
+def serialize_products_js(data: dict, header: str | None = None) -> str:
+    return (header if header is not None else file_header()) + _fmt(data, 0, 0, False) + "\n"
+
+
+def save_local(data: dict, path: Path | str = DEFAULT_LOCAL) -> None:
+    text = serialize_products_js(data, header=file_header(path))
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
 def tracked(data: dict) -> list[dict]:
     return [p for p in data.get("products", []) if not p.get("placeholder")]
 

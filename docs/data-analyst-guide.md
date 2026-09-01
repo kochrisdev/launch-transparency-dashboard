@@ -72,6 +72,17 @@ view rendered from the draft plus live governance-check results — errors caugh
 here never reach the public site. The sidebar's 🛡️ *Data checks* panel mirrors
 the repo validator.
 
+**Editing without touching JSON**: the Streamlit app's **✏️ Edit & save** tab
+does steps 1–4 of the loop for you — forms and editable grids for every recipe
+in §8, live governance checks, a required changelog description, and an
+automatic `meta.lastUpdated` bump. Saving runs the real repo validator
+(`scripts/validate-data.js`) first and then writes `data/products.js` in the
+repo's exact formatting, so the git diff shows only your change; you still
+review, commit and push yourself (step 5 never goes away — the commit is the
+audit trail). On Streamlit Cloud, use the tab's **Download** button instead
+and drop the file into the repo. Details in the
+[Streamlit README](../streamlit-app/README.md#edit--save-in-app-data-editing).
+
 ## 2. Status vocabulary
 
 Every stage and milestone uses one of four statuses:
