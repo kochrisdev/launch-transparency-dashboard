@@ -5,3 +5,7 @@ __pycache__/
 .venv/
 streamlit-app/*.log
 decks/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo

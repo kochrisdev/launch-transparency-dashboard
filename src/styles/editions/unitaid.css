@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap");
+/* Unitaid brand skin (per brandpad.io/unitaid) — ported from scripts/build-unitaid-theme.js.
+   Loaded only on /unitaid/* routes, after the page stylesheet, so its tokens win. */
+/* Unitaid brand skin — pins the palette in every theme state */
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+  --ground: #FFFFFF; --surface: #FFFFFF; --surface-2: #E6EAEE;
+  --ink: #212E92; --ink-2: #4A5578; --ink-3: #7A84AD; --line: #CBD4E6;
+  --accent: #0066FF; --accent-ink: #FFFFFF; --accent-soft: #E5F0FF;
+  --good: #00C77D; --good-soft: #DFFAF0;
+  --warn: #FF451A; --warn-soft: #FFE9E4;
+  --crit: #CC0033; --crit-soft: #FAE0E7;
+  --idle: #8A93B8; --idle-soft: #EEF1F7;
+  --map1: #75D8F7; --map2: #0066FF; --map3: #212E92;
+  --band: #212E92; --band-ink: #FFFFFF; --band-ink-2: #75D8F7;
+  --cat-newclass: #0066FF; --cat-tact: #212E92; --cat-market: #00C77D; --cat-prevention: #FF451A;
+  --shadow: 0 1px 2px rgba(33,46,146,.08), 0 4px 16px rgba(33,46,146,.08);
+  }
+  body, button, input, select, textarea {
+    font-family: "Source Sans 3", Arial, "Segoe UI", sans-serif;
+  }
+  /* brand strip so reviewers know which edition they are looking at */
+  body::before {
+    content: "UNITAID BRAND PREVIEW — same data and features as the main dashboards";
+    display: block; background: #212E92; color: #75D8F7; padding: 6px 24px;
+    font: 600 11px/1.5 "Source Sans 3", Arial, sans-serif; letter-spacing: .05em;
+  }
+  /* official logo bar — full-colour lockup on white only (brand rule);
+     width kept above the 180px minimum required for the tagline version */
+  .unitaid-logobar { background: #FFFFFF; padding: 16px 24px; border-bottom: 1px solid #E6EAEE; }
+  .unitaid-logobar img { display: block; width: 230px; max-width: 60vw; height: auto; }
+  /* de-serif option B's display face; keep one brand voice */
+  .band h1, .pcard .pname, .stuck h2, .drawer h2, .viz h2 {
+    font-family: "Source Sans 3", Arial, "Segoe UI", sans-serif !important;
+  }
+  .band h1 em { color: #00F7B6; }
+  .band a { color: #75D8F7; }
+  /* pipeline poster hardcodes an alternate header colour — rebrand it */
+  .phase-head { background: #0066FF !important; }
+  .phase-head:nth-of-type(odd) { background: #212E92 !important; }
+  #tip { background: #212E92; color: #FFFFFF; }

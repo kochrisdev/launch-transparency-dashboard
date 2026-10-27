@@ -1,0 +1,6 @@
+"use client";
+import type { ViewProps } from "@/lib/view";
+
+export default function Widget({ edition, data }: ViewProps) {
+  return <main>Widget ({edition}) — {data.products.length} products. TODO: port</main>;
+}
