@@ -1,5 +1,16 @@
 # LAUNCH Dashboard — Developer Guide
 
+> **v2 note (Next.js migration).** The single-file pages described below
+> (`index.html`, `option-b.html`, …) are now React views under `src/views/`
+> rendered by a Next.js static export — see the "Tech stack" section of the
+> README and [nextjs-porting-guide.md](nextjs-porting-guide.md). The data
+> contract, validator, history/feed/ontology pipeline and the Streamlit and
+> Power BI tools are unchanged. `scripts/make-preview.js`,
+> `build-synthetic-edition.js` and `build-unitaid-theme.js` were removed (the
+> editions are now an `edition` prop); CI builds the site instead of the
+> preview, and Pages deploys via `.github/workflows/deploy.yml`.
+
+
 *For anyone maintaining or extending the code, including RBM's web team at handover.*
 
 > New to malaria product access? Read the **[domain primer](domain-primer.md)**

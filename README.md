@@ -55,6 +55,43 @@ manufacturer written confirmation. Unverified values are shown as `TBC`, never
 estimated. `meta.dataStatus` in the data file (`illustrative` / `draft` / `live`)
 controls the on-page banner.
 
+## Tech stack (v2 — Next.js)
+
+The site is a **Next.js 16 (App Router) + React 19 + TypeScript** app, exported
+as static HTML (`output: "export"`) and deployed to GitHub Pages by
+`.github/workflows/deploy.yml`. The data contract is unchanged:
+`data/products.js` (and `data/products.synthetic.js`) stay the single source of
+truth, read at build time by `src/lib/data.ts`.
+
+```bash
+npm ci
+npm run dev        # http://localhost:3000/
+npm run build      # static site in out/ (set NEXT_PUBLIC_BASE_PATH=/launch-transparency-dashboard to mimic Pages)
+npm run typecheck
+```
+
+| Route | View (`src/views/…`) | Editions |
+|---|---|---|
+| `/` | `option-a/` (journey board) | main · `/synthetic/` · `/unitaid/` |
+| `/option-b/` | `option-b/` (comparison matrix) | main · synthetic · unitaid |
+| `/illustrated-journey-dashboard/` | `illustrated-journey/` (shares option-a components) | main |
+| `/pipeline/` | `pipeline/` | main · synthetic · unitaid |
+| `/story/` | `story/` | main · synthetic · unitaid |
+| `/explainer/` | `explainer/` | main |
+| `/widget/?product=<id>` | `widget/` | main · synthetic |
+
+The synthetic and Unitaid editions are no longer generated HTML copies: each
+route renders the same view with an `edition` prop (`src/lib/edition.ts`);
+the Unitaid skin is `src/styles/editions/unitaid.css`. Old URLs
+(`option-b.html`, `synthetic/story.html`, `widget.html?product=…`) redirect to
+the new ones. Static files served as-is (`data/`, `assets/`, `ontology/`,
+`history/`, `briefs/`, `feed.xml`) are mirrored into `public/` by
+`scripts/sync-public.js` before every dev/build. See
+[docs/nextjs-porting-guide.md](docs/nextjs-porting-guide.md) for conventions.
+
+**One-time setup:** Settings → Pages → Build and deployment → Source:
+**GitHub Actions** (the old branch-root deploy no longer applies).
+
 ## Documentation
 
 | Guide | Audience |

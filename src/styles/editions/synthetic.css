@@ -1,0 +1,6 @@
+/* warning strip so reviewers know every figure on the page is fictional */
+body::before {
+  content: "SYNTHETIC DATA EDITION — every company, product and figure on this page is fictional (development preview)";
+  display: block; background: #4B2E83; color: #D9C9F2; padding: 6px 24px;
+  font: 600 11px/1.5 "Segoe UI", Arial, sans-serif; letter-spacing: .05em;
+}

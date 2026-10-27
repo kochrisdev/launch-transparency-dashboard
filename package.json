@@ -1,0 +1,30 @@
+{
+  "name": "launch-transparency-dashboard",
+  "version": "2.0.0",
+  "private": true,
+  "description": "LAUNCH Transparency Dashboard \u2014 Next.js (React) static site for GitHub Pages",
+  "scripts": {
+    "predev": "node scripts/sync-public.js",
+    "dev": "next dev",
+    "prebuild": "node scripts/sync-public.js",
+    "build": "next build && node scripts/postbuild.js",
+    "start": "npx serve out",
+    "typecheck": "tsc --noEmit",
+    "validate": "node scripts/validate-data.js && node scripts/validate-data.js data/products.synthetic.js"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "d3-geo": "^3.1.1",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.9.3",
+    "world-atlas": "^2.0.2"
+  }
+}
