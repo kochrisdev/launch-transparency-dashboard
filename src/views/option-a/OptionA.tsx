@@ -1,6 +1,9 @@
 "use client";
+import "./option-a.css";
 import type { ViewProps } from "@/lib/view";
+import { JourneyBoard } from "./JourneyBoard";
 
-export default function OptionA({ edition, data }: ViewProps) {
-  return <main>OptionA ({edition}) — {data.products.length} products. TODO: port</main>;
+/** Journey board (legacy index.html, "Option A"). */
+export default function OptionA(props: ViewProps) {
+  return <JourneyBoard {...props} variant="classic" />;
 }
