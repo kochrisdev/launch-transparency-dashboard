@@ -164,7 +164,7 @@ with st.sidebar.expander("⚙️ Configuration", expanded=False):
                                     help="Governance option: suppress the choropleth entirely while countries.status is not 'verified'.")
 
 st.sidebar.caption("Static site: [journey board](https://kochrisdev.github.io/launch-transparency-dashboard/) · "
-                   "[data story](https://kochrisdev.github.io/launch-transparency-dashboard/story.html)")
+                   "[data story](https://kochrisdev.github.io/launch-transparency-dashboard/story/)")
 
 meta = data["meta"]
 tracked = [p for p in ld.tracked(data) if p["name"] in picked]

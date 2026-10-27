@@ -9,3 +9,5 @@ decks/
 out/
 next-env.d.ts
 *.tsbuildinfo
+public/
+AGENTS.md

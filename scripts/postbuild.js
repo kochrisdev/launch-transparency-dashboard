@@ -1,9 +1,6 @@
 #!/usr/bin/env node
-// Runs after `next build` (static export to out/):
-//  1. copies the static, bot-maintained files that are served as-is
-//     (data files read by the Streamlit app and Power BI, the RSS feed,
-//     ontology exports, icons, history snapshots, briefs) into out/;
-//  2. writes redirect stubs at the old single-file URLs (option-b.html,
+// Runs after `next build` (static export to out/). Static files reach out/
+// via public/ (see sync-public.js); this script only writes redirect stubs at the old single-file URLs (option-b.html,
 //     synthetic/story.html, …) so links shared before the Next.js migration
 //     keep working on GitHub Pages.
 const fs = require("fs");
@@ -12,16 +9,6 @@ const path = require("path");
 const root = path.join(__dirname, "..");
 const out = path.join(root, "out");
 if (!fs.existsSync(out)) { console.error("out/ not found — run `next build` first"); process.exit(1); }
-
-const STATIC = ["data", "assets", "ontology", "history", "briefs", "feed.xml", ".nojekyll", "unitaid/assets"];
-for (const rel of STATIC) {
-  const src = path.join(root, rel);
-  if (!fs.existsSync(src)) continue;
-  fs.cpSync(src, path.join(out, rel), { recursive: true });
-  console.log(`copied ${rel}`);
-}
-// GitHub Pages: never run Jekyll on the export (it would drop _next/)
-fs.writeFileSync(path.join(out, ".nojekyll"), "");
 
 const LEGACY = {
   "": ["option-b", "illustrated-journey-dashboard", "pipeline", "story", "explainer", "widget"],

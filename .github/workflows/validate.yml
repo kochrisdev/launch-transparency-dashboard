@@ -16,8 +16,12 @@ jobs:
         run: node scripts/validate-data.js
       - name: Validate synthetic dataset
         run: node scripts/validate-data.js data/products.synthetic.js
-      - name: Build single-file preview (smoke test)
-        run: node scripts/make-preview.js
+      - name: Install site dependencies
+        run: npm ci
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build static site (smoke test)
+        run: npm run build
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
